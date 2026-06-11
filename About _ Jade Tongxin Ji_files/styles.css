@@ -874,6 +874,8 @@ body {
   grid-template-columns: minmax(140px, 0.3fr) minmax(0, 0.72fr) minmax(220px, 0.58fr);
   gap: clamp(16px, 3vw, 42px);
   align-items: end;
+  min-width: 0;
+  max-width: 100%;
   border-bottom: 1px solid rgba(245, 242, 236, 0.22);
   padding-bottom: 16px;
 }
@@ -929,6 +931,8 @@ body {
 .gallery-notice {
   grid-column: 3;
   grid-row: 1 / span 3;
+  min-width: 0;
+  max-width: 100%;
   margin: 0;
 }
 
@@ -982,6 +986,8 @@ body {
   justify-content: end;
   justify-items: end;
   gap: 10px;
+  min-width: 0;
+  max-width: 100%;
   margin-top: 12px;
   text-align: right;
 }
@@ -1092,6 +1098,9 @@ body {
 .gallery-track {
   display: flex;
   gap: 0;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
   overflow-x: hidden;
   overscroll-behavior-x: none;
   scroll-snap-type: x mandatory;
@@ -1107,6 +1116,8 @@ body {
 
 .gallery-track.is-static-carousel {
   display: grid;
+  width: 100%;
+  max-width: 100%;
   overflow: hidden;
   scroll-snap-type: none;
 }
@@ -1124,6 +1135,9 @@ body {
 .gallery-slide {
   flex: 0 0 100%;
   display: grid;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
   grid-template-columns: minmax(0, 1fr) minmax(120px, 180px);
   gap: clamp(18px, 3.4vw, 54px);
   align-items: end;
@@ -1138,8 +1152,12 @@ body {
   display: grid;
   align-items: center;
   justify-items: center;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
   min-height: calc(100svh - 220px);
   background: transparent;
+  overflow: hidden;
   touch-action: pan-y;
   overscroll-behavior-x: none;
   user-select: none;
@@ -2098,6 +2116,8 @@ body {
     justify-items: start;
     align-items: flex-start;
     gap: 8px;
+    width: 100%;
+    min-width: 0;
     max-width: 100%;
     margin-left: 0;
     overflow-x: auto;
@@ -2111,7 +2131,8 @@ body {
     align-items: baseline;
     gap: 6px;
     width: auto;
-    max-width: none;
+    min-width: 0;
+    max-width: min(240px, calc(100vw - 70px));
     justify-content: flex-start;
     justify-items: start;
     overflow: hidden;
@@ -2141,6 +2162,7 @@ body {
   }
 
   .gallery-image-wrap img {
+    max-width: 100%;
     max-height: calc(100svh - 230px);
   }
 
