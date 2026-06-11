@@ -235,6 +235,9 @@
     const isSingleSection = current.sections.length === 1;
     const block = make("section", `series-thumbnail-section is-${current.id}`);
     block.id = section.id;
+    if (section.thumbnailGrid) {
+      block.classList.add(`is-${section.thumbnailGrid}`);
+    }
 
     if (!isSingleSection) {
       const header = make("div", "series-section-header");
@@ -245,6 +248,7 @@
     }
 
     const grid = make("div", "series-thumbnail-grid");
+    const showNumbers = section.showNumbers !== false;
     grid.replaceChildren(
       ...section.images.map((imageItem, index) => {
         const src = typeof imageItem === "string" ? imageItem : imageItem.src;
@@ -254,9 +258,11 @@
         image.src = src;
         image.alt = `${current.titleZh} ${section.titleZh} ${index + 1}`;
         image.draggable = false;
-        const caption = make("figcaption", "", String(index + 1).padStart(2, "0"));
         imageWrap.append(image);
-        figure.append(imageWrap, caption);
+        figure.append(imageWrap);
+        if (showNumbers) {
+          figure.append(make("figcaption", "", String(index + 1).padStart(2, "0")));
+        }
         return figure;
       })
     );

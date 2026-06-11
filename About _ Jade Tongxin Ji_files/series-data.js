@@ -8,6 +8,7 @@ window.jadeSeries = (() => {
     numbers.map((number) => `${base}/${String(number).padStart(2, "0")}-${suffix}.jpg`);
 
   const dandelionParis = "works/dandelion-has-not-decided/images";
+  const newYearElevator = "works/new-year-elevator/images";
   const natural = "年份/22摄影/大二上/22，5，23广告结课";
   const whale = "年份/22摄影/大三上/2022年11月16日记录摄影与图片编辑/鲸鱼卵图像";
   const zero20 = "年份/22摄影/大三上/22.10.25【020】摄影创作实习结课/1结课/020";
@@ -79,6 +80,39 @@ window.jadeSeries = (() => {
               captionEn: "Trivial",
             },
           ],
+        },
+      ],
+    },
+    {
+      id: "new-year-elevator",
+      year: "2024",
+      titleZh: "新年电梯",
+      titleEn: "New Year Elevator",
+      mediumZh: "摄影、装置",
+      mediumEn: "Photography, Installation",
+      cover: `${newYearElevator}/photography/01.jpg`,
+      layout: "thumbnails",
+      statementZh: [
+        `本作品以小型电梯模型为核心，通过装置与摄影照片的结合，反映广州旧居民楼老龄住户面对小区加装电梯时的矛盾与无奈。电梯不仅是一个现代化设施，更是旧城区居民们渴望改善生活却因全楼共识而无法实现的梦想。装置上贴附的照片中，老年人在本应有电梯的窗户前讲述着他们的生活故事，表情中透露着隐隐的失落与向往，他们一方面希望通过加装电梯来消除生活中的障碍，带来便捷，另一方面却因复杂的社区关系而面临决策困境。加装电梯的议题在矛盾与挣扎中被搁置，仿佛映射着旧城区住户对生活的另一种无能为力。作品将这个议题还原于展览现场，邀请观众们反思在城市化进程中，个体在社会集体决策中的孤立与无奈感。电梯的存在与否不仅仅是物理空间的转变，更是对旧居民楼住户状况的现实反映。`,
+      ],
+      statementEn: [
+        `This work centers on a small elevator model and combines installation with photographic images to reflect the contradictions and helplessness faced by elderly residents of old residential buildings in Guangzhou when confronted with the installation of elevators in their community. The elevator is not only a modern facility but also represents the dreams of residents in the old city who long to improve their lives but find these aspirations thwarted by the need for consensus among all residents. In the attached photographs, elderly individuals narrate their life stories in front of windows where elevators should be, their expressions revealing subtle feelings of loss and yearning. On one hand, they hope that adding elevators will eliminate barriers in their lives and provide convenience; on the other hand, they face decision-making dilemmas due to complex community relationships. The issue of elevator installation is set aside amidst contradictions and struggles, seemingly reflecting another form of helplessness experienced by the residents of the old district. This work restores this issue within the exhibition space, inviting the audience to reflect on the isolation and helplessness individuals feel in collective decision-making processes during urbanization. The presence or absence of the elevator signifies not just a physical transformation of space, but also serves as a realistic reflection of the conditions faced by the residents of old buildings.`,
+      ],
+      sections: [
+        {
+          id: "photography",
+          titleZh: "摄影",
+          titleEn: "Photography",
+          showNumbers: false,
+          thumbnailGrid: "new-year-photography",
+          images: paddedSequence(`${newYearElevator}/photography`, 1, 49),
+        },
+        {
+          id: "installation",
+          titleZh: "装置图片",
+          titleEn: "Installation Images",
+          thumbnailGrid: "new-year-installation",
+          images: paddedSequence(`${newYearElevator}/installation`, 1, 4),
         },
       ],
     },
