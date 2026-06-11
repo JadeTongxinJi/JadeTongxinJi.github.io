@@ -127,6 +127,7 @@
     const prev = make("button", "series-gallery-arrow series-gallery-prev", "←");
     const count = make("span", "series-gallery-count", `01 / ${String(imageTotal).padStart(2, "0")}`);
     const next = make("button", "series-gallery-arrow series-gallery-next", "→");
+    const detailSlot = make("div", "series-image-detail-slot");
     prev.type = "button";
     next.type = "button";
     prev.setAttribute("aria-label", "Previous image");
@@ -167,6 +168,37 @@
     );
 
     let activeIndex = 0;
+    const renderImageDetail = (imageItem) => {
+      if (typeof imageItem === "string") return null;
+      const hasTitle = imageItem.captionZh || imageItem.captionEn;
+      const descriptionZh = imageItem.descriptionZh || [];
+      const descriptionEn = imageItem.descriptionEn || [];
+      if (!hasTitle && !descriptionZh.length && !descriptionEn.length) return null;
+
+      const detail = make("div", "series-image-detail");
+      if (hasTitle) {
+        const titleBlock = make("div", "series-image-detail-title");
+        if (imageItem.captionZh) titleBlock.append(make("strong", "", imageItem.captionZh));
+        if (imageItem.captionEn) titleBlock.append(make("em", "", imageItem.captionEn));
+        detail.append(titleBlock);
+      }
+      if (descriptionZh.length || descriptionEn.length) {
+        const description = make("div", "series-image-detail-description");
+        if (descriptionZh.length) {
+          description.append(renderStatementGroup(descriptionZh, "statement-zh"));
+        }
+        if (descriptionEn.length) {
+          description.append(renderStatementGroup(descriptionEn, "statement-en"));
+        }
+        detail.append(description);
+      }
+      return detail;
+    };
+    const syncImageDetail = () => {
+      const detail = renderImageDetail(section.images[activeIndex]);
+      detailSlot.hidden = !detail;
+      detailSlot.replaceChildren(...(detail ? [detail] : []));
+    };
     const setActiveSlide = () => {
       track.querySelectorAll(".gallery-slide").forEach((slide, index) => {
         slide.classList.toggle("is-active", index === activeIndex);
@@ -175,6 +207,7 @@
     const goTo = (index) => {
       activeIndex = Math.max(0, Math.min(index, imageTotal - 1));
       setActiveSlide();
+      syncImageDetail();
       count.textContent = `${String(activeIndex + 1).padStart(2, "0")} / ${String(imageTotal).padStart(2, "0")}`;
     };
 
@@ -186,6 +219,8 @@
       block.append(header);
     }
     block.append(frame);
+    syncImageDetail();
+    block.append(detailSlot);
     const poem = renderSectionPoem(section);
     if (poem) {
       block.append(poem);

@@ -1475,6 +1475,57 @@ body {
   max-height: clamp(130px, 16vw, 230px);
 }
 
+.series-image-detail-slot[hidden] {
+  display: none;
+}
+
+.series-image-detail {
+  display: grid;
+  gap: clamp(14px, 2.2vw, 24px);
+  width: min(100%, 980px);
+  margin: clamp(12px, 2vw, 24px) auto 0;
+  border-top: 1px solid rgba(245, 242, 236, 0.18);
+  padding-top: clamp(14px, 2vw, 22px);
+}
+
+.series-image-detail-title {
+  display: grid;
+  gap: 4px;
+}
+
+.series-image-detail-title strong {
+  color: rgba(245, 242, 236, 0.94);
+  font-size: clamp(15px, 1.25vw, 20px);
+  font-weight: 500;
+  line-height: 1.25;
+}
+
+.series-image-detail-title em {
+  color: rgba(245, 242, 236, 0.62);
+  font-family: "Helvetica Neue", Arial, sans-serif;
+  font-size: clamp(11px, 0.9vw, 14px);
+  font-style: normal;
+  font-weight: 300;
+  line-height: 1.3;
+}
+
+.series-image-detail-description {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(24px, 5vw, 92px);
+  color: rgba(245, 242, 236, 0.76);
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: clamp(13px, 1.05vw, 16px);
+  font-weight: 300;
+  line-height: 1.85;
+}
+
+.series-image-detail-description .statement-zh,
+.series-image-detail-description .statement-en {
+  max-width: none;
+  margin: 0;
+}
+
 .series-video-section {
   display: grid;
   gap: clamp(18px, 3vw, 34px);
@@ -2120,6 +2171,18 @@ body {
 
   .series-statement-space {
     grid-template-columns: 1fr;
+  }
+
+  .series-image-detail {
+    width: 100%;
+    margin-top: 14px;
+  }
+
+  .series-image-detail-description {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    font-size: 13px;
+    line-height: 1.75;
   }
 
   .series-video-description {
