@@ -251,11 +251,12 @@
   const createVideoEmbed = (videoData) => {
     const embed = make("div", "series-video-embed");
     const iframe = document.createElement("iframe");
-    iframe.src = videoData.embedSrc;
-    iframe.title = `${current.titleZh} ${videoData.titleZh || "视频"}`;
-    iframe.loading = "lazy";
-    iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
-    iframe.referrerPolicy = "strict-origin-when-cross-origin";
+    iframe.setAttribute("src", videoData.embedSrc);
+    iframe.setAttribute("title", `${current.titleZh} ${videoData.titleZh || "视频"}`);
+    iframe.setAttribute("loading", "lazy");
+    iframe.setAttribute("allow", "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share");
+    iframe.setAttribute("referrerpolicy", "strict-origin-when-cross-origin");
+    iframe.setAttribute("allowfullscreen", "");
     iframe.allowFullscreen = true;
     embed.append(iframe);
     return embed;
