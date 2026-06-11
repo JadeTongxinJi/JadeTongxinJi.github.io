@@ -2041,11 +2041,15 @@ body {
 
   .gallery-shell {
     grid-template-columns: 1fr;
+    max-width: 100%;
+    overflow-x: hidden;
   }
 
   .gallery-info {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     gap: 12px;
+    width: 100%;
+    max-width: 100%;
   }
 
   .gallery-back,
@@ -2059,7 +2063,7 @@ body {
   }
 
   .series-gallery-page .gallery-info {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .series-gallery-page .gallery-back,
@@ -2075,6 +2079,21 @@ body {
   .series-gallery-page .gallery-info > p,
   .series-gallery-page .series-medium {
     margin-top: 0;
+  }
+
+  .gallery-back,
+  .gallery-info > p,
+  .gallery-info h1,
+  .gallery-info h2,
+  .series-medium,
+  .gallery-notice {
+    min-width: 0;
+    max-width: 100%;
+    overflow-wrap: anywhere;
+  }
+
+  .series-medium {
+    white-space: normal;
   }
 
   .series-statement-space {
