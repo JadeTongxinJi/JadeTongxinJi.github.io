@@ -1272,13 +1272,28 @@ body {
 .series-medium {
   grid-column: 2;
   grid-row: 4;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 2px 7px;
   margin: 6px 0 0;
   color: rgba(245, 242, 236, 0.74);
   font-family: "Helvetica Neue", Arial, sans-serif;
   font-size: clamp(13px, 1vw, 16px);
   font-weight: 300;
-  line-height: 1.25;
-  white-space: nowrap;
+  line-height: 1.35;
+  white-space: normal;
+}
+
+.series-medium-zh,
+.series-medium-en {
+  min-width: 0;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
+
+.series-medium-divider {
+  flex: 0 0 auto;
 }
 
 .series-statement-space {
@@ -2093,7 +2108,14 @@ body {
   }
 
   .series-medium {
+    display: grid;
+    gap: 2px;
+    line-height: 1.42;
     white-space: normal;
+  }
+
+  .series-medium-divider {
+    display: none;
   }
 
   .series-statement-space {

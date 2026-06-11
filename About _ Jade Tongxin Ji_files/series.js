@@ -355,7 +355,13 @@
     if (titleZh) titleZh.textContent = current.titleZh;
     if (titleEn) titleEn.textContent = current.titleEn;
     if (meta) meta.textContent = `${current.year} / Series`;
-    if (medium) medium.textContent = `${current.mediumZh} / ${current.mediumEn}`;
+    if (medium) {
+      medium.replaceChildren(
+        make("span", "series-medium-zh", current.mediumZh),
+        make("span", "series-medium-divider", "/"),
+        make("span", "series-medium-en", current.mediumEn)
+      );
+    }
 
     const statementZh = current.statementZh || [];
     const statementEn = current.statementEn || [];
