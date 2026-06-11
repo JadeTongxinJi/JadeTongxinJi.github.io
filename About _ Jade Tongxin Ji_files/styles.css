@@ -1475,6 +1475,34 @@ body {
   max-height: clamp(130px, 16vw, 230px);
 }
 
+.series-thumbnail-section.is-new-year-photography .series-thumbnail-grid {
+  gap: clamp(14px, 1.8vw, 26px);
+}
+
+.series-thumbnail-section.is-new-year-photography .series-thumbnail-item {
+  grid-column: span 3;
+}
+
+.series-thumbnail-section.is-new-year-photography .series-thumbnail-image {
+  min-height: clamp(120px, 15vw, 230px);
+}
+
+.series-thumbnail-section.is-new-year-photography .series-thumbnail-image img {
+  max-height: clamp(120px, 15vw, 230px);
+}
+
+.series-thumbnail-section.is-new-year-installation .series-thumbnail-item {
+  grid-column: span 3;
+}
+
+.series-thumbnail-section.is-new-year-installation .series-thumbnail-image {
+  min-height: clamp(170px, 24vw, 340px);
+}
+
+.series-thumbnail-section.is-new-year-installation .series-thumbnail-image img {
+  max-height: clamp(170px, 24vw, 340px);
+}
+
 .series-image-detail-slot[hidden] {
   display: none;
 }
@@ -2373,17 +2401,23 @@ body {
   .series-thumbnail-section.is-whale-eggs .series-thumbnail-item:nth-child(n + 3),
   .series-thumbnail-section.is-whale-eggs .series-thumbnail-item:nth-child(6),
   .series-thumbnail-section.is-whale-eggs .series-thumbnail-item:nth-child(7),
-  .series-thumbnail-section.is-zero-twenty .series-thumbnail-item {
+  .series-thumbnail-section.is-zero-twenty .series-thumbnail-item,
+  .series-thumbnail-section.is-new-year-photography .series-thumbnail-item,
+  .series-thumbnail-section.is-new-year-installation .series-thumbnail-item {
     grid-column: span 1;
   }
 
   .series-thumbnail-image,
-  .series-thumbnail-section.is-zero-twenty .series-thumbnail-image {
+  .series-thumbnail-section.is-zero-twenty .series-thumbnail-image,
+  .series-thumbnail-section.is-new-year-photography .series-thumbnail-image,
+  .series-thumbnail-section.is-new-year-installation .series-thumbnail-image {
     min-height: clamp(120px, 31vw, 190px);
   }
 
   .series-thumbnail-image img,
-  .series-thumbnail-section.is-zero-twenty .series-thumbnail-image img {
+  .series-thumbnail-section.is-zero-twenty .series-thumbnail-image img,
+  .series-thumbnail-section.is-new-year-photography .series-thumbnail-image img,
+  .series-thumbnail-section.is-new-year-installation .series-thumbnail-image img {
     max-height: clamp(120px, 31vw, 190px);
   }
 
