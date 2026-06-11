@@ -248,11 +248,29 @@
     return video;
   };
 
+  const createVideoEmbed = (videoData) => {
+    const embed = make("div", "series-video-embed");
+    const iframe = document.createElement("iframe");
+    iframe.setAttribute("src", videoData.embedSrc);
+    iframe.setAttribute("title", `${current.titleZh} ${videoData.titleZh || "视频"}`);
+    iframe.setAttribute("loading", "lazy");
+    iframe.setAttribute("allow", "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share");
+    iframe.setAttribute("referrerpolicy", "strict-origin-when-cross-origin");
+    iframe.setAttribute("allowfullscreen", "");
+    iframe.allowFullscreen = true;
+    embed.append(iframe);
+    return embed;
+  };
+
+  const createVideoMedia = (videoData) => (
+    videoData.embedSrc ? createVideoEmbed(videoData) : createVideoElement(videoData)
+  );
+
   const renderVideoSection = (videoData) => {
     if (!videoData) return null;
     const videoItems = Array.isArray(videoData.items)
-      ? videoData.items.filter((item) => item?.src)
-      : videoData.src
+      ? videoData.items.filter((item) => item?.src || item?.embedSrc)
+      : videoData.src || videoData.embedSrc
         ? [videoData]
         : [];
     if (!videoItems.length) return null;
@@ -301,14 +319,14 @@
         block.append(poster);
       }
       const videoWrap = make("div", "series-video-wrap");
-      videoWrap.append(createVideoElement(videoItems[0]));
+      videoWrap.append(createVideoMedia(videoItems[0]));
       block.append(videoWrap);
     } else {
       const videoGrid = make("div", "series-video-grid");
       videoItems.forEach((item) => {
         const figure = make("figure", "series-video-item");
         const videoWrap = make("div", "series-video-wrap");
-        videoWrap.append(createVideoElement(item));
+        videoWrap.append(createVideoMedia(item));
         figure.append(videoWrap);
         if (item.titleZh || item.titleEn) {
           const caption = make("figcaption", "series-video-caption");
