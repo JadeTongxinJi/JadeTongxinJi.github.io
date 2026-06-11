@@ -1551,6 +1551,20 @@ body {
   background: #000;
 }
 
+.series-video-embed {
+  width: min(100%, 980px);
+  aspect-ratio: 16 / 9;
+  background: #000;
+}
+
+.series-video-embed iframe {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  background: #000;
+}
+
 .series-video-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1576,6 +1590,10 @@ body {
   width: 100%;
   max-height: clamp(240px, 38vw, 520px);
   object-fit: contain;
+}
+
+.series-video-grid .series-video-embed {
+  width: 100%;
 }
 
 .series-video-caption {
@@ -2071,8 +2089,8 @@ body {
   }
 
   .series-video-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 10px;
+    grid-template-columns: 1fr;
+    gap: 18px;
   }
 
   .series-video-grid .series-video-wrap video {
@@ -2080,14 +2098,22 @@ body {
   }
 
   .series-video-section.has-video-poster {
-    grid-template-columns: minmax(104px, 0.36fr) minmax(0, 1fr);
-    column-gap: 14px;
-    align-items: end;
+    grid-template-columns: 1fr;
+    row-gap: 16px;
+    align-items: start;
   }
 
   .series-video-section.has-video-poster .series-video-poster img,
   .series-video-section.has-video-poster .series-video-wrap video {
     max-height: 42svh;
+  }
+
+  .series-video-section.has-video-poster .series-video-poster img {
+    width: min(100%, 220px);
+  }
+
+  .series-video-section.has-video-poster .series-video-embed {
+    width: 100%;
   }
 
   .series-video-caption {

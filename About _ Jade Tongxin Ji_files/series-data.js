@@ -29,12 +29,12 @@ window.jadeSeries = (() => {
           {
             titleZh: "纸蜻蜓",
             titleEn: "Paper Dragonfly",
-            src: `${hesitation}/纸蜻蜓.mp4`,
+            embedSrc: "https://www.youtube.com/embed/9iE9hkz--Lo?rel=0&modestbranding=1&playsinline=1",
           },
           {
             titleZh: "籽",
             titleEn: "Seed",
-            src: `${hesitation}/籽.mp4`,
+            embedSrc: "https://www.youtube.com/embed/P_6Q5-wSdcM?rel=0&modestbranding=1&playsinline=1",
           },
         ],
       },
@@ -107,9 +107,9 @@ window.jadeSeries = (() => {
       cover: `${zero20}/1.JPG`,
       layout: "thumbnails",
       video: {
-        titleZh: "翻书视频",
-        titleEn: "Page-Turning Video",
-        src: "年份/22摄影/大三上/22.10.25【020】摄影创作实习结课/1结课/020.mp4",
+        titleZh: "020",
+        titleEn: "020",
+        embedSrc: "https://www.youtube.com/embed/7MhzTIrHk-E?rel=0&modestbranding=1&playsinline=1",
       },
       sections: [
         {
@@ -175,7 +175,7 @@ window.jadeSeries = (() => {
       video: {
         titleZh: "上游的风",
         titleEn: "The Wind Upstream",
-        src: `${upstreamWind}/上游的风.mp4`,
+        embedSrc: "https://www.youtube.com/embed/uN6FlCbxMcs?rel=0&modestbranding=1&playsinline=1",
         poster: `${upstreamWind}/海报.jpg`,
       },
       sections: [],
@@ -191,7 +191,7 @@ window.jadeSeries = (() => {
       video: {
         titleZh: "种子",
         titleEn: "Seed",
-        src: "年份/23摄影/大四/毕业设计/素材/final/疑树·Epitaph·video/种子.mp4",
+        embedSrc: "https://www.youtube.com/embed/c_ILMBvMGZY?rel=0&modestbranding=1&playsinline=1",
         descriptionZh: [
           `“种子”为行为短片。将祖父的遗像使用明胶蓝晒印相在海边捡到的鹅卵石上，祖父曾经是一名火车列车员，我将印照着他最后一张照片的石头放在被植物环绕的铁轨上，反复出现的行走画面、重复出现的列车行驶，最后将鹅卵石放在铁轨上的花岗岩碎石间，我终于走进铁轨的深处。`,
         ],
@@ -291,14 +291,4 @@ window.jadeSeries = (() => {
       ],
     },
   ];
-})();
-
-
-/* Public package note: local multi-GB videos are omitted from this static upload package. Replace these with hosted video URLs before publishing video playback online. */
-;(function(){
-  if (!window.jadeSeries) return;
-  window.jadeSeries.forEach(function(item){
-    delete item.video;
-    delete item.videos;
-  });
 })();
