@@ -20,7 +20,7 @@ window.jadeSeries = (() => {
     {
       id: "dandelion-has-not-decided",
       year: "2026",
-      titleZh: "地丁并未决定",
+      titleZh: "地丁",
       titleEn: "The Dandelion Has Not Decided",
       mediumZh: "摄影、装置、合作视频",
       mediumEn: "Photography, Installation, Collaborative Video",

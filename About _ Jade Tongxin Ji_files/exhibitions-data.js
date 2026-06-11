@@ -2,9 +2,9 @@ window.jadeExhibitions = [
   {
     id: "dandelion-paris-cite",
     year: "2026",
-    titleZh: "《地丁并未决定》- 巴黎国际艺术城",
+    titleZh: "《地丁》- 巴黎国际艺术城",
     titleEn: "The Dandelion Has Not Decided - Cité Internationale des Arts",
-    workZh: "《地丁并未决定》",
+    workZh: "《地丁》",
     workEn: "The Dandelion Has Not Decided",
     venueZh: "巴黎国际艺术城",
     venueEn: "Cité Internationale des Arts, Paris",
