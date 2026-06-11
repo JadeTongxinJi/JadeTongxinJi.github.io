@@ -23,7 +23,7 @@ window.jadeExhibitions = [
       "works/dandelion-has-not-decided/images/exhibition/05.jpg",
       {
         src: "works/dandelion-has-not-decided/images/exhibition/06-opposite-window.jpg",
-        captionZh: "合作视频《The Opposite Window》现场",
+        captionZh: "合作视频《对面的窗户》现场",
         captionEn: "Collaborative Video The Opposite Window, Installation View",
       },
       "works/dandelion-has-not-decided/images/exhibition/07.jpg",
