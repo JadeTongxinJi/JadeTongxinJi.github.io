@@ -64,8 +64,8 @@ window.jadeSeries = (() => {
           images: [
             {
               src: `${dandelionParis}/installation/01-dredged-from-the-album.jpg`,
-              captionZh: "装置：从相册中垂钓",
-              captionEn: "Installation: Dredged from the Album",
+              captionZh: "从相册中垂钓",
+              captionEn: "Dredged from the Album",
               descriptionZh: [
                 `我在巴黎的日记：街上看到的事物、身体的状况、偶然的图像，以及那些尚未被整理的瞬间。我把它们挂在晾衣架上，仿佛从相册中打捞出仍然潮湿的图像。`,
               ],
@@ -75,8 +75,8 @@ window.jadeSeries = (() => {
             },
             {
               src: `${dandelionParis}/installation/02-trivial.jpg`,
-              captionZh: "装置：琐碎",
-              captionEn: "Installation: Trivial",
+              captionZh: "琐碎",
+              captionEn: "Trivial",
             },
           ],
         },
