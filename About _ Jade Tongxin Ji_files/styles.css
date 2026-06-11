@@ -1888,6 +1888,45 @@ body {
     text-align: left;
   }
 
+  .exhibition-gallery-page .page-nav-dropdown {
+    top: calc(100% + 4px);
+    right: 0;
+    left: auto;
+    width: min(288px, calc(100vw - 32px));
+    min-width: 0;
+    max-width: calc(100vw - 32px);
+    overflow-x: hidden;
+    transform: translateY(-4px);
+  }
+
+  .exhibition-gallery-page .page-nav-menu:hover .page-nav-dropdown,
+  .exhibition-gallery-page .page-nav-menu:focus-within .page-nav-dropdown {
+    transform: translateY(0);
+  }
+
+  .exhibition-gallery-page .page-nav-dropdown a {
+    min-width: 0;
+    max-width: 100%;
+    overflow-wrap: anywhere;
+  }
+
+  .exhibition-gallery-page .page-nav-dropdown .menu-link {
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1fr);
+    column-gap: 8px;
+  }
+
+  .exhibition-gallery-page .page-nav-dropdown .menu-title-zh,
+  .exhibition-gallery-page .page-nav-dropdown .menu-title-en,
+  .exhibition-gallery-page .page-nav-dropdown .series-menu-link .menu-title-zh,
+  .exhibition-gallery-page .page-nav-dropdown .series-menu-link .menu-title-en,
+  .exhibition-gallery-page .page-nav-dropdown .menu-line {
+    min-width: 0;
+    overflow: visible;
+    overflow-wrap: anywhere;
+    text-overflow: clip;
+    white-space: normal;
+  }
+
   .about-hero {
     gap: 24px;
     min-height: 0;
@@ -2072,6 +2111,19 @@ body {
     overflow: visible;
     text-overflow: clip;
     white-space: normal;
+  }
+
+  .exhibition-gallery-page .gallery-info > p,
+  .exhibition-gallery-page .gallery-info h1,
+  .exhibition-gallery-page .gallery-info h2,
+  .exhibition-gallery-page .gallery-fact span,
+  .exhibition-gallery-page .gallery-fact strong {
+    max-width: 100%;
+    overflow-wrap: anywhere;
+  }
+
+  .exhibition-gallery-page .gallery-fact {
+    display: grid;
   }
 
   .gallery-links-title {
@@ -2284,6 +2336,14 @@ body {
     justify-items: start;
     padding-bottom: 0;
     text-align: left;
+  }
+
+  .exhibition-gallery-page .gallery-slide figcaption strong,
+  .exhibition-gallery-page .gallery-slide figcaption em,
+  .exhibition-gallery-page .gallery-slide figcaption span,
+  .exhibition-gallery-page .gallery-slide figcaption small {
+    max-width: 100%;
+    overflow-wrap: anywhere;
   }
 }
 
