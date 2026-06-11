@@ -2,9 +2,12 @@ window.jadeSeries = (() => {
   const imageList = (base, names) => names.map((name) => `${base}/${name}`);
   const sequence = (base, start, end, ext = "jpg") =>
     Array.from({ length: end - start + 1 }, (_, index) => `${base}/${start + index}.${ext}`);
+  const paddedSequence = (base, start, end, ext = "jpg") =>
+    Array.from({ length: end - start + 1 }, (_, index) => `${base}/${String(start + index).padStart(2, "0")}.${ext}`);
   const numbered = (base, numbers, suffix) =>
     numbers.map((number) => `${base}/${String(number).padStart(2, "0")}-${suffix}.jpg`);
 
+  const dandelionParis = "works/dandelion-has-not-decided/images";
   const natural = "年份/22摄影/大二上/22，5，23广告结课";
   const whale = "年份/22摄影/大三上/2022年11月16日记录摄影与图片编辑/鲸鱼卵图像";
   const zero20 = "年份/22摄影/大三上/22.10.25【020】摄影创作实习结课/1结课/020";
@@ -14,6 +17,71 @@ window.jadeSeries = (() => {
   const upstreamWind = "年份/23摄影/大四/毕业设计/素材/final/纪彤心《疑树》/2展览现场图/上游的风";
 
   return [
+    {
+      id: "dandelion-has-not-decided",
+      year: "2026",
+      titleZh: "地丁",
+      titleEn: "The Dandelion Has Not Decided",
+      mediumZh: "摄影、装置、合作视频",
+      mediumEn: "Photography, Installation, Collaborative Video",
+      cover: `${dandelionParis}/photography/01.jpg`,
+      video: {
+        titleZh: "合作视频：对面的窗户",
+        titleEn: "Collaborative Video: The Opposite Window",
+        embedSrc: "https://www.youtube.com/embed/Q1-2B_Rr4kc",
+        descriptionZh: [
+          `这件视频作品来自我与 Lars Åkerlund 的合作。他是一位住在我窗对面的电子音乐人。通过房间、窗户、光与声音，我们找到了一种间接的连接。距离、误读、翻译，以及即使无法完全靠近时仍然发生的沟通，构成了这件作品的核心。`,
+        ],
+        descriptionEn: [
+          `This video work comes from a collaboration with Lars Åkerlund, an electronic musician living across from my window. Through rooms, windows, light, and sound, we found an indirect connection. Distance, misreading, translation, and the communication that still takes place when complete closeness is impossible.`,
+        ],
+      },
+      statementZh: [
+        `在巴黎的创作过程中，我开始意识到记忆的流逝，以及摄影在其中所能承担的保存作用。`,
+        `这组作品并不试图呈现一座城市的完整面貌，而是从个人在异地生活中的身体经验出发，记录那些不断发生、又迅速消失的细节，走过的街道、没有完全理解的语言、突然涌现的情绪、身体的疼痛与疲惫。它们并不构成一个明确事件，却持续地改变着我与周围环境之间的关系。`,
+        `皮肤过敏、跌倒后留下的淤青、被带入房间的植物与水果、逐渐变化的气味和表面，都成为作品中的视觉线索。这些细节既来自日常，也超出日常本身。它们共同构成了一种关于停留、流逝和未定状态的叙事。`,
+        `地丁——蒲公英，它会散开、落下，在不同的环境中继续生长。它的“并未决定”是一种始终处在移动、受力和重新定位之中的状态。`,
+        `它关注的不是抵达某个确定的位置，而是在一段不断流逝的时间中，身体、记忆与场所如何彼此作用。摄影在这里成为一种确认，这些轻微的事情曾经发生过，我曾以身体、情绪和图像的方式停留在这里。`,
+      ],
+      statementEn: [
+        `During my creative process in Paris, I became increasingly aware of the passage of memory, and of photography’s capacity to preserve what is otherwise easily lost.`,
+        `This series does not attempt to present a complete image of the city. Instead, it begins with my bodily experience of living in a foreign place, recording details that continually occur and quickly disappear: streets I have walked through, languages I have not fully understood, emotions that arise suddenly, and the pain and fatigue carried by the body. These fragments do not form a clear event, yet they continue to reshape my relationship with the surrounding environment.`,
+        `Skin allergies, bruises left after falling, plants and fruits brought into the room, and the gradual changes of smell and surface all become visual clues within the work. These details come from everyday life, yet they also move beyond the everyday. Together, they construct a narrative about staying, passing, and a state of not having decided.`,
+        `The dandelion scatters, falls, and continues to grow in different environments. Its state of “not having decided” is not one of confusion, but rather a condition of being constantly in motion, acted upon, and repositioned.`,
+        `The work is not concerned with arriving at a fixed position. Rather, it explores how the body, memory, and place act upon one another within a period of time that is constantly passing. Here, photography becomes a form of confirmation: these subtle things once happened, and I once stayed here through my body, my emotions, and my images.`,
+      ],
+      sections: [
+        {
+          id: "photography",
+          titleZh: "摄影",
+          titleEn: "Photography",
+          images: paddedSequence(`${dandelionParis}/photography`, 1, 20),
+        },
+        {
+          id: "installation",
+          titleZh: "装置",
+          titleEn: "Installation",
+          images: [
+            {
+              src: `${dandelionParis}/installation/01-dredged-from-the-album.jpg`,
+              captionZh: "装置：从相册中垂钓",
+              captionEn: "Installation: Dredged from the Album",
+              descriptionZh: [
+                `我在巴黎的日记：街上看到的事物、身体的状况、偶然的图像，以及那些尚未被整理的瞬间。我把它们挂在晾衣架上，仿佛从相册中打捞出仍然潮湿的图像。`,
+              ],
+              descriptionEn: [
+                `My diary in Paris: things seen on the street, bodily conditions, accidental images, and moments that have not yet been organized. I hang them on a drying rack, as if dredging up images that are still damp from the album.`,
+              ],
+            },
+            {
+              src: `${dandelionParis}/installation/02-trivial.jpg`,
+              captionZh: "装置：琐碎",
+              captionEn: "Installation: Trivial",
+            },
+          ],
+        },
+      ],
+    },
     {
       id: "hesitation",
       year: "2025",

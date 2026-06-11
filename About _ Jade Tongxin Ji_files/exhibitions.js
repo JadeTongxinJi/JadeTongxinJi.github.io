@@ -138,8 +138,6 @@
           }
           sources.append(link);
         });
-      } else {
-        sources.append(make("span", "", "展讯链接待补充"));
       }
     }
 

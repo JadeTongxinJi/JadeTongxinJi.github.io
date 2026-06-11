@@ -1,5 +1,38 @@
 window.jadeExhibitions = [
   {
+    id: "dandelion-paris-cite",
+    year: "2026",
+    titleZh: "《地丁》- 巴黎国际艺术城",
+    titleEn: "The Dandelion Has Not Decided - Cité Internationale des Arts",
+    workZh: "《地丁》",
+    workEn: "The Dandelion Has Not Decided",
+    venueZh: "巴黎国际艺术城",
+    venueEn: "Cité Internationale des Arts, Paris",
+    artist: "纪彤心 / Jade Tongxin Ji",
+    cover: "works/dandelion-has-not-decided/images/exhibition/00-poster.jpg",
+    images: [
+      {
+        src: "works/dandelion-has-not-decided/images/exhibition/00-poster.jpg",
+        captionZh: "展览海报",
+        captionEn: "Exhibition Poster",
+      },
+      "works/dandelion-has-not-decided/images/exhibition/01.jpg",
+      "works/dandelion-has-not-decided/images/exhibition/02.jpg",
+      "works/dandelion-has-not-decided/images/exhibition/03.jpg",
+      "works/dandelion-has-not-decided/images/exhibition/04.jpg",
+      "works/dandelion-has-not-decided/images/exhibition/05.jpg",
+      {
+        src: "works/dandelion-has-not-decided/images/exhibition/06-opposite-window.jpg",
+        captionZh: "合作视频《对面的窗户》现场",
+        captionEn: "Collaborative Video The Opposite Window, Installation View",
+      },
+      "works/dandelion-has-not-decided/images/exhibition/07.jpg",
+      "works/dandelion-has-not-decided/images/exhibition/08.jpg",
+      "works/dandelion-has-not-decided/images/exhibition/09.jpg",
+    ],
+    sources: [],
+  },
+  {
     id: "dandelion-caijiapo",
     year: "2026",
     titleZh: "《地丁并未决定》- 蔡家坡村村史馆",
