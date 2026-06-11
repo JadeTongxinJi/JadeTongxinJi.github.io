@@ -874,6 +874,8 @@ body {
   grid-template-columns: minmax(140px, 0.3fr) minmax(0, 0.72fr) minmax(220px, 0.58fr);
   gap: clamp(16px, 3vw, 42px);
   align-items: end;
+  min-width: 0;
+  max-width: 100%;
   border-bottom: 1px solid rgba(245, 242, 236, 0.22);
   padding-bottom: 16px;
 }
@@ -929,6 +931,8 @@ body {
 .gallery-notice {
   grid-column: 3;
   grid-row: 1 / span 3;
+  min-width: 0;
+  max-width: 100%;
   margin: 0;
 }
 
@@ -982,6 +986,8 @@ body {
   justify-content: end;
   justify-items: end;
   gap: 10px;
+  min-width: 0;
+  max-width: 100%;
   margin-top: 12px;
   text-align: right;
 }
@@ -1092,6 +1098,9 @@ body {
 .gallery-track {
   display: flex;
   gap: 0;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
   overflow-x: hidden;
   overscroll-behavior-x: none;
   scroll-snap-type: x mandatory;
@@ -1107,6 +1116,8 @@ body {
 
 .gallery-track.is-static-carousel {
   display: grid;
+  width: 100%;
+  max-width: 100%;
   overflow: hidden;
   scroll-snap-type: none;
 }
@@ -1124,6 +1135,9 @@ body {
 .gallery-slide {
   flex: 0 0 100%;
   display: grid;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
   grid-template-columns: minmax(0, 1fr) minmax(120px, 180px);
   gap: clamp(18px, 3.4vw, 54px);
   align-items: end;
@@ -1138,8 +1152,12 @@ body {
   display: grid;
   align-items: center;
   justify-items: center;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
   min-height: calc(100svh - 220px);
   background: transparent;
+  overflow: hidden;
   touch-action: pan-y;
   overscroll-behavior-x: none;
   user-select: none;
@@ -1870,6 +1888,45 @@ body {
     text-align: left;
   }
 
+  .exhibition-gallery-page .page-nav-dropdown {
+    top: calc(100% + 4px);
+    right: 0;
+    left: auto;
+    width: min(288px, calc(100vw - 32px));
+    min-width: 0;
+    max-width: calc(100vw - 32px);
+    overflow-x: hidden;
+    transform: translateY(-4px);
+  }
+
+  .exhibition-gallery-page .page-nav-menu:hover .page-nav-dropdown,
+  .exhibition-gallery-page .page-nav-menu:focus-within .page-nav-dropdown {
+    transform: translateY(0);
+  }
+
+  .exhibition-gallery-page .page-nav-dropdown a {
+    min-width: 0;
+    max-width: 100%;
+    overflow-wrap: anywhere;
+  }
+
+  .exhibition-gallery-page .page-nav-dropdown .menu-link {
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1fr);
+    column-gap: 8px;
+  }
+
+  .exhibition-gallery-page .page-nav-dropdown .menu-title-zh,
+  .exhibition-gallery-page .page-nav-dropdown .menu-title-en,
+  .exhibition-gallery-page .page-nav-dropdown .series-menu-link .menu-title-zh,
+  .exhibition-gallery-page .page-nav-dropdown .series-menu-link .menu-title-en,
+  .exhibition-gallery-page .page-nav-dropdown .menu-line {
+    min-width: 0;
+    overflow: visible;
+    overflow-wrap: anywhere;
+    text-overflow: clip;
+    white-space: normal;
+  }
+
   .about-hero {
     gap: 24px;
     min-height: 0;
@@ -2056,6 +2113,19 @@ body {
     white-space: normal;
   }
 
+  .exhibition-gallery-page .gallery-info > p,
+  .exhibition-gallery-page .gallery-info h1,
+  .exhibition-gallery-page .gallery-info h2,
+  .exhibition-gallery-page .gallery-fact span,
+  .exhibition-gallery-page .gallery-fact strong {
+    max-width: 100%;
+    overflow-wrap: anywhere;
+  }
+
+  .exhibition-gallery-page .gallery-fact {
+    display: grid;
+  }
+
   .gallery-links-title {
     text-align: left;
   }
@@ -2072,62 +2142,68 @@ body {
 
   .gallery-source-links > a,
   .gallery-source-links > span {
-    display: inline-flex;
-    align-items: baseline;
-    gap: 6px;
+    display: inline-grid;
+    align-items: start;
+    gap: 3px;
     max-width: min(620px, calc(100vw - 70px));
-    overflow: hidden;
-    white-space: nowrap;
+    overflow: visible;
+    white-space: normal;
   }
 
   .gallery-source-links > a .source-title-zh,
   .gallery-source-links > a .source-title-en {
-    display: inline;
+    display: block;
+    width: 100%;
     min-width: 0;
-    max-width: none;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    max-width: 100%;
+    overflow: visible;
+    overflow-wrap: anywhere;
+    text-overflow: clip;
+    white-space: normal;
   }
 
   .gallery-source-links.is-button-row {
     display: flex;
     flex-direction: row;
-    flex-wrap: nowrap;
+    flex-wrap: wrap;
     justify-content: flex-start;
     justify-items: start;
     align-items: flex-start;
     gap: 8px;
+    width: 100%;
+    min-width: 0;
     max-width: 100%;
     margin-left: 0;
-    overflow-x: auto;
-    padding: 2px;
-    -webkit-overflow-scrolling: touch;
+    overflow-x: visible;
+    padding: 2px 0;
   }
 
   .gallery-source-links.is-button-row a {
-    display: inline-flex;
-    flex: 0 0 auto;
-    align-items: baseline;
-    gap: 6px;
-    width: auto;
-    max-width: none;
+    display: inline-grid;
+    flex: 1 1 min(240px, 100%);
+    align-items: start;
+    gap: 3px;
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
     justify-content: flex-start;
     justify-items: start;
-    overflow: hidden;
+    overflow: visible;
     text-align: left;
-    white-space: nowrap;
+    white-space: normal;
   }
 
   .gallery-source-links.is-button-row .source-title-zh,
   .gallery-source-links.is-button-row .source-title-en {
-    display: inline;
+    display: block;
+    width: 100%;
     min-width: 0;
-    max-width: none;
-    overflow: hidden;
+    max-width: 100%;
+    overflow: visible;
+    overflow-wrap: anywhere;
     text-align: left;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    text-overflow: clip;
+    white-space: normal;
   }
 
   .gallery-slide {
@@ -2141,6 +2217,7 @@ body {
   }
 
   .gallery-image-wrap img {
+    max-width: 100%;
     max-height: calc(100svh - 230px);
   }
 
@@ -2259,6 +2336,14 @@ body {
     justify-items: start;
     padding-bottom: 0;
     text-align: left;
+  }
+
+  .exhibition-gallery-page .gallery-slide figcaption strong,
+  .exhibition-gallery-page .gallery-slide figcaption em,
+  .exhibition-gallery-page .gallery-slide figcaption span,
+  .exhibition-gallery-page .gallery-slide figcaption small {
+    max-width: 100%;
+    overflow-wrap: anywhere;
   }
 }
 
