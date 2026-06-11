@@ -2090,22 +2090,24 @@ body {
 
   .gallery-source-links > a,
   .gallery-source-links > span {
-    display: inline-flex;
-    align-items: baseline;
-    gap: 6px;
+    display: inline-grid;
+    align-items: start;
+    gap: 3px;
     max-width: min(620px, calc(100vw - 70px));
-    overflow: hidden;
-    white-space: nowrap;
+    overflow: visible;
+    white-space: normal;
   }
 
   .gallery-source-links > a .source-title-zh,
   .gallery-source-links > a .source-title-en {
-    display: inline;
+    display: block;
+    width: 100%;
     min-width: 0;
-    max-width: none;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    max-width: 100%;
+    overflow: visible;
+    overflow-wrap: anywhere;
+    text-overflow: clip;
+    white-space: normal;
   }
 
   .gallery-source-links.is-button-row {
@@ -2125,29 +2127,31 @@ body {
   }
 
   .gallery-source-links.is-button-row a {
-    display: inline-flex;
+    display: inline-grid;
     flex: 1 1 min(240px, 100%);
-    align-items: baseline;
-    gap: 6px;
+    align-items: start;
+    gap: 3px;
     width: 100%;
     min-width: 0;
     max-width: 100%;
     justify-content: flex-start;
     justify-items: start;
-    overflow: hidden;
+    overflow: visible;
     text-align: left;
-    white-space: nowrap;
+    white-space: normal;
   }
 
   .gallery-source-links.is-button-row .source-title-zh,
   .gallery-source-links.is-button-row .source-title-en {
-    display: inline;
+    display: block;
+    width: 100%;
     min-width: 0;
-    max-width: none;
-    overflow: hidden;
+    max-width: 100%;
+    overflow: visible;
+    overflow-wrap: anywhere;
     text-align: left;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    text-overflow: clip;
+    white-space: normal;
   }
 
   .gallery-slide {
