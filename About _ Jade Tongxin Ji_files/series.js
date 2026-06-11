@@ -307,6 +307,55 @@
     videoData.embedSrc ? createVideoEmbed(videoData) : createVideoElement(videoData)
   );
 
+  const renderVideoCollaborator = (collaborator) => {
+    if (!collaborator) return null;
+
+    const block = make("aside", "series-video-collaborator");
+    if (collaborator.image) {
+      const media = make("figure", "series-video-collaborator-media");
+      const image = document.createElement("img");
+      image.src = collaborator.image;
+      image.alt = collaborator.imageAlt || collaborator.name || "Collaborating artist";
+      image.loading = "lazy";
+      media.append(image);
+      block.append(media);
+    }
+
+    const content = make("div", "series-video-collaborator-content");
+    content.append(
+      make(
+        "small",
+        "series-video-collaborator-kicker",
+        `${collaborator.titleZh || "合作艺术家"} / ${collaborator.titleEn || "Collaborating Artist"}`
+      ),
+      make("h4", "", collaborator.name || "")
+    );
+
+    const bioZh = collaborator.bioZh || [];
+    const bioEn = collaborator.bioEn || [];
+    if (bioZh.length || bioEn.length) {
+      const bio = make("div", "series-video-collaborator-bio");
+      if (bioZh.length) {
+        bio.append(renderStatementGroup(bioZh, "statement-zh"));
+      }
+      if (bioEn.length) {
+        bio.append(renderStatementGroup(bioEn, "statement-en"));
+      }
+      content.append(bio);
+    }
+
+    if (collaborator.instagram) {
+      const link = make("a", "series-video-collaborator-link", "Instagram / @akerlund_lars");
+      link.href = collaborator.instagram;
+      link.target = "_blank";
+      link.rel = "noreferrer";
+      content.append(link);
+    }
+
+    block.append(content);
+    return block;
+  };
+
   const renderVideoSection = (videoData) => {
     if (!videoData) return null;
     const videoItems = Array.isArray(videoData.items)
@@ -378,6 +427,10 @@
         videoGrid.append(figure);
       });
       block.append(videoGrid);
+    }
+    const collaborator = renderVideoCollaborator(videoData.collaborator);
+    if (collaborator) {
+      block.append(collaborator);
     }
     return block;
   };

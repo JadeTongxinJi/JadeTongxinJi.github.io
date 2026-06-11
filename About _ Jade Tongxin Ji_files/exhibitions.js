@@ -146,7 +146,7 @@
         ...current.images.map((imageItem, index) => {
           const src = typeof imageItem === "string" ? imageItem : imageItem.src;
           const captionZh = typeof imageItem === "string" ? "展览现场" : imageItem.captionZh || "展览现场";
-          const captionEn = typeof imageItem === "string" ? "Installation View" : imageItem.captionEn || "Installation View";
+          const captionEn = typeof imageItem === "string" ? "Exhibition Site" : imageItem.captionEn || "Exhibition Site";
           const figure = make("figure", "gallery-slide");
           if (index === 0) {
             figure.classList.add("is-active");

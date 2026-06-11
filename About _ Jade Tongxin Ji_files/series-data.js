@@ -36,6 +36,22 @@ window.jadeSeries = (() => {
         descriptionEn: [
           `This video work comes from a collaboration with Lars Åkerlund, an electronic musician living across from my window. Through rooms, windows, light, and sound, we found an indirect connection. Distance, misreading, translation, and the communication that still takes place when complete closeness is impossible.`,
         ],
+        collaborator: {
+          titleZh: "合作艺术家",
+          titleEn: "Collaborating Artist",
+          name: "Lars Åkerlund",
+          image: `${dandelionParis}/collaboration/lars-akerlund.png`,
+          imageAlt: "Lars Åkerlund biography and performance image",
+          instagram: "https://www.instagram.com/akerlund_lars/",
+          bioZh: [
+            `Lars Åkerlund 是一位音乐人、表演者和作曲家，使用电脑、合成器、模拟声音与田野录音工作，创作扎根于质感、噪音与转化。`,
+            `自 1980 年代以来，他以个人创作和跨领域合作的方式与不同学科的音乐人与艺术家工作。近十年来，他主要专注于作曲、现场电子、巡演、合作以及在不同唱片厂牌发表作品。`,
+          ],
+          bioEn: [
+            `Lars Åkerlund is a musician, performer and composer working with computers, synthesizers, analog sound and field recordings, rooted in texture, noise and transformation.`,
+            `Since the 1980s he has worked both solo and in collaboration with musicians and artists from various disciplines. Over the past ten years Åkerlund has primarily focused on composition, live electronics, touring, collaborations and the publication of works on different record labels.`,
+          ],
+        },
       },
       statementZh: [
         `在巴黎的创作过程中，我开始意识到记忆的流逝，以及摄影在其中所能承担的保存作用。`,
