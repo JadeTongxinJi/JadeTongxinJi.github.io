@@ -1216,6 +1216,8 @@ body {
   column-gap: clamp(28px, 5vw, 84px);
   row-gap: clamp(16px, 2.6vw, 34px);
   align-items: start;
+  border-bottom: 0;
+  padding-bottom: 0;
 }
 
 .series-gallery-page .gallery-back {
