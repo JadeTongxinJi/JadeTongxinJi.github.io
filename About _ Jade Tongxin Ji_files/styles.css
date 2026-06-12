@@ -1351,6 +1351,12 @@ body {
   padding-top: clamp(26px, 4.5vw, 56px);
 }
 
+.series-viewer > .series-gallery-section:first-child,
+.series-viewer > .series-thumbnail-section:first-child {
+  border-top: 1px solid rgba(245, 242, 236, 0.24);
+  padding-top: clamp(26px, 4.5vw, 56px);
+}
+
 .series-section-header {
   display: flex;
   justify-content: space-between;
