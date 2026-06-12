@@ -161,10 +161,8 @@
 
     let activeIndex = 0;
     let snapTimer = 0;
-    let wheelDelta = 0;
     let wheelGestureTimer = 0;
-    let wheelDirection = 0;
-    let lastWheelSlideAt = 0;
+    let isWheelScrolling = false;
     const clampIndex = (index) => Math.max(0, Math.min(index, imageTotal - 1));
     const getSlideWidth = () => Math.max(track.clientWidth || 1, 1);
     const getNearestIndex = () => clampIndex(Math.round(track.scrollLeft / getSlideWidth()));
@@ -231,41 +229,40 @@
       window.clearTimeout(snapTimer);
       snapTimer = window.setTimeout(() => {
         scrollToIndex(getNearestIndex(), "smooth");
-      }, 120);
+      }, 180);
+    };
+    const setWheelScrollMode = (enabled) => {
+      isWheelScrolling = enabled;
+      track.style.scrollSnapType = enabled ? "none" : "";
+      track.style.scrollBehavior = enabled ? "auto" : "";
     };
     const handleTrackWheel = (event) => {
       if (imageTotal <= 1 || event.ctrlKey) return;
       if (Math.abs(event.deltaX) <= Math.abs(event.deltaY) || Math.abs(event.deltaX) < 1) return;
 
       event.preventDefault();
-      const direction = event.deltaX > 0 ? 1 : -1;
-      const now = Date.now();
-      if (wheelDirection && wheelDirection !== direction) {
-        wheelDelta = 0;
-        lastWheelSlideAt = 0;
-      }
-      wheelDirection = direction;
-      wheelDelta += Math.abs(event.deltaX);
+      setWheelScrollMode(true);
+      window.clearTimeout(snapTimer);
       window.clearTimeout(wheelGestureTimer);
 
-      if (wheelDelta >= 40 && now - lastWheelSlideAt >= 480) {
-        wheelDelta = 0;
-        lastWheelSlideAt = now;
-        scrollToIndex(activeIndex + direction);
-      }
+      const maxStep = Math.max(36, getSlideWidth() * 0.18);
+      const delta = Math.max(-maxStep, Math.min(event.deltaX * 0.58, maxStep));
+      track.scrollLeft += delta;
+      syncFromScroll();
 
       wheelGestureTimer = window.setTimeout(() => {
-        wheelDelta = 0;
-        wheelDirection = 0;
-        lastWheelSlideAt = 0;
-      }, 220);
+        setWheelScrollMode(false);
+        scrollToIndex(getNearestIndex(), "smooth");
+      }, 180);
     };
 
     prev.addEventListener("click", () => scrollToIndex(activeIndex - 1));
     next.addEventListener("click", () => scrollToIndex(activeIndex + 1));
     track.addEventListener("scroll", () => {
       syncFromScroll();
-      settleToNearestSlide();
+      if (!isWheelScrolling) {
+        settleToNearestSlide();
+      }
     }, { passive: true });
     track.addEventListener("wheel", handleTrackWheel, { passive: false });
     window.addEventListener("resize", () => {
