@@ -161,6 +161,9 @@
 
     let activeIndex = 0;
     let snapTimer = 0;
+    let wheelDelta = 0;
+    let wheelResetTimer = 0;
+    let wheelLockTimer = 0;
     const clampIndex = (index) => Math.max(0, Math.min(index, imageTotal - 1));
     const getSlideWidth = () => Math.max(track.clientWidth || 1, 1);
     const getNearestIndex = () => clampIndex(Math.round(track.scrollLeft / getSlideWidth()));
@@ -229,6 +232,35 @@
         scrollToIndex(getNearestIndex(), "smooth");
       }, 120);
     };
+    const handleTrackWheel = (event) => {
+      if (imageTotal <= 1 || event.ctrlKey) return;
+      if (Math.abs(event.deltaX) <= Math.abs(event.deltaY) || Math.abs(event.deltaX) < 1) return;
+
+      event.preventDefault();
+      wheelDelta += event.deltaX;
+      window.clearTimeout(wheelResetTimer);
+
+      if (wheelLockTimer) {
+        wheelResetTimer = window.setTimeout(() => {
+          wheelDelta = 0;
+        }, 180);
+        return;
+      }
+
+      if (Math.abs(wheelDelta) >= 32) {
+        const direction = wheelDelta > 0 ? 1 : -1;
+        wheelDelta = 0;
+        scrollToIndex(activeIndex + direction);
+        wheelLockTimer = window.setTimeout(() => {
+          wheelLockTimer = 0;
+        }, 360);
+        return;
+      }
+
+      wheelResetTimer = window.setTimeout(() => {
+        wheelDelta = 0;
+      }, 180);
+    };
 
     prev.addEventListener("click", () => scrollToIndex(activeIndex - 1));
     next.addEventListener("click", () => scrollToIndex(activeIndex + 1));
@@ -236,6 +268,7 @@
       syncFromScroll();
       settleToNearestSlide();
     }, { passive: true });
+    track.addEventListener("wheel", handleTrackWheel, { passive: false });
     window.addEventListener("resize", () => {
       scrollToIndex(activeIndex, "auto");
     });

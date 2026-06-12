@@ -81,6 +81,9 @@
   let current = null;
   let activeIndex = 0;
   let snapTimer = 0;
+  let wheelDelta = 0;
+  let wheelResetTimer = 0;
+  let wheelLockTimer = 0;
 
   const getCurrent = () => {
     const currentId = decodeURIComponent(window.location.hash.replace("#", "")) || exhibitions[0]?.id;
@@ -144,6 +147,36 @@
     snapTimer = window.setTimeout(() => {
       scrollToIndex(getNearestIndex(), "smooth");
     }, 120);
+  };
+
+  const handleTrackWheel = (event) => {
+    if (!track || !current || current.images.length <= 1 || event.ctrlKey) return;
+    if (Math.abs(event.deltaX) <= Math.abs(event.deltaY) || Math.abs(event.deltaX) < 1) return;
+
+    event.preventDefault();
+    wheelDelta += event.deltaX;
+    window.clearTimeout(wheelResetTimer);
+
+    if (wheelLockTimer) {
+      wheelResetTimer = window.setTimeout(() => {
+        wheelDelta = 0;
+      }, 180);
+      return;
+    }
+
+    if (Math.abs(wheelDelta) >= 32) {
+      const direction = wheelDelta > 0 ? 1 : -1;
+      wheelDelta = 0;
+      scrollToIndex(activeIndex + direction);
+      wheelLockTimer = window.setTimeout(() => {
+        wheelLockTimer = 0;
+      }, 360);
+      return;
+    }
+
+    wheelResetTimer = window.setTimeout(() => {
+      wheelDelta = 0;
+    }, 180);
   };
 
   const renderGallery = () => {
@@ -246,6 +279,7 @@
     syncFromScroll();
     settleToNearestSlide();
   }, { passive: true });
+  track?.addEventListener("wheel", handleTrackWheel, { passive: false });
 
   window.addEventListener("resize", () => {
     scrollToIndex(activeIndex, "auto");
