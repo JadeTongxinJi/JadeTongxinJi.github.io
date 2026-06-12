@@ -13,6 +13,7 @@
   };
 
   const galleryHref = (item) => `series-gallery.html#${item.id}`;
+  const exhibitionHref = (item) => `exhibition-gallery.html#${item.id}`;
   const seriesByRecent = [...series].sort((a, b) => Number(b.year) - Number(a.year));
   const menuLabelZh = (item) => `${item.year}-${item.titleZh}`;
   const menuLabelEn = (item) => `${item.year}-${item.titleEn}`;
@@ -662,28 +663,13 @@
       row.append(make("span", "series-exhibition-year", item.year));
 
       const body = make("div", "series-exhibition-body");
-      const titleLine = make("div", "series-exhibition-title");
+      const titleLine = make("a", "series-exhibition-title series-exhibition-link");
+      titleLine.href = exhibitionHref(item);
       titleLine.append(
         make("strong", "", item.titleZh),
         make("em", "", item.titleEn)
       );
       body.append(titleLine);
-      body.append(make("span", "series-exhibition-venue", `${item.venueZh} / ${item.venueEn}`));
-
-      if (item.sources?.length) {
-        const links = make("div", "series-exhibition-links");
-        item.sources.forEach((source) => {
-          const sourceLink = make("a", "", source.label);
-          sourceLink.href = source.href;
-          sourceLink.target = "_blank";
-          sourceLink.rel = "noreferrer";
-          if (source.labelEn && source.labelEn !== source.label) {
-            sourceLink.setAttribute("aria-label", `${source.label} / ${source.labelEn}`);
-          }
-          links.append(sourceLink);
-        });
-        body.append(links);
-      }
 
       row.append(body);
       list.append(row);
