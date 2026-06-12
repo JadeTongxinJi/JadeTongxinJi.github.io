@@ -1284,7 +1284,6 @@ body {
   column-gap: clamp(42px, 7vw, 110px);
   row-gap: 18px;
   min-height: 0;
-  border-top: 1px solid rgba(245, 242, 236, 0.16);
   border-bottom: 1px solid rgba(245, 242, 236, 0.16);
   padding: clamp(24px, 2.4vw, 34px) 0 clamp(26px, 2.6vw, 38px);
   margin-bottom: 18px;
