@@ -77,13 +77,25 @@
   const sourcesTitle = document.querySelector("[data-gallery-sources-title]");
   const sources = document.querySelector("[data-gallery-sources]");
   const track = document.querySelector("[data-gallery-track]");
+  const toolbar = document.querySelector(".gallery-toolbar");
   const count = document.querySelector("[data-gallery-count]");
   let current = null;
   let activeIndex = 0;
+  let alignTimer = 0;
   let snapTimer = 0;
   let wheelDelta = 0;
+  let wheelDirection = 0;
   let wheelGestureTimer = 0;
   let wheelGestureMoved = false;
+  let wheelLastTime = 0;
+  let wheelLastMagnitude = 0;
+  let touchStartX = 0;
+  let touchStartY = 0;
+  let touchLastX = 0;
+  let touchLastY = 0;
+  let touchStartIndex = 0;
+  let touchTracking = false;
+  let touchIsHorizontal = false;
 
   const getCurrent = () => {
     const currentId = decodeURIComponent(window.location.hash.replace("#", "")) || exhibitions[0]?.id;
@@ -104,9 +116,26 @@
 
   const getSlideWidth = () => Math.max(track?.clientWidth || 1, 1);
 
+  const getSlideLeft = (index) => {
+    if (!track) return index * getSlideWidth();
+    const slide = track.querySelectorAll(".gallery-slide")[clampIndex(index)];
+    if (!slide) return index * getSlideWidth();
+    return track.scrollLeft + slide.getBoundingClientRect().left - track.getBoundingClientRect().left;
+  };
+
   const getNearestIndex = () => {
     if (!track || !current) return 0;
-    return clampIndex(Math.round(track.scrollLeft / getSlideWidth()));
+    let nearestIndex = 0;
+    let nearestDistance = Infinity;
+    track.querySelectorAll(".gallery-slide").forEach((slide, index) => {
+      const slideLeft = track.scrollLeft + slide.getBoundingClientRect().left - track.getBoundingClientRect().left;
+      const distance = Math.abs(track.scrollLeft - slideLeft);
+      if (distance < nearestDistance) {
+        nearestDistance = distance;
+        nearestIndex = index;
+      }
+    });
+    return clampIndex(nearestIndex);
   };
 
   const updateCount = () => {
@@ -133,20 +162,29 @@
 
   const scrollToIndex = (index, behavior = "smooth") => {
     if (!track || !current) return;
+    window.clearTimeout(alignTimer);
     activeIndex = clampIndex(index);
     setActiveSlide();
     updateCount();
     track.scrollTo({
-      left: activeIndex * getSlideWidth(),
+      left: getSlideLeft(activeIndex),
       behavior,
     });
+    if (behavior === "smooth") {
+      alignTimer = window.setTimeout(() => {
+        track.scrollTo({
+          left: getSlideLeft(activeIndex),
+          behavior: "auto",
+        });
+      }, 360);
+    }
   };
 
   const settleToNearestSlide = () => {
     window.clearTimeout(snapTimer);
     snapTimer = window.setTimeout(() => {
       scrollToIndex(getNearestIndex(), "smooth");
-    }, 120);
+    }, 140);
   };
 
   const handleTrackWheel = (event) => {
@@ -154,30 +192,115 @@
     if (Math.abs(event.deltaX) <= Math.abs(event.deltaY) || Math.abs(event.deltaX) < 1) return;
 
     event.preventDefault();
-    wheelDelta += event.deltaX;
-    window.clearTimeout(wheelGestureTimer);
-
-    if (!wheelGestureMoved && Math.abs(wheelDelta) >= 40) {
-      const direction = wheelDelta > 0 ? 1 : -1;
+    window.clearTimeout(snapTimer);
+    const direction = event.deltaX > 0 ? 1 : -1;
+    const magnitude = Math.abs(event.deltaX);
+    const now = event.timeStamp || Date.now();
+    const elapsed = wheelLastTime ? now - wheelLastTime : Infinity;
+    const startsNewWheelGesture = wheelGestureMoved && (
+      (direction !== wheelDirection && magnitude >= 12) ||
+      (elapsed > 110 && magnitude >= 32) ||
+      (elapsed > 60 && magnitude >= Math.max(16, wheelLastMagnitude * 1.8))
+    );
+    if (startsNewWheelGesture) {
+      wheelGestureMoved = false;
       wheelDelta = 0;
-      wheelGestureMoved = true;
-      scrollToIndex(activeIndex + direction);
+    }
+    if (!wheelGestureMoved && wheelDirection && wheelDirection !== direction) {
+      wheelDelta = 0;
+    }
+    wheelDirection = direction;
+    wheelLastTime = now;
+    wheelLastMagnitude = magnitude;
+
+    window.clearTimeout(wheelGestureTimer);
+    const resetWheelGesture = () => {
+      wheelGestureMoved = false;
+      wheelDirection = 0;
+      wheelDelta = 0;
+      wheelLastTime = 0;
+      wheelLastMagnitude = 0;
+    };
+    const scheduleWheelReset = () => {
+      wheelGestureTimer = window.setTimeout(resetWheelGesture, 220);
+    };
+
+    if (wheelGestureMoved) {
+      scheduleWheelReset();
+      return;
     }
 
-    wheelGestureTimer = window.setTimeout(() => {
-      wheelDelta = 0;
-      wheelGestureMoved = false;
-    }, 240);
+    wheelDelta += magnitude;
+    if (wheelDelta < 30) {
+      scheduleWheelReset();
+      return;
+    }
+
+    wheelDelta = 0;
+    wheelGestureMoved = true;
+    scrollToIndex(activeIndex + direction);
+    scheduleWheelReset();
+  };
+
+  const resetTouchGesture = () => {
+    touchTracking = false;
+    touchIsHorizontal = false;
+  };
+
+  const handlePointerDown = (event) => {
+    if (!track || !current || current.images.length <= 1 || event.pointerType === "mouse") return;
+    touchStartX = event.clientX;
+    touchStartY = event.clientY;
+    touchLastX = event.clientX;
+    touchLastY = event.clientY;
+    touchStartIndex = activeIndex;
+    touchTracking = true;
+    touchIsHorizontal = false;
+    window.clearTimeout(snapTimer);
+  };
+
+  const handlePointerMove = (event) => {
+    if (!touchTracking || !track) return;
+    touchLastX = event.clientX;
+    touchLastY = event.clientY;
+    const deltaX = touchLastX - touchStartX;
+    const deltaY = touchLastY - touchStartY;
+    if (!touchIsHorizontal && Math.abs(deltaX) > 8 && Math.abs(deltaX) > Math.abs(deltaY) + 6) {
+      touchIsHorizontal = true;
+      try {
+        track.setPointerCapture(event.pointerId);
+      } catch (error) {
+        // Pointer capture is best-effort; the swipe still resolves on pointerup.
+      }
+    }
+    if (touchIsHorizontal) {
+      event.preventDefault();
+    }
+  };
+
+  const handlePointerEnd = () => {
+    if (!touchTracking || !current) return;
+    const deltaX = touchLastX - touchStartX;
+    const deltaY = touchLastY - touchStartY;
+    const shouldMove = touchIsHorizontal && Math.abs(deltaX) > 34 && Math.abs(deltaX) > Math.abs(deltaY);
+    const nextIndex = shouldMove ? touchStartIndex + (deltaX < 0 ? 1 : -1) : activeIndex;
+    resetTouchGesture();
+    scrollToIndex(nextIndex);
   };
 
   const renderGallery = () => {
     current = getCurrent();
     if (!current) return;
+    const hasMultipleImages = current.images.length > 1;
 
     document.title = `${current.titleEn} / Jade Tongxin Ji`;
     if (titleZh) titleZh.textContent = current.titleZh;
     if (titleEn) titleEn.textContent = current.titleEn;
     if (meta) meta.textContent = `${current.year} / ${current.venueZh}`;
+    if (toolbar) {
+      toolbar.hidden = !hasMultipleImages;
+      toolbar.style.display = hasMultipleImages ? "" : "none";
+    }
 
     if (facts) {
       facts.replaceChildren();
@@ -239,9 +362,11 @@
           caption.append(
             make("strong", "", captionZh),
             make("em", "", captionEn),
-            make("span", "", current.year),
-            make("small", "", `${String(index + 1).padStart(2, "0")} / ${String(current.images.length).padStart(2, "0")}`)
+            make("span", "", current.year)
           );
+          if (hasMultipleImages) {
+            caption.append(make("small", "", `${String(index + 1).padStart(2, "0")} / ${String(current.images.length).padStart(2, "0")}`));
+          }
           figure.append(imageWrap, caption);
           return figure;
         })
@@ -268,9 +393,18 @@
 
   track?.addEventListener("scroll", () => {
     syncFromScroll();
-    settleToNearestSlide();
+    if (!wheelGestureMoved && !touchTracking) {
+      settleToNearestSlide();
+    }
   }, { passive: true });
   track?.addEventListener("wheel", handleTrackWheel, { passive: false });
+  track?.addEventListener("pointerdown", handlePointerDown);
+  track?.addEventListener("pointermove", handlePointerMove, { passive: false });
+  track?.addEventListener("pointerup", handlePointerEnd);
+  track?.addEventListener("pointercancel", () => {
+    resetTouchGesture();
+    scrollToIndex(activeIndex);
+  });
 
   window.addEventListener("resize", () => {
     scrollToIndex(activeIndex, "auto");
