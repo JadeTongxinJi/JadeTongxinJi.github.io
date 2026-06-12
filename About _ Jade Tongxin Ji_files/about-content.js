@@ -1,6 +1,6 @@
 // 这里是 About 页的可编辑内容。
 // 以后如果要改简介、学历、导师、驻地、展览或联系方式，只需要改这个文件里引号中的文字。
-// 每条展览按 { year: "年份", zh: "中文", en: "English" } 的格式添加或修改。
+// 每条展览按 { year: "年份", zh: "中文", en: "English", href: "可选跳转链接" } 的格式添加或修改。
 // 学历、导师、驻地按 { zh: "中文", en: "English" } 的格式添加或修改。
 
 window.jadeAboutContent = {
@@ -74,6 +74,7 @@ window.jadeAboutContent = {
       year: "2026",
       zh: "《地丁并未决定》个展",
       en: "Hesitation, solo exhibition",
+      href: "series-gallery.html?series=hesitation#exhibitions",
     },
     {
       year: "2025",
@@ -84,6 +85,7 @@ window.jadeAboutContent = {
       year: "2025",
       zh: "第六届国际摄影研讨会暨2025丽水摄影节院校组，参展",
       en: "6th International Photography Symposium and 2025 Lishui Photography Festival, Academy Section, exhibited",
+      href: "series-gallery.html?series=epitaph#exhibitions",
     },
     {
       year: "2025",
@@ -99,6 +101,7 @@ window.jadeAboutContent = {
       year: "2024",
       zh: "A Frame 浓缩城市计划，参展",
       en: "A Frame Condensed City Project, exhibited",
+      href: "series-gallery.html?series=new-year-elevator#exhibitions",
     },
     {
       year: "2024",
@@ -109,16 +112,19 @@ window.jadeAboutContent = {
       year: "2024",
       zh: "第四届“未来·星丛”奖美术与书法优秀作品展，入选/参展",
       en: "4th Future Star Cluster Award Art and Calligraphy Exhibition, selected and exhibited",
+      href: "series-gallery.html?series=epitaph#exhibitions",
     },
     {
       year: "2024",
       zh: "第24届平遥国际摄影大展，院校优秀奖",
       en: "24th Pingyao International Photography Festival, Outstanding Academy Award",
+      href: "series-gallery.html?series=epitaph#exhibitions",
     },
     {
       year: "2024",
       zh: "法国阿尔勒 Fisheye “10sur10” 展览，参展",
       en: "Fisheye “10sur10” Exhibition, Arles, France, exhibited",
+      href: "series-gallery.html?series=epitaph#exhibitions",
     },
     {
       year: "2024",
@@ -129,6 +135,7 @@ window.jadeAboutContent = {
       year: "2024",
       zh: "2024届“无界西美”西安美术学院毕业季展览，一等奖",
       en: "2024 Wujie Ximei Graduation Season Exhibition, Xi'an Academy of Fine Arts, First Prize",
+      href: "series-gallery.html?series=epitaph#exhibitions",
     },
     {
       year: "2023",

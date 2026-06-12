@@ -1,5 +1,6 @@
 (() => {
   const series = window.jadeSeries || [];
+  const exhibitions = window.jadeExhibitions || [];
   const make = (tag, className, text) => {
     const element = document.createElement(tag);
     if (className) {
@@ -76,9 +77,26 @@
   const sectionsRoot = document.querySelector("[data-series-sections]");
   let current = null;
 
+  const getRoute = () => {
+    const params = new URLSearchParams(window.location.search);
+    const querySeries = params.get("series");
+    const hash = decodeURIComponent(window.location.hash.replace("#", ""));
+    if (querySeries) {
+      return {
+        seriesId: querySeries,
+        anchor: hash,
+      };
+    }
+    const [seriesId, anchor = ""] = hash.split("/");
+    return {
+      seriesId: seriesId || series[0]?.id,
+      anchor,
+    };
+  };
+
   const getCurrent = () => {
-    const currentId = decodeURIComponent(window.location.hash.replace("#", "")) || series[0]?.id;
-    return series.find((item) => item.id === currentId) || series[0];
+    const route = getRoute();
+    return series.find((item) => item.id === route.seriesId) || series[0];
   };
 
   const lockImageTouch = (target) => {
@@ -618,6 +636,77 @@
     return group;
   };
 
+  const getSeriesExhibitions = (seriesId) => exhibitions
+    .filter((item) => {
+      const ids = [item.seriesId, ...(item.seriesIds || [])].filter(Boolean);
+      return ids.includes(seriesId);
+    })
+    .sort((a, b) => Number(b.year) - Number(a.year));
+
+  const renderSeriesExhibitions = () => {
+    const relatedExhibitions = getSeriesExhibitions(current.id);
+    if (!relatedExhibitions.length) return null;
+
+    const block = make("section", "series-exhibitions");
+    block.id = "exhibitions";
+    block.setAttribute("aria-label", "Exhibition history");
+
+    const header = make("div", "series-section-header series-exhibitions-header");
+    const title = make("div", "series-section-title");
+    title.append(make("h3", "", "展览经历"), make("small", "", "Exhibitions"));
+    header.append(title);
+
+    const list = make("ol", "series-exhibitions-list");
+    relatedExhibitions.forEach((item) => {
+      const row = make("li", "series-exhibition-item");
+      row.append(make("span", "series-exhibition-year", item.year));
+
+      const body = make("div", "series-exhibition-body");
+      const titleLine = make("div", "series-exhibition-title");
+      titleLine.append(
+        make("strong", "", item.titleZh),
+        make("em", "", item.titleEn)
+      );
+      body.append(titleLine);
+      body.append(make("span", "series-exhibition-venue", `${item.venueZh} / ${item.venueEn}`));
+
+      if (item.sources?.length) {
+        const links = make("div", "series-exhibition-links");
+        item.sources.forEach((source) => {
+          const sourceLink = make("a", "", source.label);
+          sourceLink.href = source.href;
+          sourceLink.target = "_blank";
+          sourceLink.rel = "noreferrer";
+          if (source.labelEn && source.labelEn !== source.label) {
+            sourceLink.setAttribute("aria-label", `${source.label} / ${source.labelEn}`);
+          }
+          links.append(sourceLink);
+        });
+        body.append(links);
+      }
+
+      row.append(body);
+      list.append(row);
+    });
+
+    block.append(header, list);
+    return block;
+  };
+
+  const scrollToRouteAnchor = () => {
+    const { anchor } = getRoute();
+    if (!anchor) return;
+    const target = document.getElementById(anchor);
+    if (!target) return;
+    const scroll = () => {
+      target.scrollIntoView({ block: "start" });
+    };
+    window.requestAnimationFrame(scroll);
+    window.setTimeout(scroll, 260);
+    window.setTimeout(scroll, 900);
+    window.setTimeout(scroll, 1800);
+  };
+
   const renderGallery = () => {
     current = getCurrent();
     if (!current) return;
@@ -655,7 +744,12 @@
       const renderedSections = current.sections.map(renderSection);
       const videoSections = [current.video, current.videos].map(renderVideoSection).filter(Boolean);
       renderedSections.push(...videoSections);
+      const exhibitionsSection = renderSeriesExhibitions();
+      if (exhibitionsSection) {
+        renderedSections.push(exhibitionsSection);
+      }
       sectionsRoot.replaceChildren(...renderedSections);
+      scrollToRouteAnchor();
     }
   };
 

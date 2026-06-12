@@ -1,6 +1,8 @@
+// Use seriesId to place each exhibition record inside its related Series detail page.
 window.jadeExhibitions = [
   {
     id: "dandelion-paris-cite",
+    seriesId: "dandelion-has-not-decided",
     year: "2026",
     titleZh: "《地丁》- 巴黎国际艺术城",
     titleEn: "The Dandelion Has Not Decided - Cité Internationale des Arts",
@@ -34,6 +36,7 @@ window.jadeExhibitions = [
   },
   {
     id: "dandelion-caijiapo",
+    seriesId: "hesitation",
     year: "2026",
     titleZh: "《地丁并未决定》- 蔡家坡村村史馆",
     titleEn: "Hesitation - Caijiapo Village History Museum",
@@ -76,6 +79,7 @@ window.jadeExhibitions = [
   },
   {
     id: "yishu-arles",
+    seriesId: "epitaph",
     year: "2024",
     titleZh: "《疑树》- 法国阿尔勒",
     titleEn: "Epitaph - Arles, France",
@@ -96,6 +100,7 @@ window.jadeExhibitions = [
   },
   {
     id: "yishu-lishui",
+    seriesId: "epitaph",
     year: "2025",
     titleZh: "《疑树》- 丽水摄影节",
     titleEn: "Epitaph - Lishui Photography Festival",
@@ -120,6 +125,7 @@ window.jadeExhibitions = [
   },
   {
     id: "new-year-elevator",
+    seriesId: "new-year-elevator",
     year: "2024",
     titleZh: "《新年电梯》- 浓缩城市计划",
     titleEn: "New Year Elevator - Condensed City Project",
@@ -160,6 +166,7 @@ window.jadeExhibitions = [
   },
   {
     id: "yishu-pingyao",
+    seriesId: "epitaph",
     year: "2024",
     titleZh: "《疑树》- 平遥国际摄影大展",
     titleEn: "Epitaph - Pingyao International Photography Festival",
@@ -184,6 +191,7 @@ window.jadeExhibitions = [
   },
   {
     id: "yishu-sichuan",
+    seriesId: "epitaph",
     year: "2024",
     titleZh: "《疑树》- 四川美术学院美术馆",
     titleEn: "Epitaph - Sichuan Fine Arts Institute Art Museum",
@@ -207,6 +215,7 @@ window.jadeExhibitions = [
   },
   {
     id: "yishu-xian",
+    seriesId: "epitaph",
     year: "2024",
     titleZh: "《疑树》- 西安美术馆",
     titleEn: "Epitaph - Xi'an Art Museum",
