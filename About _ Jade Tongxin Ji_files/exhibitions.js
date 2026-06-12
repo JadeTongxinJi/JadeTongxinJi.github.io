@@ -81,9 +81,12 @@
   const count = document.querySelector("[data-gallery-count]");
   let current = null;
   let activeIndex = 0;
+  let alignTimer = 0;
   let snapTimer = 0;
+  let wheelDelta = 0;
+  let wheelDirection = 0;
   let wheelGestureTimer = 0;
-  let isWheelScrolling = false;
+  let isWheelAnimating = false;
 
   const getCurrent = () => {
     const currentId = decodeURIComponent(window.location.hash.replace("#", "")) || exhibitions[0]?.id;
@@ -104,9 +107,26 @@
 
   const getSlideWidth = () => Math.max(track?.clientWidth || 1, 1);
 
+  const getSlideLeft = (index) => {
+    if (!track) return index * getSlideWidth();
+    const slide = track.querySelectorAll(".gallery-slide")[clampIndex(index)];
+    if (!slide) return index * getSlideWidth();
+    return track.scrollLeft + slide.getBoundingClientRect().left - track.getBoundingClientRect().left;
+  };
+
   const getNearestIndex = () => {
     if (!track || !current) return 0;
-    return clampIndex(Math.round(track.scrollLeft / getSlideWidth()));
+    let nearestIndex = 0;
+    let nearestDistance = Infinity;
+    track.querySelectorAll(".gallery-slide").forEach((slide, index) => {
+      const slideLeft = track.scrollLeft + slide.getBoundingClientRect().left - track.getBoundingClientRect().left;
+      const distance = Math.abs(track.scrollLeft - slideLeft);
+      if (distance < nearestDistance) {
+        nearestDistance = distance;
+        nearestIndex = index;
+      }
+    });
+    return clampIndex(nearestIndex);
   };
 
   const updateCount = () => {
@@ -133,27 +153,29 @@
 
   const scrollToIndex = (index, behavior = "smooth") => {
     if (!track || !current) return;
+    window.clearTimeout(alignTimer);
     activeIndex = clampIndex(index);
     setActiveSlide();
     updateCount();
     track.scrollTo({
-      left: activeIndex * getSlideWidth(),
+      left: getSlideLeft(activeIndex),
       behavior,
     });
+    if (behavior === "smooth") {
+      alignTimer = window.setTimeout(() => {
+        track.scrollTo({
+          left: getSlideLeft(activeIndex),
+          behavior: "auto",
+        });
+      }, 360);
+    }
   };
 
   const settleToNearestSlide = () => {
     window.clearTimeout(snapTimer);
     snapTimer = window.setTimeout(() => {
       scrollToIndex(getNearestIndex(), "smooth");
-    }, 180);
-  };
-
-  const setWheelScrollMode = (enabled) => {
-    isWheelScrolling = enabled;
-    if (!track) return;
-    track.style.scrollSnapType = enabled ? "none" : "";
-    track.style.scrollBehavior = enabled ? "auto" : "";
+    }, 140);
   };
 
   const handleTrackWheel = (event) => {
@@ -161,19 +183,26 @@
     if (Math.abs(event.deltaX) <= Math.abs(event.deltaY) || Math.abs(event.deltaX) < 1) return;
 
     event.preventDefault();
-    setWheelScrollMode(true);
     window.clearTimeout(snapTimer);
+    if (isWheelAnimating) return;
+
+    const direction = event.deltaX > 0 ? 1 : -1;
+    if (wheelDirection && wheelDirection !== direction) {
+      wheelDelta = 0;
+    }
+    wheelDirection = direction;
+    wheelDelta += Math.abs(event.deltaX);
+
+    if (wheelDelta < 110) return;
+    wheelDelta = 0;
+    isWheelAnimating = true;
+    scrollToIndex(activeIndex + direction);
     window.clearTimeout(wheelGestureTimer);
-
-    const maxStep = Math.max(36, getSlideWidth() * 0.18);
-    const delta = Math.max(-maxStep, Math.min(event.deltaX * 0.58, maxStep));
-    track.scrollLeft += delta;
-    syncFromScroll();
-
     wheelGestureTimer = window.setTimeout(() => {
-      setWheelScrollMode(false);
-      scrollToIndex(getNearestIndex(), "smooth");
-    }, 180);
+      isWheelAnimating = false;
+      wheelDirection = 0;
+      wheelDelta = 0;
+    }, 280);
   };
 
   const renderGallery = () => {
@@ -281,7 +310,7 @@
 
   track?.addEventListener("scroll", () => {
     syncFromScroll();
-    if (!isWheelScrolling) {
+    if (!isWheelAnimating) {
       settleToNearestSlide();
     }
   }, { passive: true });
