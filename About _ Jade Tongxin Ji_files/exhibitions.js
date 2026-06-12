@@ -82,8 +82,8 @@
   let activeIndex = 0;
   let snapTimer = 0;
   let wheelDelta = 0;
-  let wheelResetTimer = 0;
-  let wheelLockTimer = 0;
+  let wheelGestureTimer = 0;
+  let wheelGestureMoved = false;
 
   const getCurrent = () => {
     const currentId = decodeURIComponent(window.location.hash.replace("#", "")) || exhibitions[0]?.id;
@@ -155,28 +155,19 @@
 
     event.preventDefault();
     wheelDelta += event.deltaX;
-    window.clearTimeout(wheelResetTimer);
+    window.clearTimeout(wheelGestureTimer);
 
-    if (wheelLockTimer) {
-      wheelResetTimer = window.setTimeout(() => {
-        wheelDelta = 0;
-      }, 180);
-      return;
-    }
-
-    if (Math.abs(wheelDelta) >= 32) {
+    if (!wheelGestureMoved && Math.abs(wheelDelta) >= 40) {
       const direction = wheelDelta > 0 ? 1 : -1;
       wheelDelta = 0;
+      wheelGestureMoved = true;
       scrollToIndex(activeIndex + direction);
-      wheelLockTimer = window.setTimeout(() => {
-        wheelLockTimer = 0;
-      }, 360);
-      return;
     }
 
-    wheelResetTimer = window.setTimeout(() => {
+    wheelGestureTimer = window.setTimeout(() => {
       wheelDelta = 0;
-    }, 180);
+      wheelGestureMoved = false;
+    }, 240);
   };
 
   const renderGallery = () => {
