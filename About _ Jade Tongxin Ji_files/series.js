@@ -165,7 +165,16 @@
     let wheelDelta = 0;
     let wheelDirection = 0;
     let wheelGestureTimer = 0;
-    let isWheelAnimating = false;
+    let wheelGestureMoved = false;
+    let wheelLastTime = 0;
+    let wheelLastMagnitude = 0;
+    let touchStartX = 0;
+    let touchStartY = 0;
+    let touchLastX = 0;
+    let touchLastY = 0;
+    let touchStartIndex = 0;
+    let touchTracking = false;
+    let touchIsHorizontal = false;
     const clampIndex = (index) => Math.max(0, Math.min(index, imageTotal - 1));
     const getSlideWidth = () => Math.max(track.clientWidth || 1, 1);
     const getSlideLeft = (index) => {
@@ -266,36 +275,117 @@
 
       event.preventDefault();
       window.clearTimeout(snapTimer);
-      if (isWheelAnimating) return;
-
       const direction = event.deltaX > 0 ? 1 : -1;
-      if (wheelDirection && wheelDirection !== direction) {
+      const magnitude = Math.abs(event.deltaX);
+      const now = event.timeStamp || Date.now();
+      const elapsed = wheelLastTime ? now - wheelLastTime : Infinity;
+      const startsNewWheelGesture = wheelGestureMoved && (
+        (direction !== wheelDirection && magnitude >= 12) ||
+        (elapsed > 110 && magnitude >= 32) ||
+        (elapsed > 60 && magnitude >= Math.max(16, wheelLastMagnitude * 1.8))
+      );
+      if (startsNewWheelGesture) {
+        wheelGestureMoved = false;
+        wheelDelta = 0;
+      }
+      if (!wheelGestureMoved && wheelDirection && wheelDirection !== direction) {
         wheelDelta = 0;
       }
       wheelDirection = direction;
-      wheelDelta += Math.abs(event.deltaX);
+      wheelLastTime = now;
+      wheelLastMagnitude = magnitude;
 
-      if (wheelDelta < 110) return;
-      wheelDelta = 0;
-      isWheelAnimating = true;
-      scrollToIndex(activeIndex + direction);
       window.clearTimeout(wheelGestureTimer);
-      wheelGestureTimer = window.setTimeout(() => {
-        isWheelAnimating = false;
+      const resetWheelGesture = () => {
+        wheelGestureMoved = false;
         wheelDirection = 0;
         wheelDelta = 0;
-      }, 280);
+        wheelLastTime = 0;
+        wheelLastMagnitude = 0;
+      };
+      const scheduleWheelReset = () => {
+        wheelGestureTimer = window.setTimeout(resetWheelGesture, 220);
+      };
+
+      if (wheelGestureMoved) {
+        scheduleWheelReset();
+        return;
+      }
+
+      wheelDelta += magnitude;
+      if (wheelDelta < 30) {
+        scheduleWheelReset();
+        return;
+      }
+
+      wheelDelta = 0;
+      wheelGestureMoved = true;
+      scrollToIndex(activeIndex + direction);
+      scheduleWheelReset();
+    };
+
+    const resetTouchGesture = () => {
+      touchTracking = false;
+      touchIsHorizontal = false;
+    };
+
+    const handlePointerDown = (event) => {
+      if (imageTotal <= 1 || event.pointerType === "mouse") return;
+      touchStartX = event.clientX;
+      touchStartY = event.clientY;
+      touchLastX = event.clientX;
+      touchLastY = event.clientY;
+      touchStartIndex = activeIndex;
+      touchTracking = true;
+      touchIsHorizontal = false;
+      window.clearTimeout(snapTimer);
+    };
+
+    const handlePointerMove = (event) => {
+      if (!touchTracking) return;
+      touchLastX = event.clientX;
+      touchLastY = event.clientY;
+      const deltaX = touchLastX - touchStartX;
+      const deltaY = touchLastY - touchStartY;
+      if (!touchIsHorizontal && Math.abs(deltaX) > 8 && Math.abs(deltaX) > Math.abs(deltaY) + 6) {
+        touchIsHorizontal = true;
+        try {
+          track.setPointerCapture(event.pointerId);
+        } catch (error) {
+          // Pointer capture is best-effort; the swipe still resolves on pointerup.
+        }
+      }
+      if (touchIsHorizontal) {
+        event.preventDefault();
+      }
+    };
+
+    const handlePointerEnd = () => {
+      if (!touchTracking) return;
+      const deltaX = touchLastX - touchStartX;
+      const deltaY = touchLastY - touchStartY;
+      const shouldMove = touchIsHorizontal && Math.abs(deltaX) > 34 && Math.abs(deltaX) > Math.abs(deltaY);
+      const nextIndex = shouldMove ? touchStartIndex + (deltaX < 0 ? 1 : -1) : activeIndex;
+      resetTouchGesture();
+      scrollToIndex(nextIndex);
     };
 
     prev.addEventListener("click", () => scrollToIndex(activeIndex - 1));
     next.addEventListener("click", () => scrollToIndex(activeIndex + 1));
     track.addEventListener("scroll", () => {
       syncFromScroll();
-      if (!isWheelAnimating) {
+      if (!wheelGestureMoved && !touchTracking) {
         settleToNearestSlide();
       }
     }, { passive: true });
     track.addEventListener("wheel", handleTrackWheel, { passive: false });
+    track.addEventListener("pointerdown", handlePointerDown);
+    track.addEventListener("pointermove", handlePointerMove, { passive: false });
+    track.addEventListener("pointerup", handlePointerEnd);
+    track.addEventListener("pointercancel", () => {
+      resetTouchGesture();
+      scrollToIndex(activeIndex);
+    });
     window.addEventListener("resize", () => {
       scrollToIndex(activeIndex, "auto");
     });
