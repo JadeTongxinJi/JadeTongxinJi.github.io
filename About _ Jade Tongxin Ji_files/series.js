@@ -1,6 +1,7 @@
 (() => {
   const series = window.jadeSeries || [];
   const exhibitions = window.jadeExhibitions || [];
+  const presentationHistory = window.jadePresentationHistory || [];
   const make = (tag, className, text) => {
     const element = document.createElement(tag);
     if (className) {
@@ -14,6 +15,11 @@
 
   const galleryHref = (item) => `series-gallery.html#${item.id}`;
   const exhibitionHref = (item) => `exhibition-gallery.html#${item.id}`;
+  const presentationHref = (item) => {
+    if (item.detailId) return `exhibition-gallery.html#${item.detailId}`;
+    if (item.href) return item.href;
+    return "";
+  };
   const seriesByRecent = [...series].sort((a, b) => Number(b.year) - Number(a.year));
   const menuLabelZh = (item) => `${item.year}-${item.titleZh}`;
   const menuLabelEn = (item) => `${item.year}-${item.titleEn}`;
@@ -30,6 +36,54 @@
         return link;
       })
     );
+  });
+
+  const closeSeriesMenus = (exceptMenu) => {
+    document.querySelectorAll(".home-nav-menu.is-open, .page-nav-menu.is-open").forEach((navMenu) => {
+      if (navMenu === exceptMenu) return;
+      navMenu.classList.remove("is-open");
+      const trigger = navMenu.querySelector(".home-nav-trigger, .page-nav-trigger");
+      if (trigger) {
+        trigger.setAttribute("aria-expanded", "false");
+        if (trigger.dataset.baseLabel) trigger.textContent = `${trigger.dataset.baseLabel} ↓`;
+      }
+    });
+  };
+
+  document.querySelectorAll("[data-render-series-menu]").forEach((menu) => {
+    const navMenu = menu.closest(".home-nav-menu, .page-nav-menu");
+    const trigger = navMenu?.querySelector(".home-nav-trigger, .page-nav-trigger");
+    if (!navMenu || !trigger) return;
+
+    trigger.dataset.baseLabel = trigger.textContent.trim().replace(/\s+[↑↓]$/, "");
+    trigger.textContent = `${trigger.dataset.baseLabel} ↓`;
+    trigger.setAttribute("aria-expanded", "false");
+
+    trigger.addEventListener("click", (event) => {
+      event.preventDefault();
+      const isOpen = navMenu.classList.toggle("is-open");
+      closeSeriesMenus(isOpen ? navMenu : null);
+      trigger.setAttribute("aria-expanded", String(isOpen));
+      trigger.textContent = `${trigger.dataset.baseLabel} ${isOpen ? "↑" : "↓"}`;
+    });
+
+    menu.addEventListener("click", (event) => {
+      const link = event.target.closest("a");
+      if (!link) return;
+      navMenu.classList.remove("is-open");
+      trigger.setAttribute("aria-expanded", "false");
+      trigger.textContent = `${trigger.dataset.baseLabel} ↓`;
+    });
+  });
+
+  document.addEventListener("click", (event) => {
+    if (event.target.closest(".home-nav-menu, .page-nav-menu")) return;
+    closeSeriesMenus(null);
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key !== "Escape") return;
+    closeSeriesMenus(null);
   });
 
   const directory = document.querySelector("[data-render-series-directory]");
@@ -637,12 +691,21 @@
     return group;
   };
 
-  const getSeriesExhibitions = (seriesId) => exhibitions
-    .filter((item) => {
-      const ids = [item.seriesId, ...(item.seriesIds || [])].filter(Boolean);
-      return ids.includes(seriesId);
-    })
-    .sort((a, b) => Number(b.year) - Number(a.year));
+  const getSeriesExhibitions = (seriesId) => {
+    const records = presentationHistory.length
+      ? presentationHistory
+      : exhibitions.map((item) => ({
+          ...item,
+          detailId: item.id,
+          eventEn: item.titleEn,
+        }));
+    return records
+      .filter((item) => {
+        const ids = [item.seriesId, ...(item.seriesIds || [])].filter(Boolean);
+        return ids.includes(seriesId);
+      })
+      .sort((a, b) => Number(b.year) - Number(a.year));
+  };
 
   const renderSeriesExhibitions = () => {
     const relatedExhibitions = getSeriesExhibitions(current.id);
@@ -650,11 +713,11 @@
 
     const block = make("section", "series-exhibitions");
     block.id = "exhibitions";
-    block.setAttribute("aria-label", "Exhibition history");
+    block.setAttribute("aria-label", "Exhibitions and presentations");
 
     const header = make("div", "series-section-header series-exhibitions-header");
     const title = make("div", "series-section-title");
-    title.append(make("h3", "", "展览经历"), make("small", "", "Exhibitions"));
+    title.append(make("h3", "", "展览 / 呈现经历"), make("small", "", "Exhibitions / Presentations"));
     header.append(title);
 
     const list = make("ol", "series-exhibitions-list");
@@ -663,12 +726,17 @@
       row.append(make("span", "series-exhibition-year", item.year));
 
       const body = make("div", "series-exhibition-body");
-      const titleLine = make("a", "series-exhibition-title series-exhibition-link");
-      titleLine.href = exhibitionHref(item);
-      titleLine.append(
-        make("strong", "", item.titleZh),
-        make("em", "", item.titleEn)
-      );
+      const href = presentationHref(item);
+      const titleLine = make(href ? "a" : "span", `series-exhibition-title${href ? " series-exhibition-link" : ""}`);
+      if (href) {
+        titleLine.href = href;
+        titleLine.setAttribute("aria-label", `${item.eventEn || item.titleEn}, view exhibition`);
+        row.classList.add("has-link");
+      }
+      titleLine.append(make("strong", "", item.eventEn || item.titleEn));
+      if (href) {
+        titleLine.append(make("span", "series-exhibition-action", "View exhibition →"));
+      }
       body.append(titleLine);
 
       row.append(body);

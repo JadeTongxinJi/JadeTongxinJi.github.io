@@ -1,4 +1,5 @@
-// Use seriesId to place each exhibition record inside its related Series detail page.
+// Exhibition detail pages stay in jadeExhibitions. CV / presentation records live in
+// jadePresentationHistory so Series and About can show both linked and unlinked history.
 window.jadeExhibitions = [
   {
     id: "dandelion-paris-cite",
@@ -246,5 +247,114 @@ window.jadeExhibitions = [
         href: "https://xafa.meishu.org.cn/arts/4403-112463.html",
       },
     ],
+  },
+];
+
+window.jadePresentationHistory = [
+  {
+    year: "2026",
+    seriesId: "dandelion-has-not-decided",
+    workZh: "《地丁》",
+    workEn: "The Dandelion Has Not Decided",
+    eventEn: "The Dandelion Has Not Decided, solo exhibition",
+    detailId: "dandelion-paris-cite",
+  },
+  {
+    year: "2026",
+    seriesId: "hesitation",
+    workZh: "《地丁并未决定》",
+    workEn: "Hesitation",
+    eventEn: "Hesitation, solo exhibition",
+    detailId: "dandelion-caijiapo",
+  },
+  {
+    year: "2025",
+    seriesId: "epitaph",
+    workZh: "《疑树》",
+    workEn: "Epitaph",
+    eventEn: "Congsheng: The First Cross-Strait Art Biennial, Islands in the Wave Gaps section, exhibited",
+  },
+  {
+    year: "2025",
+    seriesId: "epitaph",
+    workZh: "《疑树》",
+    workEn: "Epitaph",
+    eventEn: "6th International Photography Symposium and 2025 Lishui Photography Festival, Academy Section, exhibited",
+    detailId: "yishu-lishui",
+  },
+  {
+    year: "2025",
+    seriesId: "epitaph",
+    workZh: "《疑树》",
+    workEn: "Epitaph",
+    eventEn: "Incheon Open Port International University Student Photography Festival, shortlisted",
+  },
+  {
+    year: "2025",
+    seriesId: "epitaph",
+    workZh: "《疑树》",
+    workEn: "Epitaph",
+    eventEn: "Attention and Resonance: Outstanding Digital Image Exhibition of Shaanxi Universities, exhibited",
+  },
+  {
+    year: "2024",
+    seriesId: "new-year-elevator",
+    workZh: "《新年电梯》",
+    workEn: "New Year Elevator",
+    eventEn: "A Frame Condensed City Project, exhibited",
+    detailId: "new-year-elevator",
+  },
+  {
+    year: "2024",
+    seriesId: "epitaph",
+    workZh: "《疑树》",
+    workEn: "Epitaph",
+    eventEn: "12th Academy Photography Award and 12th Academy Outstanding Photography Works Exhibition, Gold Award",
+  },
+  {
+    year: "2024",
+    seriesId: "epitaph",
+    workZh: "《疑树》",
+    workEn: "Epitaph",
+    eventEn: "4th Future Star Cluster Award Art and Calligraphy Exhibition, selected and exhibited",
+    detailId: "yishu-sichuan",
+  },
+  {
+    year: "2024",
+    seriesId: "epitaph",
+    workZh: "《疑树》",
+    workEn: "Epitaph",
+    eventEn: "24th Pingyao International Photography Festival, Outstanding Academy Award",
+    detailId: "yishu-pingyao",
+  },
+  {
+    year: "2024",
+    seriesId: "epitaph",
+    workZh: "《疑树》",
+    workEn: "Epitaph",
+    eventEn: "Fisheye “10sur10” Exhibition, Arles, France, exhibited",
+    detailId: "yishu-arles",
+  },
+  {
+    year: "2024",
+    seriesId: "epitaph",
+    workZh: "《疑树》",
+    workEn: "Epitaph",
+    eventEn: "6th 1839 Photography Award, shortlisted",
+  },
+  {
+    year: "2024",
+    seriesId: "epitaph",
+    workZh: "《疑树》",
+    workEn: "Epitaph",
+    eventEn: "2024 Wujie Ximei Graduation Season Exhibition, Xi'an Academy of Fine Arts, First Prize",
+    detailId: "yishu-xian",
+  },
+  {
+    year: "2023",
+    seriesId: "upstream-wind",
+    workZh: "《上游的风》",
+    workEn: "ON THE WAY",
+    eventEn: "10th Academy Outstanding Photography Works Exhibition and 10th Academy Photography Award, Outstanding Work Award",
   },
 ];

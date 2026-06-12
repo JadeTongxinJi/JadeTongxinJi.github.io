@@ -41,7 +41,7 @@ body {
   left: 8vw;
   right: 8vw;
   display: grid;
-  grid-template-columns: repeat(4, max-content);
+  grid-template-columns: repeat(3, max-content);
   justify-content: space-between;
   align-items: start;
   gap: 22px;
@@ -92,10 +92,8 @@ body {
   transition: opacity 160ms ease, transform 160ms ease;
 }
 
-.home-nav-menu:hover .home-nav-dropdown,
-.home-nav-menu:focus-within .home-nav-dropdown,
-.page-nav-menu:hover .page-nav-dropdown,
-.page-nav-menu:focus-within .page-nav-dropdown {
+.home-nav-menu.is-open .home-nav-dropdown,
+.page-nav-menu.is-open .page-nav-dropdown {
   opacity: 1;
   pointer-events: auto;
   transform: translateY(0);
@@ -238,8 +236,7 @@ body {
     background: rgba(220, 222, 221, 0.46);
   }
 
-  .home-nav-menu:hover .home-nav-dropdown,
-  .home-nav-menu:focus-within .home-nav-dropdown {
+  .home-nav-menu.is-open .home-nav-dropdown {
     transform: translateX(0);
   }
 
@@ -640,31 +637,56 @@ body {
   line-height: 1.55;
 }
 
-a.cv-text {
-  color: inherit;
-  text-decoration: none;
-  text-underline-offset: 0.18em;
+.cv-work {
+  color: rgba(245, 242, 236, 0.92);
+  font-family: "PingFang SC", "Noto Sans SC", "Microsoft YaHei", sans-serif;
+  font-weight: 500;
 }
 
-a.cv-text:hover,
-a.cv-text:focus-visible {
-  color: #f5f2ec;
+.cv-event {
+  display: grid;
+  gap: 4px;
+  color: rgba(245, 242, 236, 0.76);
+  font-family: "Helvetica Neue", Arial, sans-serif;
+  font-weight: 300;
+  line-height: 1.5;
+}
+
+.cv-event-link {
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.cv-event-link .cv-event-title {
   text-decoration: underline;
+  text-decoration-color: rgba(245, 242, 236, 0.48);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.22em;
+}
+
+.cv-event-link:hover,
+.cv-event-link:focus-visible {
+  color: #f5f2ec;
   outline: none;
 }
 
-.cv-text-en {
-  color: rgba(245, 242, 236, 0.76);
-  font-family: "Helvetica Neue", Arial, sans-serif;
-  font-weight: 300;
-  line-height: 1.5;
+.cv-event-link:hover .cv-event-title,
+.cv-event-link:focus-visible .cv-event-title {
+  text-decoration-color: #f5f2ec;
 }
 
-.cv-list li .cv-text:nth-child(3) {
-  color: rgba(245, 242, 236, 0.76);
-  font-family: "Helvetica Neue", Arial, sans-serif;
-  font-weight: 300;
-  line-height: 1.5;
+.cv-link-cue {
+  color: rgba(245, 242, 236, 0.62);
+  font-family: "Courier New", Courier, monospace;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.3;
+  text-transform: uppercase;
+}
+
+.cv-event-link:hover .cv-link-cue,
+.cv-event-link:focus-visible .cv-link-cue {
+  color: #f5f2ec;
 }
 
 .about-footer a {
@@ -1556,16 +1578,31 @@ a.cv-text:focus-visible {
 
 .series-exhibition-title {
   display: grid;
-  gap: 3px;
+  gap: 5px;
   text-decoration: none;
 }
 
-.series-exhibition-title:hover strong,
-.series-exhibition-title:focus-visible strong,
-.series-exhibition-title:hover em,
-.series-exhibition-title:focus-visible em {
-  color: #f5f2ec;
+.series-exhibition-link {
+  cursor: pointer;
+}
+
+.series-exhibition-link strong {
   text-decoration: underline;
+  text-decoration-color: rgba(245, 242, 236, 0.48);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.22em;
+}
+
+.series-exhibition-link:hover strong,
+.series-exhibition-link:focus-visible strong,
+.series-exhibition-link:hover em,
+.series-exhibition-link:focus-visible em {
+  color: #f5f2ec;
+}
+
+.series-exhibition-link:hover strong,
+.series-exhibition-link:focus-visible strong {
+  text-decoration-color: #f5f2ec;
 }
 
 .series-exhibition-title:focus-visible {
@@ -1581,13 +1618,26 @@ a.cv-text:focus-visible {
   line-height: 1.32;
 }
 
-.series-exhibition-title em {
+.series-exhibition-title em,
+.series-exhibition-action {
   color: rgba(245, 242, 236, 0.62);
   font-family: "Helvetica Neue", Arial, sans-serif;
   font-size: clamp(11px, 0.9vw, 14px);
   font-style: normal;
   font-weight: 300;
   line-height: 1.4;
+}
+
+.series-exhibition-action {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.series-exhibition-link:hover .series-exhibition-action,
+.series-exhibition-link:focus-visible .series-exhibition-action {
+  color: #f5f2ec;
 }
 
 .series-image-detail-slot[hidden] {
@@ -2115,8 +2165,7 @@ a.cv-text:focus-visible {
     transform: translateX(6px);
   }
 
-  .page-nav-menu:hover .page-nav-dropdown,
-  .page-nav-menu:focus-within .page-nav-dropdown {
+  .page-nav-menu.is-open .page-nav-dropdown {
     opacity: 1;
     pointer-events: auto;
     transform: translateX(0);
@@ -2197,8 +2246,7 @@ a.cv-text:focus-visible {
     transform: translateY(-4px);
   }
 
-  .exhibition-gallery-page .page-nav-menu:hover .page-nav-dropdown,
-  .exhibition-gallery-page .page-nav-menu:focus-within .page-nav-dropdown {
+  .exhibition-gallery-page .page-nav-menu.is-open .page-nav-dropdown {
     transform: translateY(0);
   }
 
@@ -2794,8 +2842,7 @@ a.cv-text:focus-visible {
 }
 
 .about-page .fact-line-en,
-.about-page .cv-text-en,
-.about-page .cv-list li .cv-text:nth-child(3) {
+.about-page .cv-event {
   font-size: clamp(12px, 0.9vw, 15px);
   line-height: 1.48;
 }

@@ -1,5 +1,6 @@
 (() => {
   const content = window.jadeAboutContent;
+  const presentationHistory = window.jadePresentationHistory || [];
 
   if (!content) {
     return;
@@ -30,12 +31,28 @@
     block.append(wrapper);
   };
 
-  const makeCvText = (className, text, href) => {
-    const element = make(href ? "a" : "span", `cv-text ${className}`, text);
+  const exhibitionHref = (item) => {
+    if (item.detailId) return `exhibition-gallery.html#${item.detailId}`;
+    return item.href || "";
+  };
+
+  const makeCvEvent = (item) => {
+    const href = exhibitionHref(item);
+    const event = make(href ? "a" : "span", `cv-text cv-event${href ? " cv-event-link" : ""}`);
     if (href) {
-      element.href = href;
+      event.href = href;
+      event.setAttribute("aria-label", `${item.eventEn || item.en || item.zh}, view exhibition`);
     }
-    return element;
+    event.append(make("span", "cv-event-title", item.eventEn || item.en || item.zh || ""));
+    if (href) {
+      event.append(make("span", "cv-link-cue", "View exhibition →"));
+    }
+    return event;
+  };
+
+  const makeCvWork = (item) => {
+    const workText = item.workZh && item.workEn ? `${item.workZh} / ${item.workEn}` : item.zh || "";
+    return make("span", "cv-text cv-work", workText);
   };
 
   const makeFactBlock = (item) => {
@@ -113,13 +130,17 @@
   });
 
   const exhibitions = document.querySelector('[data-render="exhibitions"]');
-  if (exhibitions && Array.isArray(content.exhibitions)) {
+  const exhibitionItems = presentationHistory.length ? presentationHistory : content.exhibitions || [];
+  if (exhibitions && Array.isArray(exhibitionItems)) {
     exhibitions.replaceChildren(
-      ...content.exhibitions.map((item) => {
-        const row = make("li");
+      ...exhibitionItems.map((item) => {
+        const row = make("li", "cv-row");
+        if (exhibitionHref(item)) {
+          row.classList.add("has-link");
+        }
         row.append(make("span", "cv-year", item.year));
-        row.append(makeCvText("cv-text-zh", item.zh, item.href));
-        row.append(makeCvText("cv-text-en", item.en, item.href));
+        row.append(makeCvWork(item));
+        row.append(makeCvEvent(item));
         return row;
       })
     );
