@@ -1559,6 +1559,11 @@ body {
   border-top: 0;
 }
 
+.series-viewer > .series-video-section.is-first-content:first-child {
+  border-top: 1px solid rgba(245, 242, 236, 0.24);
+  padding-top: clamp(26px, 4.5vw, 56px);
+}
+
 .series-video-section.has-video-poster {
   grid-template-columns: minmax(180px, 0.34fr) minmax(0, 1fr);
   align-items: end;
