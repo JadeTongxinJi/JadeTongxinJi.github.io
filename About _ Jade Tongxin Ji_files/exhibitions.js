@@ -84,7 +84,8 @@
   let snapTimer = 0;
   let wheelDelta = 0;
   let wheelGestureTimer = 0;
-  let wheelGestureMoved = false;
+  let wheelDirection = 0;
+  let lastWheelSlideAt = 0;
 
   const getCurrent = () => {
     const currentId = decodeURIComponent(window.location.hash.replace("#", "")) || exhibitions[0]?.id;
@@ -155,20 +156,27 @@
     if (Math.abs(event.deltaX) <= Math.abs(event.deltaY) || Math.abs(event.deltaX) < 1) return;
 
     event.preventDefault();
-    wheelDelta += event.deltaX;
+    const direction = event.deltaX > 0 ? 1 : -1;
+    const now = Date.now();
+    if (wheelDirection && wheelDirection !== direction) {
+      wheelDelta = 0;
+      lastWheelSlideAt = 0;
+    }
+    wheelDirection = direction;
+    wheelDelta += Math.abs(event.deltaX);
     window.clearTimeout(wheelGestureTimer);
 
-    if (!wheelGestureMoved && Math.abs(wheelDelta) >= 40) {
-      const direction = wheelDelta > 0 ? 1 : -1;
+    if (wheelDelta >= 40 && now - lastWheelSlideAt >= 480) {
       wheelDelta = 0;
-      wheelGestureMoved = true;
+      lastWheelSlideAt = now;
       scrollToIndex(activeIndex + direction);
     }
 
     wheelGestureTimer = window.setTimeout(() => {
       wheelDelta = 0;
-      wheelGestureMoved = false;
-    }, 240);
+      wheelDirection = 0;
+      lastWheelSlideAt = 0;
+    }, 220);
   };
 
   const renderGallery = () => {
