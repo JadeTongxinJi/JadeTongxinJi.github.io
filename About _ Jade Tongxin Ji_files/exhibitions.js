@@ -77,6 +77,7 @@
   const sourcesTitle = document.querySelector("[data-gallery-sources-title]");
   const sources = document.querySelector("[data-gallery-sources]");
   const track = document.querySelector("[data-gallery-track]");
+  const toolbar = document.querySelector(".gallery-toolbar");
   const count = document.querySelector("[data-gallery-count]");
   let current = null;
   let activeIndex = 0;
@@ -173,11 +174,16 @@
   const renderGallery = () => {
     current = getCurrent();
     if (!current) return;
+    const hasMultipleImages = current.images.length > 1;
 
     document.title = `${current.titleEn} / Jade Tongxin Ji`;
     if (titleZh) titleZh.textContent = current.titleZh;
     if (titleEn) titleEn.textContent = current.titleEn;
     if (meta) meta.textContent = `${current.year} / ${current.venueZh}`;
+    if (toolbar) {
+      toolbar.hidden = !hasMultipleImages;
+      toolbar.style.display = hasMultipleImages ? "" : "none";
+    }
 
     if (facts) {
       facts.replaceChildren();
@@ -239,9 +245,11 @@
           caption.append(
             make("strong", "", captionZh),
             make("em", "", captionEn),
-            make("span", "", current.year),
-            make("small", "", `${String(index + 1).padStart(2, "0")} / ${String(current.images.length).padStart(2, "0")}`)
+            make("span", "", current.year)
           );
+          if (hasMultipleImages) {
+            caption.append(make("small", "", `${String(index + 1).padStart(2, "0")} / ${String(current.images.length).padStart(2, "0")}`));
+          }
           figure.append(imageWrap, caption);
           return figure;
         })
