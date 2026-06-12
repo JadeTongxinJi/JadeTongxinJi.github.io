@@ -1494,8 +1494,7 @@ body {
   gap: clamp(14px, 2.2vw, 24px);
   width: min(100%, 980px);
   margin: clamp(12px, 2vw, 24px) auto 0;
-  border-top: 1px solid rgba(245, 242, 236, 0.18);
-  padding-top: clamp(14px, 2vw, 22px);
+  padding-top: clamp(8px, 1.4vw, 16px);
 }
 
 .series-image-detail-title {
