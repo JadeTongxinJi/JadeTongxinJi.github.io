@@ -30,6 +30,14 @@
     block.append(wrapper);
   };
 
+  const makeCvText = (className, text, href) => {
+    const element = make(href ? "a" : "span", `cv-text ${className}`, text);
+    if (href) {
+      element.href = href;
+    }
+    return element;
+  };
+
   const makeFactBlock = (item) => {
     const block = make("div", "fact-block");
     block.append(make("h2", "", item.title));
@@ -110,8 +118,8 @@
       ...content.exhibitions.map((item) => {
         const row = make("li");
         row.append(make("span", "cv-year", item.year));
-        row.append(make("span", "cv-text cv-text-zh", item.zh));
-        row.append(make("span", "cv-text cv-text-en", item.en));
+        row.append(makeCvText("cv-text-zh", item.zh, item.href));
+        row.append(makeCvText("cv-text-en", item.en, item.href));
         return row;
       })
     );
