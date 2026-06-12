@@ -178,7 +178,7 @@ window.jadeExhibitions = [
       {
         label: "第24届平遥国际摄影大展揭晓各大奖项",
         labelEn: "The 24th Pingyao International Photography Festival Announces Its Awards",
-        href: "https://mp.weixin.qq.com/s/cxpHJJiMfKPFm7M84hkI8A",
+        href: "https://mp.weixin.qq.com/s/YxM7dSAcJ9uTc_eQJ8eoLA",
       },
     ],
   },
