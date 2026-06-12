@@ -192,9 +192,9 @@ window.jadeExhibitions = [
     venueZh: "四川美术学院美术馆",
     venueEn: "Sichuan Fine Arts Institute Art Museum",
     artist: "纪彤心 / Jade Tongxin Ji",
-    cover: "About _ Jade Tongxin Ji_files/exhibition-assets/sichuan/01-original.jpg",
+    cover: "About _ Jade Tongxin Ji_files/exhibition-assets/sichuan/01-exhibition-site.jpg",
     images: [
-      "About _ Jade Tongxin Ji_files/exhibition-assets/sichuan/01-original.jpg",
+      "About _ Jade Tongxin Ji_files/exhibition-assets/sichuan/01-exhibition-site.jpg",
       "About _ Jade Tongxin Ji_files/exhibition-assets/sichuan/02-original.jpg",
     ],
     sources: [
