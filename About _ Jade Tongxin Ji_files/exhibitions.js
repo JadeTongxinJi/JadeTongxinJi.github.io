@@ -78,9 +78,12 @@
   const sources = document.querySelector("[data-gallery-sources]");
   const track = document.querySelector("[data-gallery-track]");
   const count = document.querySelector("[data-gallery-count]");
-  track?.classList.add("is-static-carousel");
   let current = null;
   let activeIndex = 0;
+  let snapTimer = 0;
+  let wheelDelta = 0;
+  let wheelGestureTimer = 0;
+  let wheelGestureMoved = false;
 
   const getCurrent = () => {
     const currentId = decodeURIComponent(window.location.hash.replace("#", "")) || exhibitions[0]?.id;
@@ -92,6 +95,79 @@
     target.addEventListener("dragstart", (event) => {
       event.preventDefault();
     });
+  };
+
+  const clampIndex = (index) => {
+    if (!current) return 0;
+    return Math.max(0, Math.min(index, current.images.length - 1));
+  };
+
+  const getSlideWidth = () => Math.max(track?.clientWidth || 1, 1);
+
+  const getNearestIndex = () => {
+    if (!track || !current) return 0;
+    return clampIndex(Math.round(track.scrollLeft / getSlideWidth()));
+  };
+
+  const updateCount = () => {
+    if (!count || !current) return;
+    count.textContent = `${String(activeIndex + 1).padStart(2, "0")} / ${String(current.images.length).padStart(2, "0")}`;
+  };
+
+  const setActiveSlide = () => {
+    if (!track) return;
+    track.querySelectorAll(".gallery-slide").forEach((slide, index) => {
+      slide.classList.toggle("is-active", index === activeIndex);
+    });
+  };
+
+  const syncFromScroll = () => {
+    if (!track || !current) return;
+    const nextIndex = getNearestIndex();
+    if (nextIndex !== activeIndex) {
+      activeIndex = nextIndex;
+      setActiveSlide();
+    }
+    updateCount();
+  };
+
+  const scrollToIndex = (index, behavior = "smooth") => {
+    if (!track || !current) return;
+    activeIndex = clampIndex(index);
+    setActiveSlide();
+    updateCount();
+    track.scrollTo({
+      left: activeIndex * getSlideWidth(),
+      behavior,
+    });
+  };
+
+  const settleToNearestSlide = () => {
+    window.clearTimeout(snapTimer);
+    snapTimer = window.setTimeout(() => {
+      scrollToIndex(getNearestIndex(), "smooth");
+    }, 120);
+  };
+
+  const handleTrackWheel = (event) => {
+    if (!track || !current || current.images.length <= 1 || event.ctrlKey) return;
+    if (Math.abs(event.deltaX) <= Math.abs(event.deltaY) || Math.abs(event.deltaX) < 1) return;
+
+    event.preventDefault();
+    wheelDelta += event.deltaX;
+    window.clearTimeout(wheelGestureTimer);
+
+    if (!wheelGestureMoved && Math.abs(wheelDelta) >= 40) {
+      const direction = wheelDelta > 0 ? 1 : -1;
+      wheelDelta = 0;
+      wheelGestureMoved = true;
+      scrollToIndex(activeIndex + direction);
+    }
+
+    wheelGestureTimer = window.setTimeout(() => {
+      wheelDelta = 0;
+      wheelGestureMoved = false;
+    }, 240);
   };
 
   const renderGallery = () => {
@@ -170,34 +246,16 @@
           return figure;
         })
       );
-      track.scrollLeft = 0;
       activeIndex = 0;
+      setActiveSlide();
+      updateCount();
+      track.scrollLeft = 0;
+      window.requestAnimationFrame(() => scrollToIndex(0, "auto"));
     }
-
-    if (count) {
-      count.textContent = `01 / ${String(current.images.length).padStart(2, "0")}`;
-    }
-  };
-
-  const updateCount = () => {
-    if (!track || !count || !current) return;
-    const index = Math.round(track.scrollLeft / track.clientWidth) + 1;
-    activeIndex = Math.min(index, current.images.length) - 1;
-    count.textContent = `${String(Math.min(index, current.images.length)).padStart(2, "0")} / ${String(current.images.length).padStart(2, "0")}`;
-  };
-
-  const setActiveSlide = () => {
-    if (!track) return;
-    track.querySelectorAll(".gallery-slide").forEach((slide, index) => {
-      slide.classList.toggle("is-active", index === activeIndex);
-    });
   };
 
   const goTo = (index) => {
-    if (!track || !count || !current) return;
-    activeIndex = Math.max(0, Math.min(index, current.images.length - 1));
-    setActiveSlide();
-    count.textContent = `${String(activeIndex + 1).padStart(2, "0")} / ${String(current.images.length).padStart(2, "0")}`;
+    scrollToIndex(index);
   };
 
   document.querySelector("[data-gallery-prev]")?.addEventListener("click", () => {
@@ -206,6 +264,16 @@
 
   document.querySelector("[data-gallery-next]")?.addEventListener("click", () => {
     goTo(activeIndex + 1);
+  });
+
+  track?.addEventListener("scroll", () => {
+    syncFromScroll();
+    settleToNearestSlide();
+  }, { passive: true });
+  track?.addEventListener("wheel", handleTrackWheel, { passive: false });
+
+  window.addEventListener("resize", () => {
+    scrollToIndex(activeIndex, "auto");
   });
 
   window.addEventListener("hashchange", renderGallery);

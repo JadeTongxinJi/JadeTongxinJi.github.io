@@ -81,13 +81,6 @@
     return series.find((item) => item.id === currentId) || series[0];
   };
 
-  const updateCount = (track, count, total) => {
-    if (!track || !count) return;
-    const index = Math.round(track.scrollLeft / track.clientWidth) + 1;
-    count.textContent = `${String(Math.min(index, total)).padStart(2, "0")} / ${String(total).padStart(2, "0")}`;
-    return Math.min(index, total) - 1;
-  };
-
   const lockImageTouch = (target) => {
     if (!target) return;
     target.addEventListener("dragstart", (event) => {
@@ -137,7 +130,6 @@
     }
 
     const track = make("div", "gallery-track");
-    track.classList.add("is-static-carousel");
     track.replaceChildren(
       ...section.images.map((imageItem, index) => {
         const src = typeof imageItem === "string" ? imageItem : imageItem.src;
@@ -168,6 +160,14 @@
     );
 
     let activeIndex = 0;
+    let snapTimer = 0;
+    let wheelDelta = 0;
+    let wheelGestureTimer = 0;
+    let wheelGestureMoved = false;
+    const clampIndex = (index) => Math.max(0, Math.min(index, imageTotal - 1));
+    const getSlideWidth = () => Math.max(track.clientWidth || 1, 1);
+    const getNearestIndex = () => clampIndex(Math.round(track.scrollLeft / getSlideWidth()));
+
     const renderImageDetail = (imageItem) => {
       if (typeof imageItem === "string") return null;
       const hasTitle = imageItem.captionZh || imageItem.captionEn;
@@ -199,20 +199,70 @@
       detailSlot.hidden = !detail;
       detailSlot.replaceChildren(...(detail ? [detail] : []));
     };
+    const syncCount = () => {
+      count.textContent = `${String(activeIndex + 1).padStart(2, "0")} / ${String(imageTotal).padStart(2, "0")}`;
+    };
     const setActiveSlide = () => {
       track.querySelectorAll(".gallery-slide").forEach((slide, index) => {
         slide.classList.toggle("is-active", index === activeIndex);
       });
     };
-    const goTo = (index) => {
-      activeIndex = Math.max(0, Math.min(index, imageTotal - 1));
+    const syncFromScroll = () => {
+      const nextIndex = getNearestIndex();
+      if (nextIndex !== activeIndex) {
+        activeIndex = nextIndex;
+        setActiveSlide();
+        syncImageDetail();
+      }
+      syncCount();
+    };
+    const scrollToIndex = (index, behavior = "smooth") => {
+      activeIndex = clampIndex(index);
       setActiveSlide();
       syncImageDetail();
-      count.textContent = `${String(activeIndex + 1).padStart(2, "0")} / ${String(imageTotal).padStart(2, "0")}`;
+      syncCount();
+      track.scrollTo({
+        left: activeIndex * getSlideWidth(),
+        behavior,
+      });
+    };
+    const settleToNearestSlide = () => {
+      window.clearTimeout(snapTimer);
+      snapTimer = window.setTimeout(() => {
+        scrollToIndex(getNearestIndex(), "smooth");
+      }, 120);
+    };
+    const handleTrackWheel = (event) => {
+      if (imageTotal <= 1 || event.ctrlKey) return;
+      if (Math.abs(event.deltaX) <= Math.abs(event.deltaY) || Math.abs(event.deltaX) < 1) return;
+
+      event.preventDefault();
+      wheelDelta += event.deltaX;
+      window.clearTimeout(wheelGestureTimer);
+
+      if (!wheelGestureMoved && Math.abs(wheelDelta) >= 40) {
+        const direction = wheelDelta > 0 ? 1 : -1;
+        wheelDelta = 0;
+        wheelGestureMoved = true;
+        scrollToIndex(activeIndex + direction);
+      }
+
+      wheelGestureTimer = window.setTimeout(() => {
+        wheelDelta = 0;
+        wheelGestureMoved = false;
+      }, 240);
     };
 
-    prev.addEventListener("click", () => goTo(activeIndex - 1));
-    next.addEventListener("click", () => goTo(activeIndex + 1));
+    prev.addEventListener("click", () => scrollToIndex(activeIndex - 1));
+    next.addEventListener("click", () => scrollToIndex(activeIndex + 1));
+    track.addEventListener("scroll", () => {
+      syncFromScroll();
+      settleToNearestSlide();
+    }, { passive: true });
+    track.addEventListener("wheel", handleTrackWheel, { passive: false });
+    window.addEventListener("resize", () => {
+      scrollToIndex(activeIndex, "auto");
+    });
 
     frame.append(prev, track, next, count);
     if (!isSingleSection) {
@@ -220,6 +270,7 @@
     }
     block.append(frame);
     syncImageDetail();
+    window.requestAnimationFrame(() => scrollToIndex(0, "auto"));
     block.append(detailSlot);
     const poem = renderSectionPoem(section);
     if (poem) {
