@@ -294,7 +294,6 @@ window.jadeSeries = (() => {
         titleZh: "上游的风",
         titleEn: "The Wind Upstream",
         embedSrc: "https://www.youtube.com/embed/uN6FlCbxMcs",
-        poster: `${upstreamWind}/海报.jpg`,
       },
       sections: [],
     },
