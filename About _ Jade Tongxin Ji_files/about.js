@@ -57,6 +57,106 @@
     return event;
   };
 
+  const getCvStatus = (item) => {
+    const zh = item.eventZh || item.zh || "";
+    const en = item.eventEn || item.en || "";
+    const zhStatus = zh.split("，").pop() || "";
+    const enStatus = en.split(",").pop() || "";
+    if (/入围/.test(zhStatus) || /shortlist/i.test(enStatus)) {
+      return { zh: "入围", en: "Shortlisted" };
+    }
+    if (/获奖|金奖|一等奖|优秀奖|优秀作品奖/.test(zhStatus) || /award|prize|awarded/i.test(enStatus)) {
+      return { zh: "获奖", en: "Awarded" };
+    }
+    return { zh: "参展", en: "Selected" };
+  };
+
+  const stripCvStatus = (text = "") => text
+    .replace(/，(参展|入围|获奖|金奖|一等奖|院校优秀奖|优秀作品奖|入选\/参展)$/u, "")
+    .replace(/,\s*(selected and exhibited|exhibited|shortlisted|gold award|first prize|outstanding academy award|outstanding work award)$/i, "");
+
+  const getCvDisplay = (item) => {
+    const eventZh = item.eventZh || item.zh || "";
+    const eventEn = item.eventEn || item.en || "";
+    const isSolo = /个展/.test(eventZh) || /solo exhibition/i.test(eventEn);
+    if (isSolo) {
+      return {
+        type: "solo",
+        titleZh: eventZh,
+        titleEn: eventEn.replace(/,\s*solo exhibition$/i, ""),
+        kind: "个展 / Solo Exhibition",
+      };
+    }
+    const status = getCvStatus(item);
+    return {
+      type: "group",
+      titleZh: stripCvStatus(eventZh),
+      titleEn: stripCvStatus(eventEn),
+      status: `状态：${status.zh} / ${status.en}`,
+      work: item.workZh && item.workEn ? `作品：${item.workZh} / ${item.workEn}` : "",
+    };
+  };
+
+  const makeCvRecord = (item) => {
+    const row = make("li", "cv-entry");
+    const href = exhibitionHref(item);
+    const display = getCvDisplay(item);
+    const title = make(href ? "a" : "div", `cv-entry-title${href ? " cv-entry-title-link" : ""}`);
+    if (href) {
+      title.href = href;
+      title.setAttribute("aria-label", `${display.titleZh || display.titleEn}, view exhibition`);
+    }
+    title.append(make("h3", "", display.titleZh), make("p", "", display.titleEn));
+    row.append(title);
+
+    if (display.type === "solo") {
+      row.append(make("p", "cv-entry-kind", display.kind));
+    } else {
+      row.append(make("p", "cv-entry-status", display.status));
+      if (display.work) {
+        row.append(make("p", "cv-entry-work", display.work));
+      }
+    }
+
+    if (href) {
+      const link = make("a", "cv-entry-link", "View exhibition →");
+      link.href = href;
+      row.append(link);
+      row.classList.add("has-link");
+    }
+
+    return row;
+  };
+
+  const makeCvYearGroup = (year, items) => {
+    const group = make("li", "cv-year-group");
+    const toggle = make("button", "cv-year-toggle");
+    const panel = make("div", "cv-year-panel");
+    const list = make("ol", "cv-year-list");
+    const panelId = `about-cv-${year}`;
+
+    toggle.type = "button";
+    toggle.setAttribute("aria-expanded", "false");
+    toggle.setAttribute("aria-controls", panelId);
+    toggle.append(make("span", "cv-year-number", year), make("span", "cv-year-symbol", "+"));
+
+    panel.id = panelId;
+    panel.hidden = true;
+    list.replaceChildren(...items.map(makeCvRecord));
+    panel.append(list);
+
+    toggle.addEventListener("click", () => {
+      const isOpen = toggle.getAttribute("aria-expanded") === "true";
+      toggle.setAttribute("aria-expanded", String(!isOpen));
+      toggle.querySelector(".cv-year-symbol").textContent = isOpen ? "+" : "−";
+      panel.hidden = isOpen;
+      group.classList.toggle("is-open", !isOpen);
+    });
+
+    group.append(toggle, panel);
+    return group;
+  };
+
   const makeCvWork = (item) => {
     const workText = item.workZh && item.workEn ? `${item.workZh} / ${item.workEn}` : item.zh || "";
     return make("span", "cv-text cv-work", workText);
@@ -139,17 +239,13 @@
   const exhibitions = document.querySelector('[data-render="exhibitions"]');
   const exhibitionItems = presentationHistory.length ? presentationHistory : content.exhibitions || [];
   if (exhibitions && Array.isArray(exhibitionItems)) {
+    const years = [...new Set(exhibitionItems.map((item) => item.year))]
+      .sort((a, b) => Number(b) - Number(a));
     exhibitions.replaceChildren(
-      ...exhibitionItems.map((item) => {
-        const row = make("li", "cv-row");
-        if (exhibitionHref(item)) {
-          row.classList.add("has-link");
-        }
-        row.append(make("span", "cv-year", item.year));
-        row.append(makeCvWork(item));
-        row.append(makeCvEvent(item));
-        return row;
-      })
+      ...years.map((year) => makeCvYearGroup(
+        year,
+        exhibitionItems.filter((item) => item.year === year)
+      ))
     );
   }
 

@@ -24,10 +24,10 @@ window.jadeAboutContent = {
   bio: {
     zhTitle: "个人简介",
     zh:
-      "纪彤心，2002年生。她的创作常以摄影、影像、行为等综合媒介展开，围绕自我身份、身体经验、记忆与物像之间的关系进行探索。",
+      "纪彤心，2002年生。创作常以摄影、影像、行为等综合媒介展开，围绕自我身份、身体经验、记忆与物像之间的关系进行探索。",
     enTitle: "Biography",
     en:
-      "Jade Tongxin Ji, born in 2002. Her practice often works across photography, moving image and performance, exploring self-identity, bodily experience, memory and the relationship between image and object.",
+      "Jade Tongxin Ji, born in 2002. The practice often works across photography, moving image and performance, exploring self-identity, bodily experience, memory and the relationship between image and object.",
   },
 
   facts: [
@@ -35,12 +35,12 @@ window.jadeAboutContent = {
       title: "学历 / Education",
       entries: [
         {
-          zh: "2024.09-至今 硕士研究生，西安美术学院影视动画系，摄影艺术方向",
-          en: "2024.09-present Master's Candidate, Photography Art, Department of Film and Animation, Xi'an Academy of Fine Arts",
+          zh: "2024.09-至今 硕士，西安美术学院影视动画系，摄影艺术方向",
+          en: "2024.09-present MFA Candidate, Photography Art, Department of Film and Animation, Xi'an Academy of Fine Arts",
         },
         {
           zh: "2020.09-2024.06 本科，西安美术学院影视动画系，摄影专业",
-          en: "2020.09-2024.06 Bachelor's Degree, Photography, Department of Film and Animation, Xi'an Academy of Fine Arts",
+          en: "2020.09-2024.06 BFA, Photography, Department of Film and Animation, Xi'an Academy of Fine Arts",
         },
       ],
     },
@@ -68,7 +68,7 @@ window.jadeAboutContent = {
     },
   ],
 
-  exhibitionsTitle: "参展 / 入围 / 获奖\nSelected Exhibitions / Awards / Screenings",
+  exhibitionsTitle: "部分参展与获奖\nSelected Exhibitions / Awards / Screenings",
   exhibitions: [],
 
   footerLinks: [

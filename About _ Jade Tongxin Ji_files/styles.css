@@ -614,7 +614,7 @@ body {
   list-style: none;
 }
 
-.cv-list li {
+.cv-row {
   display: grid;
   grid-template-columns: 76px minmax(0, 1fr) minmax(0, 1.1fr);
   gap: 20px;
@@ -622,9 +622,142 @@ body {
   border-top: 1px solid rgba(245, 242, 236, 0.2);
 }
 
-.cv-list li:first-child {
+.cv-row:first-child {
   border-top: 0;
   padding-top: 0;
+}
+
+.cv-year-group {
+  border-top: 1px solid rgba(245, 242, 236, 0.22);
+}
+
+.cv-year-group:first-child {
+  border-top: 0;
+}
+
+.cv-year-toggle {
+  display: grid;
+  width: 100%;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 18px;
+  align-items: center;
+  padding: 16px 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: rgba(245, 242, 236, 0.94);
+  cursor: pointer;
+  font-family: "Courier New", Courier, monospace;
+  font-size: clamp(22px, 3vw, 38px);
+  font-weight: 700;
+  line-height: 1;
+  text-align: left;
+}
+
+.cv-year-toggle:hover,
+.cv-year-toggle:focus-visible {
+  color: #f5f2ec;
+  outline: none;
+}
+
+.cv-year-symbol {
+  color: rgba(245, 242, 236, 0.68);
+  font-size: 0.72em;
+  line-height: 1;
+}
+
+.cv-year-panel {
+  padding: 0 0 22px;
+}
+
+.cv-year-list {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.cv-entry {
+  display: grid;
+  gap: 7px;
+  padding: 16px 0;
+  border-top: 1px solid rgba(245, 242, 236, 0.14);
+}
+
+.cv-entry-title {
+  display: grid;
+  gap: 5px;
+}
+
+.cv-entry-title-link {
+  color: inherit;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.cv-entry-title-link h3 {
+  text-decoration: underline;
+  text-decoration-color: rgba(245, 242, 236, 0.34);
+  text-underline-offset: 0.22em;
+}
+
+.cv-entry-title-link:hover h3,
+.cv-entry-title-link:focus-visible h3 {
+  color: #f5f2ec;
+  text-decoration-color: #f5f2ec;
+}
+
+.cv-entry-title-link:focus-visible {
+  outline: 1px solid rgba(245, 242, 236, 0.46);
+  outline-offset: 4px;
+}
+
+.cv-entry-title h3 {
+  margin: 0;
+  color: rgba(245, 242, 236, 0.94);
+  font-family: "PingFang SC", "Noto Sans SC", "Microsoft YaHei", sans-serif;
+  font-size: clamp(15px, 1.25vw, 20px);
+  font-weight: 500;
+  line-height: 1.35;
+}
+
+.cv-entry-title p,
+.cv-entry-kind,
+.cv-entry-status,
+.cv-entry-work {
+  margin: 0;
+  color: rgba(245, 242, 236, 0.68);
+  font-family: "Helvetica Neue", Arial, sans-serif;
+  font-size: clamp(12px, 1vw, 15px);
+  font-weight: 300;
+  line-height: 1.46;
+}
+
+.cv-entry-kind,
+.cv-entry-status,
+.cv-entry-work {
+  color: rgba(245, 242, 236, 0.8);
+}
+
+.cv-entry-link {
+  justify-self: start;
+  margin-top: 5px;
+  color: rgba(245, 242, 236, 0.62);
+  font-family: "Courier New", Courier, monospace;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.25;
+  text-decoration: underline;
+  text-decoration-color: rgba(245, 242, 236, 0.42);
+  text-underline-offset: 0.24em;
+  text-transform: uppercase;
+}
+
+.cv-entry-link:hover,
+.cv-entry-link:focus-visible {
+  color: #f5f2ec;
+  text-decoration-color: #f5f2ec;
+  outline: none;
 }
 
 .cv-year {
@@ -2123,7 +2256,8 @@ body {
   .exhibitions-hero,
   .series-year-block,
   .cv-section,
-  .cv-list li {
+  .cv-row,
+  .cv-entry {
     grid-template-columns: 1fr;
   }
 
@@ -2323,9 +2457,23 @@ body {
     font-size: 16px;
   }
 
-  .cv-list li {
+  .cv-row {
     gap: 8px;
     padding: 20px 0;
+  }
+
+  .cv-year-toggle {
+    padding: 18px 0;
+    font-size: clamp(24px, 8vw, 34px);
+  }
+
+  .cv-entry {
+    gap: 6px;
+    padding: 15px 0;
+  }
+
+  .cv-entry-title h3 {
+    font-size: 15px;
   }
 
   .series-exhibition-item {
@@ -2981,7 +3129,11 @@ body {
 
   .about-page .fact-line-en,
   .about-page .cv-text-en,
-  .about-page .cv-list li .cv-text:nth-child(3) {
+  .about-page .cv-event-title-en,
+  .about-page .cv-entry-title p,
+  .about-page .cv-entry-kind,
+  .about-page .cv-entry-status,
+  .about-page .cv-entry-work {
     font-size: 13px;
   }
 }
