@@ -71,12 +71,23 @@
     setNavTriggerState(trigger, false);
     trigger.setAttribute("aria-expanded", "false");
 
-    trigger.addEventListener("click", (event) => {
-      event.preventDefault();
+    const toggleNavMenu = () => {
       const isOpen = navMenu.classList.toggle("is-open");
       closeSeriesMenus(isOpen ? navMenu : null);
       trigger.setAttribute("aria-expanded", String(isOpen));
       setNavTriggerState(trigger, isOpen);
+    };
+
+    trigger.addEventListener("click", (event) => {
+      event.preventDefault();
+      toggleNavMenu();
+    });
+
+    navMenu.addEventListener("click", (event) => {
+      if (event.target.closest("[data-render-series-menu]")) return;
+      if (event.target.closest(".home-nav-trigger, .page-nav-trigger")) return;
+      event.preventDefault();
+      toggleNavMenu();
     });
 
     menu.addEventListener("click", (event) => {
