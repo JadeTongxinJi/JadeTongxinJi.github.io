@@ -71,8 +71,5 @@ window.jadeAboutContent = {
   exhibitionsTitle: "参展与获奖\nExhibitions / Awards / Screenings",
   exhibitions: [],
 
-  footerLinks: [
-    { label: "witnessjade@gmail.com", href: "mailto:witnessjade@gmail.com" },
-    { label: "Instagram @witnessjade", href: "https://www.instagram.com/witnessjade/" },
-  ],
+  footerLinks: [],
 };
