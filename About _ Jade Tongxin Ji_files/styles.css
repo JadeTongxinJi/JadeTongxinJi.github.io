@@ -664,6 +664,15 @@ body {
   text-underline-offset: 0.22em;
 }
 
+.cv-event-title-zh {
+  font-family: "PingFang SC", "Noto Sans SC", "Microsoft YaHei", sans-serif;
+  font-weight: 400;
+}
+
+.cv-event-title-en {
+  color: rgba(245, 242, 236, 0.62);
+}
+
 .cv-event-link:hover,
 .cv-event-link:focus-visible {
   color: #f5f2ec;

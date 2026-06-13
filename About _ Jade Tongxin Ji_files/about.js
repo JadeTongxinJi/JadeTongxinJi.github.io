@@ -39,11 +39,18 @@
   const makeCvEvent = (item) => {
     const href = exhibitionHref(item);
     const event = make(href ? "a" : "span", `cv-text cv-event${href ? " cv-event-link" : ""}`);
+    const eventZh = item.eventZh || item.zh || "";
+    const eventEn = item.eventEn || item.en || "";
     if (href) {
       event.href = href;
-      event.setAttribute("aria-label", `${item.eventEn || item.en || item.zh}, view exhibition`);
+      event.setAttribute("aria-label", `${eventZh || eventEn}, view exhibition`);
     }
-    event.append(make("span", "cv-event-title", item.eventEn || item.en || item.zh || ""));
+    if (eventZh) {
+      event.append(make("span", "cv-event-title cv-event-title-zh", eventZh));
+    }
+    if (eventEn) {
+      event.append(make("span", "cv-event-title-en", eventEn));
+    }
     if (href) {
       event.append(make("span", "cv-link-cue", "View exhibition →"));
     }

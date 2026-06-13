@@ -730,10 +730,13 @@
       const titleLine = make(href ? "a" : "span", `series-exhibition-title${href ? " series-exhibition-link" : ""}`);
       if (href) {
         titleLine.href = href;
-        titleLine.setAttribute("aria-label", `${item.eventEn || item.titleEn}, view exhibition`);
+        titleLine.setAttribute("aria-label", `${item.eventZh || item.eventEn || item.titleZh || item.titleEn}, view exhibition`);
         row.classList.add("has-link");
       }
-      titleLine.append(make("strong", "", item.eventEn || item.titleEn));
+      titleLine.append(make("strong", "", item.eventZh || item.titleZh || item.eventEn || item.titleEn));
+      if (item.eventEn || item.titleEn) {
+        titleLine.append(make("em", "", item.eventEn || item.titleEn));
+      }
       if (href) {
         titleLine.append(make("span", "series-exhibition-action", "View exhibition →"));
       }
