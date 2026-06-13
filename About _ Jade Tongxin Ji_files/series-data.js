@@ -26,6 +26,7 @@ window.jadeSeries = (() => {
       mediumZh: "摄影、装置、合作视频",
       mediumEn: "Photography, Installation, Collaborative Video",
       cover: `${dandelionParis}/photography/01.jpg`,
+      atmosphereImage: `${dandelionParis}/statement-atmosphere.jpg`,
       video: {
         titleZh: "合作视频：对面的窗户",
         titleEn: "Collaborative Video: The Opposite Window",

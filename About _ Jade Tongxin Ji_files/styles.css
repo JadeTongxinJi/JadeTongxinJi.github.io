@@ -1754,6 +1754,30 @@ body {
   padding-bottom: 0;
 }
 
+.series-gallery-page .gallery-info.has-series-atmosphere {
+  isolation: isolate;
+}
+
+.series-gallery-page .gallery-info.has-series-atmosphere::before {
+  content: "";
+  grid-column: 1 / -1;
+  grid-row: 2 / 6;
+  align-self: stretch;
+  min-height: clamp(220px, 24vw, 304px);
+  background-image: linear-gradient(90deg, rgba(13, 13, 12, 0.68) 0%, rgba(13, 13, 12, 0.46) 46%, rgba(13, 13, 12, 0.18) 76%, rgba(13, 13, 12, 0.08) 100%), var(--series-atmosphere-image);
+  background-position: center right;
+  background-size: cover;
+  -webkit-mask-image: linear-gradient(90deg, transparent 0%, rgba(0, 0, 0, 0.18) 12%, #000 38%, #000 100%);
+  mask-image: linear-gradient(90deg, transparent 0%, rgba(0, 0, 0, 0.18) 12%, #000 38%, #000 100%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.series-gallery-page .gallery-info.has-series-atmosphere > * {
+  position: relative;
+  z-index: 1;
+}
+
 .series-gallery-page .gallery-back {
   grid-column: 1;
   grid-row: 1;

@@ -167,6 +167,7 @@
   const titleEn = document.querySelector("[data-series-title-en]");
   const meta = document.querySelector("[data-series-meta]");
   const medium = document.querySelector("[data-series-medium]");
+  const galleryInfo = detailRoot.querySelector(".gallery-info");
   const statement = document.querySelector("[data-series-statement]");
   const statementToggle = document.querySelector("[data-series-statement-toggle]");
   const statementBody = document.querySelector("[data-series-statement-body]");
@@ -930,6 +931,16 @@
     if (!current) return;
 
     document.title = `${current.titleEn} / Series / Jade Tongxin Ji`;
+    if (galleryInfo) {
+      const atmosphereImage = current.atmosphereImage || "";
+      galleryInfo.classList.toggle("has-series-atmosphere", Boolean(atmosphereImage));
+      if (atmosphereImage) {
+        const atmosphereUrl = new URL(atmosphereImage, window.location.href).href;
+        galleryInfo.style.setProperty("--series-atmosphere-image", `url("${atmosphereUrl}")`);
+      } else {
+        galleryInfo.style.removeProperty("--series-atmosphere-image");
+      }
+    }
     if (titleZh) titleZh.textContent = current.titleZh;
     if (titleEn) titleEn.textContent = current.titleEn;
     if (meta) meta.textContent = `${current.year} / Series`;
