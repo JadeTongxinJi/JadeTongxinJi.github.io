@@ -26,6 +26,7 @@ window.jadeSeries = (() => {
       mediumZh: "摄影、装置、合作视频",
       mediumEn: "Photography, Installation, Collaborative Video",
       cover: `${dandelionParis}/photography/01.jpg`,
+      atmosphereImage: `${dandelionParis}/statement-atmosphere.jpg`,
       video: {
         titleZh: "合作视频：对面的窗户",
         titleEn: "Collaborative Video: The Opposite Window",
@@ -107,6 +108,7 @@ window.jadeSeries = (() => {
       mediumZh: "摄影、装置",
       mediumEn: "Photography, Installation",
       cover: `${newYearElevator}/photography/01.jpg`,
+      atmosphereImage: `${newYearElevator}/statement-atmosphere.jpg`,
       layout: "thumbnails",
       statementZh: [
         `本作品以小型电梯模型为核心，通过装置与摄影照片的结合，反映广州旧居民楼老龄住户面对小区加装电梯时的矛盾与无奈。电梯不仅是一个现代化设施，更是旧城区居民们渴望改善生活却因全楼共识而无法实现的梦想。装置上贴附的照片中，老年人在本应有电梯的窗户前讲述着他们的生活故事，表情中透露着隐隐的失落与向往，他们一方面希望通过加装电梯来消除生活中的障碍，带来便捷，另一方面却因复杂的社区关系而面临决策困境。加装电梯的议题在矛盾与挣扎中被搁置，仿佛映射着旧城区住户对生活的另一种无能为力。作品将这个议题还原于展览现场，邀请观众们反思在城市化进程中，个体在社会集体决策中的孤立与无奈感。电梯的存在与否不仅仅是物理空间的转变，更是对旧居民楼住户状况的现实反映。`,
@@ -140,6 +142,7 @@ window.jadeSeries = (() => {
       mediumZh: "摄影、行为影像",
       mediumEn: "Photography, Performance Video",
       cover: `${hesitation}/1.jpg`,
+      atmosphereImage: `${hesitation}/statement-atmosphere.jpg`,
       videos: {
         titleZh: "行为影像",
         titleEn: "Performance Video",
@@ -305,6 +308,7 @@ window.jadeSeries = (() => {
       mediumZh: "摄影、行为影像、摄影书",
       mediumEn: "Photography, Performance Video, Photo Book",
       cover: `${epitaph}/01-呼吸时.jpg`,
+      atmosphereImage: `${epitaph}/statement-atmosphere.jpg`,
       video: {
         titleZh: "种子",
         titleEn: "Seed",
