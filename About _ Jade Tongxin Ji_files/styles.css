@@ -492,7 +492,7 @@ body {
 }
 
 .name-en {
-  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Courier New", monospace;
+  font-family: Georgia, "Times New Roman", serif;
   font-weight: 700;
   line-height: 1.14;
   white-space: pre-line;
@@ -3321,7 +3321,7 @@ body {
 }
 
 .about-page .name-en {
-  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Courier New", monospace;
+  font-family: Georgia, "Times New Roman", serif;
   font-weight: 700;
   line-height: 1.14;
 }
