@@ -141,6 +141,7 @@ window.jadeSeries = (() => {
       mediumZh: "摄影、行为影像",
       mediumEn: "Photography, Performance Video",
       cover: `${hesitation}/1.jpg`,
+      atmosphereImage: `${hesitation}/statement-atmosphere.jpg`,
       videos: {
         titleZh: "行为影像",
         titleEn: "Performance Video",
