@@ -1809,7 +1809,7 @@ body {
 .series-image-detail-title {
   display: flex;
   gap: 10px;
-  align-items: center;
+  align-items: flex-start;
 }
 
 .series-image-detail-heading {
@@ -1840,10 +1840,11 @@ body {
 
 .series-image-detail-toggle {
   display: inline-grid;
+  position: relative;
   flex: 0 0 auto;
-  align-self: center;
   width: 18px;
   height: 18px;
+  margin-top: 1px;
   place-items: center;
   border: 0;
   border-radius: 0;
@@ -1851,11 +1852,25 @@ body {
   color: rgba(245, 242, 236, 0.76);
   cursor: pointer;
   font-family: "Courier New", Courier, monospace;
-  font-size: 16px;
+  font-size: 0;
   line-height: 1;
   padding: 0;
+  transform: none;
+  transition: color 160ms ease;
+}
+
+.series-image-detail-toggle::before {
+  content: "›";
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: currentColor;
+  font-size: 16px;
+  line-height: 1;
   transform: rotate(90deg);
-  transition: color 160ms ease, transform 160ms ease;
+  transform-origin: center;
+  transition: transform 160ms ease;
 }
 
 .series-image-detail-toggle:hover,
@@ -1865,6 +1880,10 @@ body {
 }
 
 .series-image-detail-toggle[aria-expanded="true"] {
+  transform: none;
+}
+
+.series-image-detail-toggle[aria-expanded="true"]::before {
   transform: rotate(-90deg);
 }
 
