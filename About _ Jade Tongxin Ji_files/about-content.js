@@ -35,12 +35,12 @@ window.jadeAboutContent = {
       title: "学历 / Education",
       entries: [
         {
-          zh: "2024.09-至今 硕士研究生，西安美术学院影视动画系，摄影艺术方向",
-          en: "2024.09-present Master's Candidate, Photography Art, Department of Film and Animation, Xi'an Academy of Fine Arts",
+          zh: "2024.09-至今 硕士，西安美术学院影视动画系，摄影艺术方向",
+          en: "2024.09-present MFA Candidate, Photography Art, Department of Film and Animation, Xi'an Academy of Fine Arts",
         },
         {
           zh: "2020.09-2024.06 本科，西安美术学院影视动画系，摄影专业",
-          en: "2020.09-2024.06 Bachelor's Degree, Photography, Department of Film and Animation, Xi'an Academy of Fine Arts",
+          en: "2020.09-2024.06 BFA, Photography, Department of Film and Animation, Xi'an Academy of Fine Arts",
         },
       ],
     },
