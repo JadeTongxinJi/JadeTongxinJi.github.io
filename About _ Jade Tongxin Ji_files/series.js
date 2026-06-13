@@ -217,6 +217,16 @@
         image.src = src;
         image.alt = `${current.titleZh} ${section.titleZh} ${index + 1}`;
         image.draggable = false;
+        const setImageOrientation = () => {
+          const isPortrait = image.naturalHeight > image.naturalWidth;
+          imageWrap.classList.toggle("is-portrait", isPortrait);
+          imageWrap.classList.toggle("is-landscape", !isPortrait);
+        };
+        if (image.complete && image.naturalWidth) {
+          setImageOrientation();
+        } else {
+          image.addEventListener("load", setImageOrientation, { once: true });
+        }
         lockImageTouch(imageWrap);
         imageWrap.append(image);
 
@@ -249,24 +259,10 @@
     let touchTracking = false;
     let touchIsHorizontal = false;
     const clampIndex = (index) => Math.max(0, Math.min(index, imageTotal - 1));
-    const getSlideWidth = () => Math.max(track.clientWidth || 1, 1);
-    const getSlideLeft = (index) => {
-      const slide = track.querySelectorAll(".gallery-slide")[clampIndex(index)];
-      if (!slide) return index * getSlideWidth();
-      return track.scrollLeft + slide.getBoundingClientRect().left - track.getBoundingClientRect().left;
-    };
+    const getSlideWidth = () => Math.max((track.scrollWidth / imageTotal) || track.clientWidth || 1, 1);
+    const getSlideLeft = (index) => clampIndex(index) * getSlideWidth();
     const getNearestIndex = () => {
-      let nearestIndex = 0;
-      let nearestDistance = Infinity;
-      track.querySelectorAll(".gallery-slide").forEach((slide, index) => {
-        const slideLeft = track.scrollLeft + slide.getBoundingClientRect().left - track.getBoundingClientRect().left;
-        const distance = Math.abs(track.scrollLeft - slideLeft);
-        if (distance < nearestDistance) {
-          nearestDistance = distance;
-          nearestIndex = index;
-        }
-      });
-      return clampIndex(nearestIndex);
+      return clampIndex(Math.round(track.scrollLeft / getSlideWidth()));
     };
 
     const renderImageDetail = (imageItem) => {

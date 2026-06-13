@@ -2911,6 +2911,7 @@ body {
 
   .series-gallery-section {
     --series-image-height: clamp(280px, 50svh, 430px);
+    --series-portrait-image-height: clamp(230px, 31svh, 300px);
   }
 
   .series-gallery-frame {
@@ -2924,7 +2925,8 @@ body {
   }
 
   .series-gallery-frame .gallery-track {
-    max-width: calc(100% - 74px);
+    width: calc(100vw - 116px);
+    max-width: min(100%, calc(100vw - 116px));
   }
 
   .series-gallery-section .gallery-slide,
@@ -2957,6 +2959,10 @@ body {
     -webkit-user-select: none;
     -webkit-user-drag: none;
     -webkit-touch-callout: none;
+  }
+
+  .series-gallery-section .gallery-image-wrap.is-portrait img {
+    max-height: var(--series-portrait-image-height);
   }
 
   .series-section-poem {
