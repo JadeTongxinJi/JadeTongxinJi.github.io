@@ -22,9 +22,16 @@
   };
   const cleanNavTriggerLabel = (text) => (
     text.trim()
-      .replace(/\s+[↑↓]$/, "")
+      .replace(/\s*[↑↓]$/, "")
       .replace(/\s*\/\s*$/, "")
   );
+  const setNavTriggerState = (trigger, isOpen) => {
+    const label = trigger.dataset.baseLabel || cleanNavTriggerLabel(trigger.textContent);
+    trigger.replaceChildren(
+      make("span", "nav-trigger-label", label),
+      make("span", "nav-trigger-arrow", isOpen ? "↑" : "↓")
+    );
+  };
   const seriesByRecent = [...series].sort((a, b) => Number(b.year) - Number(a.year));
   const menuLabelZh = (item) => `${item.year}-${item.titleZh}`;
   const menuLabelEn = (item) => `${item.year}-${item.titleEn}`;
@@ -50,7 +57,7 @@
       const trigger = navMenu.querySelector(".home-nav-trigger, .page-nav-trigger");
       if (trigger) {
         trigger.setAttribute("aria-expanded", "false");
-        if (trigger.dataset.baseLabel) trigger.textContent = `${trigger.dataset.baseLabel} ↓`;
+        if (trigger.dataset.baseLabel) setNavTriggerState(trigger, false);
       }
     });
   };
@@ -61,7 +68,7 @@
     if (!navMenu || !trigger) return;
 
     trigger.dataset.baseLabel = cleanNavTriggerLabel(trigger.textContent);
-    trigger.textContent = `${trigger.dataset.baseLabel} ↓`;
+    setNavTriggerState(trigger, false);
     trigger.setAttribute("aria-expanded", "false");
 
     trigger.addEventListener("click", (event) => {
@@ -69,7 +76,7 @@
       const isOpen = navMenu.classList.toggle("is-open");
       closeSeriesMenus(isOpen ? navMenu : null);
       trigger.setAttribute("aria-expanded", String(isOpen));
-      trigger.textContent = `${trigger.dataset.baseLabel} ${isOpen ? "↑" : "↓"}`;
+      setNavTriggerState(trigger, isOpen);
     });
 
     menu.addEventListener("click", (event) => {
@@ -77,7 +84,7 @@
       if (!link) return;
       navMenu.classList.remove("is-open");
       trigger.setAttribute("aria-expanded", "false");
-      trigger.textContent = `${trigger.dataset.baseLabel} ↓`;
+      setNavTriggerState(trigger, false);
     });
   });
 
