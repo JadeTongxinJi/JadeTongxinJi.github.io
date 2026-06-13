@@ -3911,6 +3911,44 @@ body {
   color: #fff;
 }
 
+.page-nav-menu {
+  flex-direction: column;
+  align-items: flex-end;
+  padding-bottom: 0;
+  margin-bottom: 0;
+}
+
+.page-nav-menu > .page-nav-dropdown {
+  position: static;
+  top: auto;
+  right: auto;
+  left: auto;
+  display: none;
+  width: max-content;
+  min-width: 0;
+  max-width: min(300px, calc(100vw - 32px));
+  max-height: none;
+  overflow: visible;
+  margin-top: 8px;
+  padding: 4px 0;
+  border-top: 0;
+  opacity: 1;
+  pointer-events: auto;
+  transform: none;
+}
+
+.page-nav-menu.is-open > .page-nav-dropdown {
+  display: grid;
+  transform: none;
+}
+
+.about-page .page-nav-menu > .page-nav-dropdown,
+.exhibition-gallery-page .page-nav-menu > .page-nav-dropdown {
+  width: max-content;
+  min-width: 0;
+  max-width: min(300px, calc(100vw - 32px));
+}
+
 @media (max-width: 880px) {
   .site-footer {
     padding-right: 24px;
