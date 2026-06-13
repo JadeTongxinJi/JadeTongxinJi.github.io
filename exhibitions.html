@@ -5,15 +5,40 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Exhibitions / Jade Tongxin Ji</title>
     <meta name="description" content="Exhibitions for Jade Tongxin Ji / 纪彤心." />
-    <meta http-equiv="refresh" content="0; url=exhibition-gallery.html#dandelion-paris-cite" />
-    <link rel="canonical" href="exhibition-gallery.html#dandelion-paris-cite" />
-    <link rel="stylesheet" href="./About _ Jade Tongxin Ji_files/styles.css?v=20260611-installation-detail-1" />
-    <script>
-      window.location.replace("exhibition-gallery.html#dandelion-paris-cite");
-    </script>
+    <link rel="stylesheet" href="./About _ Jade Tongxin Ji_files/styles.css?v=20260613-exhibition-accordion-1" />
+    <script src="./About _ Jade Tongxin Ji_files/exhibitions-data.js?v=20260613-exhibition-accordion-1" defer></script>
+    <script src="./About _ Jade Tongxin Ji_files/series-data.js?v=20260611-new-year-series-1" defer></script>
+    <script src="./About _ Jade Tongxin Ji_files/exhibitions.js?v=20260613-exhibition-accordion-1" defer></script>
+    <script src="./About _ Jade Tongxin Ji_files/series.js?v=20260611-new-year-series-1" defer></script>
   </head>
-  <body class="redirect-page">
-    <a href="exhibition-gallery.html#dandelion-paris-cite">Exhibitions / 展览</a>
-    <footer class="site-footer redirect-footer">Copyright © Tongxin Ji. All rights reserved.</footer>
+  <body class="exhibitions-page">
+    <header class="page-header" aria-label="Site header">
+      <a class="site-link" href="index.html">Jade Tongxin Ji / 纪彤心</a>
+      <nav class="page-nav" aria-label="Main navigation">
+        <a href="About _ Jade Tongxin Ji.html">ABOUT /</a>
+        <span class="page-nav-menu">
+          <button class="page-nav-trigger is-current" type="button" aria-haspopup="true">EXHIBITIONS /</button>
+          <span class="page-nav-dropdown" data-render-exhibition-menu></span>
+        </span>
+        <span class="page-nav-menu">
+          <button class="page-nav-trigger" type="button" aria-haspopup="true">SERIES /</button>
+          <span class="page-nav-dropdown" data-render-series-menu></span>
+        </span>
+        <a href="contact.html">CONTACT /</a>
+      </nav>
+    </header>
+
+    <main class="exhibitions-shell">
+      <section class="exhibitions-title" aria-labelledby="exhibitions-title">
+        <a class="gallery-back" href="index.html">← HOME</a>
+        <h1 id="exhibitions-title">EXHIBITIONS</h1>
+        <p>展览 / 参展 / 入围 / 获奖</p>
+      </section>
+
+      <section class="exhibition-directory" aria-label="Exhibitions by year">
+        <div class="exhibition-year-accordion" data-render-exhibition-directory></div>
+      </section>
+    </main>
+    <footer class="site-footer">Copyright © Tongxin Ji. All rights reserved.</footer>
   </body>
 </html>

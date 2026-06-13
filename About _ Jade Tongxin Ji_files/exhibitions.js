@@ -1,5 +1,6 @@
 (() => {
   const exhibitions = window.jadeExhibitions || [];
+  const exhibitionDirectory = window.jadeExhibitionDirectory || [];
   const make = (tag, className, text) => {
     const element = document.createElement(tag);
     if (className) {
@@ -12,7 +13,10 @@
   };
 
   const galleryHref = (item) => `exhibition-gallery.html#${item.id}`;
+  const detailHref = (item) => item.detailId ? `exhibition-gallery.html#${item.detailId}` : item.href || "";
   const exhibitionsByRecent = [...exhibitions].sort((a, b) => Number(b.year) - Number(a.year));
+  const directoryByRecent = [...(exhibitionDirectory.length ? exhibitionDirectory : exhibitions)]
+    .sort((a, b) => Number(b.year) - Number(a.year));
   const menuLabelZh = (item) => ({
     main: `${item.year}-${item.workZh}`,
     sub: item.venueZh,
@@ -46,21 +50,69 @@
 
   const directory = document.querySelector("[data-render-exhibition-directory]");
   if (directory) {
+    const years = [...new Set(directoryByRecent.map((item) => item.year))].sort((a, b) => Number(b) - Number(a));
     directory.replaceChildren(
-      ...exhibitionsByRecent.map((item, index) => {
-        const listItem = make("li", "");
-        const row = make("a", "exhibition-card");
-        row.href = galleryHref(item);
-        row.style.setProperty("--cover", `url("${item.cover}")`);
+      ...years.map((year) => {
+        const group = make("section", "exhibition-year-group");
+        const yearButton = make("button", "exhibition-year-toggle");
+        const panel = make("div", "exhibition-year-panel");
+        const panelId = `exhibition-year-${year}`;
+        const yearItems = directoryByRecent.filter((item) => item.year === year);
 
-        const number = make("span", "exhibition-index", String(index + 1).padStart(2, "0"));
-        const text = make("div", "exhibition-name");
-        text.append(make("span", "exhibition-year", item.year));
-        text.append(make("h2", "", item.titleZh));
-        text.append(make("p", "", item.titleEn));
-        row.append(number, text);
-        listItem.append(row);
-        return listItem;
+        yearButton.type = "button";
+        yearButton.setAttribute("aria-expanded", "false");
+        yearButton.setAttribute("aria-controls", panelId);
+        yearButton.append(
+          make("span", "exhibition-year-number", year),
+          make("span", "exhibition-year-symbol", "+")
+        );
+
+        panel.id = panelId;
+        panel.hidden = true;
+
+        const list = make("ol", "exhibition-year-list");
+        list.replaceChildren(
+          ...yearItems.map((item) => {
+            const row = make("li", `exhibition-directory-item${item.type === "solo" ? " is-solo" : ""}`);
+            const title = make("div", "exhibition-directory-title");
+            title.append(
+              make("h2", "", item.titleZh),
+              make("p", "", item.titleEn)
+            );
+            row.append(title);
+
+            if (item.type === "solo") {
+              row.append(make("p", "exhibition-directory-kind", "个展 / Solo Exhibition"));
+            } else {
+              const status = `${item.statusZh || "参展"} / ${item.statusEn || "Exhibited"}`;
+              const work = `${item.workZh || item.work || item.workEn || ""}${item.workZh && item.workEn ? " / " : ""}${item.workEn || ""}`;
+              row.append(make("p", "exhibition-directory-status", `状态：${status}`));
+              if (work.trim()) {
+                row.append(make("p", "exhibition-directory-work", `作品：${work}`));
+              }
+            }
+
+            const href = detailHref(item);
+            if (href) {
+              const link = make("a", "exhibition-directory-link", "VIEW EXHIBITION →");
+              link.href = href;
+              row.append(link);
+            }
+            return row;
+          })
+        );
+        panel.append(list);
+
+        yearButton.addEventListener("click", () => {
+          const isOpen = yearButton.getAttribute("aria-expanded") === "true";
+          yearButton.setAttribute("aria-expanded", String(!isOpen));
+          yearButton.querySelector(".exhibition-year-symbol").textContent = isOpen ? "+" : "−";
+          panel.hidden = isOpen;
+          group.classList.toggle("is-open", !isOpen);
+        });
+
+        group.append(yearButton, panel);
+        return group;
       })
     );
   }

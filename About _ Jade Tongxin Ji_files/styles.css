@@ -733,6 +733,115 @@ body {
   margin-top: clamp(44px, 8vw, 104px);
 }
 
+.exhibition-year-accordion {
+  display: grid;
+}
+
+.exhibition-year-group {
+  border-bottom: 1px solid rgba(245, 242, 236, 0.24);
+}
+
+.exhibition-year-toggle {
+  display: grid;
+  width: 100%;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 20px;
+  align-items: center;
+  padding: clamp(18px, 3vw, 32px) 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: #f5f2ec;
+  cursor: pointer;
+  font-family: "Courier New", Courier, monospace;
+  font-size: clamp(28px, 5vw, 76px);
+  font-weight: 700;
+  line-height: 1;
+  text-align: left;
+}
+
+.exhibition-year-toggle:hover,
+.exhibition-year-toggle:focus-visible {
+  color: #fff;
+  outline: none;
+}
+
+.exhibition-year-symbol {
+  color: rgba(245, 242, 236, 0.76);
+  font-size: 0.62em;
+  line-height: 1;
+}
+
+.exhibition-year-panel {
+  padding: 0 0 clamp(24px, 4.6vw, 58px);
+}
+
+.exhibition-year-list {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.exhibition-directory-item {
+  display: grid;
+  gap: 8px;
+  padding: clamp(18px, 2.6vw, 30px) 0;
+  border-top: 1px solid rgba(245, 242, 236, 0.14);
+}
+
+.exhibition-directory-title {
+  display: grid;
+  gap: 5px;
+}
+
+.exhibition-directory-title h2 {
+  margin: 0;
+  color: rgba(245, 242, 236, 0.94);
+  font-family: "PingFang SC", "Noto Sans SC", "Microsoft YaHei", sans-serif;
+  font-size: clamp(18px, 2.2vw, 31px);
+  font-weight: 500;
+  line-height: 1.25;
+}
+
+.exhibition-directory-title p,
+.exhibition-directory-kind,
+.exhibition-directory-status,
+.exhibition-directory-work {
+  margin: 0;
+  color: rgba(245, 242, 236, 0.64);
+  font-family: "Helvetica Neue", Arial, sans-serif;
+  font-size: clamp(13px, 1.08vw, 16px);
+  font-weight: 300;
+  line-height: 1.46;
+}
+
+.exhibition-directory-kind,
+.exhibition-directory-status,
+.exhibition-directory-work {
+  color: rgba(245, 242, 236, 0.78);
+}
+
+.exhibition-directory-link {
+  justify-self: start;
+  margin-top: 8px;
+  color: rgba(245, 242, 236, 0.64);
+  font-family: "Courier New", Courier, monospace;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.25;
+  text-decoration: underline;
+  text-decoration-color: rgba(245, 242, 236, 0.4);
+  text-underline-offset: 0.25em;
+}
+
+.exhibition-directory-link:hover,
+.exhibition-directory-link:focus-visible {
+  color: #f5f2ec;
+  text-decoration-color: #f5f2ec;
+  outline: none;
+}
+
 .exhibition-list {
   display: grid;
   margin: 0;
