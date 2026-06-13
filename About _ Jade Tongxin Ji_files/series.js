@@ -871,7 +871,7 @@
         titleLine.append(make("em", "", item.eventEn || item.titleEn));
       }
       if (href) {
-        titleLine.append(make("span", "series-exhibition-action", "View exhibition →"));
+        titleLine.append(make("span", "series-exhibition-action", "VIEW EXHIBITION ↗"));
       }
       body.append(titleLine);
 

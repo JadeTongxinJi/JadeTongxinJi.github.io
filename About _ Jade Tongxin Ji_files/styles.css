@@ -871,21 +871,21 @@ body {
 .cv-entry-link {
   justify-self: start;
   margin-top: 5px;
-  color: rgba(174, 190, 206, 0.88);
+  color: #cfcfcf;
   font-family: "Courier New", Courier, monospace;
   font-size: 11px;
   font-weight: 700;
   line-height: 1.25;
   text-decoration: underline;
-  text-decoration-color: rgba(174, 190, 206, 0.52);
-  text-underline-offset: 0.24em;
+  text-decoration-color: rgba(207, 207, 207, 0.72);
+  text-underline-offset: 4px;
   text-transform: uppercase;
 }
 
 .cv-entry-link:hover,
 .cv-entry-link:focus-visible {
-  color: #cad7e4;
-  text-decoration-color: rgba(202, 215, 228, 0.88);
+  color: #ffffff;
+  text-decoration-color: #ffffff;
   outline: none;
 }
 
@@ -947,17 +947,21 @@ body {
 }
 
 .cv-link-cue {
-  color: rgba(245, 242, 236, 0.62);
+  color: #cfcfcf;
   font-family: "Courier New", Courier, monospace;
   font-size: 11px;
   font-weight: 700;
   line-height: 1.3;
+  text-decoration: underline;
+  text-decoration-color: rgba(207, 207, 207, 0.72);
+  text-underline-offset: 4px;
   text-transform: uppercase;
 }
 
 .cv-event-link:hover .cv-link-cue,
 .cv-event-link:focus-visible .cv-link-cue {
-  color: #f5f2ec;
+  color: #ffffff;
+  text-decoration-color: #ffffff;
 }
 
 .about-footer a {
@@ -1986,15 +1990,20 @@ body {
 }
 
 .series-exhibition-action {
+  color: #cfcfcf;
   font-family: "Courier New", Courier, monospace;
   font-size: 11px;
   font-weight: 700;
+  text-decoration: underline;
+  text-decoration-color: rgba(207, 207, 207, 0.72);
+  text-underline-offset: 4px;
   text-transform: uppercase;
 }
 
 .series-exhibition-link:hover .series-exhibition-action,
 .series-exhibition-link:focus-visible .series-exhibition-action {
-  color: #f5f2ec;
+  color: #ffffff;
+  text-decoration-color: #ffffff;
 }
 
 .series-image-detail-slot[hidden] {

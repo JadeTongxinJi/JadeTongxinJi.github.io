@@ -69,7 +69,7 @@
       event.append(make("span", "cv-event-title-en", eventEn));
     }
     if (href) {
-      event.append(make("span", "cv-link-cue", "View exhibition →"));
+      event.append(make("span", "cv-link-cue", "VIEW EXHIBITION ↗"));
     }
     return event;
   };
@@ -102,7 +102,7 @@
     }
 
     if (href) {
-      const link = make("a", "cv-entry-link", "View exhibition →");
+      const link = make("a", "cv-entry-link", "VIEW EXHIBITION ↗");
       link.href = href;
       row.append(link);
       row.classList.add("has-link");
