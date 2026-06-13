@@ -5,10 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Series Gallery / Jade Tongxin Ji</title>
     <meta name="description" content="Series gallery for Jade Tongxin Ji / 纪彤心." />
-    <link rel="stylesheet" href="./About _ Jade Tongxin Ji_files/styles.css?v=20260613-nav-arrow-align-1" />
+    <link rel="stylesheet" href="./About _ Jade Tongxin Ji_files/styles.css?v=20260613-series-disclosures-1" />
     <script src="./About _ Jade Tongxin Ji_files/exhibitions-data.js?v=20260613-cv-bilingual-1" defer></script>
     <script src="./About _ Jade Tongxin Ji_files/series-data.js?v=20260613-cv-bilingual-1" defer></script>
-    <script src="./About _ Jade Tongxin Ji_files/series.js?v=20260613-nav-arrow-align-1" defer></script>
+    <script src="./About _ Jade Tongxin Ji_files/series.js?v=20260613-series-disclosures-1" defer></script>
   </head>
   <body class="exhibition-gallery-page series-gallery-page">
     <header class="page-header" aria-label="Site header">
@@ -32,8 +32,11 @@
         <div class="series-medium" data-series-medium></div>
 
         <section class="gallery-notice series-statement" aria-label="Series statement" data-series-statement hidden>
-          <h3>作品简介 / Statement</h3>
-          <div class="series-statement-space" data-series-statement-body></div>
+          <button class="series-statement-toggle series-disclosure-trigger" type="button" aria-expanded="false" aria-controls="series-statement-body" data-series-statement-toggle>
+            <span class="series-statement-title">作品简介 / Statement</span>
+            <span class="series-disclosure-icon" aria-hidden="true"></span>
+          </button>
+          <div class="series-statement-space" id="series-statement-body" data-series-statement-body hidden></div>
         </section>
       </aside>
 

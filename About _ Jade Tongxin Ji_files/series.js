@@ -140,6 +140,7 @@
   const meta = document.querySelector("[data-series-meta]");
   const medium = document.querySelector("[data-series-medium]");
   const statement = document.querySelector("[data-series-statement]");
+  const statementToggle = document.querySelector("[data-series-statement-toggle]");
   const statementBody = document.querySelector("[data-series-statement-body]");
   const sectionsRoot = document.querySelector("[data-series-sections]");
   let current = null;
@@ -172,6 +173,30 @@
       event.preventDefault();
     });
   };
+
+  const setDisclosureOpen = (root, toggle, panel, isOpen, labels = {}) => {
+    if (!root || !toggle || !panel) return;
+    toggle.setAttribute("aria-expanded", String(isOpen));
+    toggle.setAttribute("aria-label", isOpen ? labels.close || "收起作品简介" : labels.open || "展开作品简介");
+    panel.hidden = !isOpen;
+    root.classList.toggle("is-open", isOpen);
+  };
+
+  const bindDisclosure = (root, toggle, panel, getOpen, setOpen, labels) => {
+    if (!root || !toggle || !panel) return;
+    setDisclosureOpen(root, toggle, panel, Boolean(getOpen()), labels);
+    if (toggle.dataset.disclosureBound === "true") return;
+    toggle.dataset.disclosureBound = "true";
+    toggle.addEventListener("click", (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      const nextIsOpen = !Boolean(getOpen());
+      setOpen(nextIsOpen);
+      setDisclosureOpen(root, toggle, panel, nextIsOpen, labels);
+    });
+  };
+
+  const makeDisclosureIcon = () => make("span", "series-disclosure-icon");
 
   const renderSectionPoem = (section) => {
     const poemZh = section.poemZh || [];
@@ -616,7 +641,9 @@
     }
 
     const content = make("div", "series-video-collaborator-content");
-    content.append(
+    const heading = make("div", "series-video-collaborator-heading");
+    const titleGroup = make("div", "series-video-collaborator-title");
+    titleGroup.append(
       make(
         "small",
         "series-video-collaborator-kicker",
@@ -624,9 +651,42 @@
       ),
       make("h4", "", collaborator.name || "")
     );
+    heading.append(titleGroup);
 
     const bioZh = collaborator.bioZh || [];
     const bioEn = collaborator.bioEn || [];
+    const hasCollaboratorDetail = bioZh.length || bioEn.length || collaborator.instagram;
+    let panel = null;
+    if (hasCollaboratorDetail) {
+      panel = make("div", "series-video-collaborator-panel");
+      const panelId = `series-collaborator-${current.id}-${collaborator.name || "artist"}`.replace(/[^a-z0-9_-]+/gi, "-");
+      panel.id = panelId;
+      const toggle = make("button", "series-collaborator-toggle series-disclosure-trigger");
+      toggle.type = "button";
+      toggle.setAttribute("aria-controls", panelId);
+      toggle.append(makeDisclosureIcon());
+      heading.classList.add("is-toggleable");
+      heading.append(toggle);
+      heading.addEventListener("click", (event) => {
+        if (event.target.closest("button, a")) return;
+        toggle.click();
+      });
+      bindDisclosure(
+        block,
+        toggle,
+        panel,
+        () => collaborator._detailOpen,
+        (nextIsOpen) => {
+          collaborator._detailOpen = nextIsOpen;
+        },
+        {
+          open: "展开合作艺术家简介",
+          close: "收起合作艺术家简介",
+        }
+      );
+    }
+    content.append(heading);
+
     if (bioZh.length || bioEn.length) {
       const bio = make("div", "series-video-collaborator-bio");
       if (bioZh.length) {
@@ -635,7 +695,7 @@
       if (bioEn.length) {
         bio.append(renderStatementGroup(bioEn, "statement-en"));
       }
-      content.append(bio);
+      (panel || content).append(bio);
     }
 
     if (collaborator.instagram) {
@@ -643,7 +703,11 @@
       link.href = collaborator.instagram;
       link.target = "_blank";
       link.rel = "noreferrer";
-      content.append(link);
+      (panel || content).append(link);
+    }
+
+    if (panel) {
+      content.append(panel);
     }
 
     block.append(content);
@@ -680,16 +744,41 @@
 
     const descriptionZh = videoData.descriptionZh || [];
     const descriptionEn = videoData.descriptionEn || [];
+    const hasDescription = descriptionZh.length || descriptionEn.length;
     const description = make("div", "series-video-description");
+    const descriptionId = `series-video-description-${current.id}-${videoData.titleEn || videoData.titleZh || "video"}`.replace(/[^a-z0-9_-]+/gi, "-");
     if (descriptionZh.length) {
       description.append(renderStatementGroup(descriptionZh, "statement-zh"));
     }
     if (descriptionEn.length) {
       description.append(renderStatementGroup(descriptionEn, "statement-en"));
     }
+    description.id = descriptionId;
+
+    if (hasDescription) {
+      const toggle = make("button", "series-description-toggle series-disclosure-trigger");
+      toggle.type = "button";
+      toggle.setAttribute("aria-controls", descriptionId);
+      toggle.append(makeDisclosureIcon());
+      heading.classList.add("is-toggleable");
+      heading.append(toggle);
+      heading.addEventListener("click", (event) => {
+        if (event.target.closest("button, a")) return;
+        toggle.click();
+      });
+      bindDisclosure(
+        block,
+        toggle,
+        description,
+        () => videoData._descriptionOpen,
+        (nextIsOpen) => {
+          videoData._descriptionOpen = nextIsOpen;
+        }
+      );
+    }
 
     block.append(heading);
-    if (descriptionZh.length || descriptionEn.length) {
+    if (hasDescription) {
       block.append(description);
     }
     if (videoItems.length === 1) {
@@ -837,6 +926,15 @@
         if (statementEn.length) {
           statementBody.append(renderStatementGroup(statementEn, "statement-en"));
         }
+        bindDisclosure(
+          statement,
+          statementToggle,
+          statementBody,
+          () => current._statementOpen,
+          (nextIsOpen) => {
+            current._statementOpen = nextIsOpen;
+          }
+        );
       }
     }
 
