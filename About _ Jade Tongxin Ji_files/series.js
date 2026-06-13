@@ -274,17 +274,35 @@
       const hasTitle = imageItem.captionZh || imageItem.captionEn;
       const descriptionZh = imageItem.descriptionZh || [];
       const descriptionEn = imageItem.descriptionEn || [];
-      if (!hasTitle && !descriptionZh.length && !descriptionEn.length) return null;
+      const hasDescription = descriptionZh.length || descriptionEn.length;
+      const isDescriptionOpen = Boolean(imageItem._detailOpen);
+      if (!hasTitle && !hasDescription) return null;
 
       const detail = make("div", "series-image-detail");
+      detail.classList.toggle("is-open", isDescriptionOpen);
+      let toggle = null;
+      let titleBlock = null;
       if (hasTitle) {
-        const titleBlock = make("div", "series-image-detail-title");
-        if (imageItem.captionZh) titleBlock.append(make("strong", "", imageItem.captionZh));
-        if (imageItem.captionEn) titleBlock.append(make("em", "", imageItem.captionEn));
+        titleBlock = make("div", "series-image-detail-title");
+        const titleText = make("div", "series-image-detail-heading");
+        if (imageItem.captionZh) titleText.append(make("strong", "", imageItem.captionZh));
+        if (imageItem.captionEn) titleText.append(make("em", "", imageItem.captionEn));
+        titleBlock.append(titleText);
+        if (hasDescription) {
+          titleBlock.classList.add("is-toggleable");
+          toggle = make("button", "series-image-detail-toggle", "›");
+          toggle.type = "button";
+          toggle.setAttribute("aria-expanded", String(isDescriptionOpen));
+          toggle.setAttribute("aria-label", isDescriptionOpen ? "收起作品简介" : "展开作品简介");
+          titleBlock.append(toggle);
+        }
         detail.append(titleBlock);
       }
-      if (descriptionZh.length || descriptionEn.length) {
+      if (hasDescription) {
         const description = make("div", "series-image-detail-description");
+        const descriptionId = `series-image-detail-${section.id}-${activeIndex}`;
+        description.id = descriptionId;
+        description.hidden = !isDescriptionOpen;
         if (descriptionZh.length) {
           description.append(renderStatementGroup(descriptionZh, "statement-zh"));
         }
@@ -292,6 +310,24 @@
           description.append(renderStatementGroup(descriptionEn, "statement-en"));
         }
         detail.append(description);
+        if (toggle) {
+          const setDescriptionOpen = (nextIsOpen) => {
+            imageItem._detailOpen = nextIsOpen;
+            toggle.setAttribute("aria-expanded", String(nextIsOpen));
+            toggle.setAttribute("aria-label", nextIsOpen ? "收起作品简介" : "展开作品简介");
+            description.hidden = !nextIsOpen;
+            detail.classList.toggle("is-open", nextIsOpen);
+          };
+          toggle.setAttribute("aria-controls", descriptionId);
+          toggle.addEventListener("click", (event) => {
+            event.preventDefault();
+            event.stopPropagation();
+            setDescriptionOpen(!imageItem._detailOpen);
+          });
+          titleBlock?.addEventListener("click", () => {
+            setDescriptionOpen(!imageItem._detailOpen);
+          });
+        }
       }
       return detail;
     };
