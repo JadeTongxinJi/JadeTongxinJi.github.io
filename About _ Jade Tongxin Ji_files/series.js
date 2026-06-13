@@ -20,6 +20,11 @@
     if (item.href) return item.href;
     return "";
   };
+  const cleanNavTriggerLabel = (text) => (
+    text.trim()
+      .replace(/\s+[↑↓]$/, "")
+      .replace(/\s*\/\s*$/, "")
+  );
   const seriesByRecent = [...series].sort((a, b) => Number(b.year) - Number(a.year));
   const menuLabelZh = (item) => `${item.year}-${item.titleZh}`;
   const menuLabelEn = (item) => `${item.year}-${item.titleEn}`;
@@ -55,7 +60,7 @@
     const trigger = navMenu?.querySelector(".home-nav-trigger, .page-nav-trigger");
     if (!navMenu || !trigger) return;
 
-    trigger.dataset.baseLabel = trigger.textContent.trim().replace(/\s+[↑↓]$/, "");
+    trigger.dataset.baseLabel = cleanNavTriggerLabel(trigger.textContent);
     trigger.textContent = `${trigger.dataset.baseLabel} ↓`;
     trigger.setAttribute("aria-expanded", "false");
 
