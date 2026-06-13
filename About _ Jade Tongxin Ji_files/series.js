@@ -32,9 +32,6 @@
       make("span", "nav-trigger-arrow", isOpen ? "↑" : "↓")
     );
   };
-  const seriesByRecent = [...series].sort((a, b) => Number(b.year) - Number(a.year));
-  const menuLabelZh = (item) => `${item.year}-${item.titleZh}`;
-  const menuLabelEn = (item) => `${item.year}-${item.titleEn}`;
   const homeSeriesEntrypoints = [
     {
       href: "recent-works.html",
@@ -47,26 +44,15 @@
   ];
 
   document.querySelectorAll("[data-render-series-menu]").forEach((menu) => {
-    const isHomeMenu = Boolean(menu.closest(".home-nav-menu"));
-    const links = isHomeMenu
-      ? homeSeriesEntrypoints.map((item) => {
-          const link = make("a", "menu-link series-directory-entry");
-          link.href = item.href;
-          link.append(
-            make("span", "series-directory-entry-label", item.label),
-            make("span", "series-directory-entry-arrow", "→")
-          );
-          return link;
-        })
-      : seriesByRecent.map((item) => {
-          const link = make("a", "menu-link series-menu-link");
-          link.href = galleryHref(item);
-          link.append(
-            make("span", "menu-title-zh", menuLabelZh(item)),
-            make("small", "menu-title-en", menuLabelEn(item))
-          );
-          return link;
-        });
+    const links = homeSeriesEntrypoints.map((item) => {
+      const link = make("a", "menu-link series-directory-entry");
+      link.href = item.href;
+      link.append(
+        make("span", "series-directory-entry-label", item.label),
+        make("span", "series-directory-entry-arrow", "→")
+      );
+      return link;
+    });
     menu.replaceChildren(...links);
   });
 
