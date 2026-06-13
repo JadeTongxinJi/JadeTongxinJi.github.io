@@ -2666,7 +2666,6 @@ body {
 }
 
 @media (min-width: 761px) {
-  .home-image,
   .series-video-collaborator-media img {
     object-fit: contain;
   }
