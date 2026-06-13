@@ -186,7 +186,12 @@
   }
   setText('[data-about="bioZhTitle"]', content.bio?.zhTitle);
   setText('[data-about="bioZh"]', content.bio?.zh);
-  setText('[data-about="bioEnTitle"]', content.bio?.enTitle);
+  const bioEnTitle = document.querySelector('[data-about="bioEnTitle"]');
+  if (bioEnTitle) {
+    const value = content.bio?.enTitle || "";
+    bioEnTitle.textContent = value;
+    bioEnTitle.hidden = !value;
+  }
   setText('[data-about="bioEn"]', content.bio?.en);
   setMultilineTitle('[data-about="exhibitionsTitle"]', content.exhibitionsTitle);
 

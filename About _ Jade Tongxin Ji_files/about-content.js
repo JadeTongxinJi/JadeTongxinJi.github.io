@@ -22,10 +22,10 @@ window.jadeAboutContent = {
   },
 
   bio: {
-    zhTitle: "个人简介",
+    zhTitle: "个人简介 / BIOGRAPHY",
     zh:
       "纪彤心，2002年生。创作常以摄影、影像、行为等综合媒介展开，围绕自我身份、身体经验、记忆与物像之间的关系进行探索。",
-    enTitle: "Biography",
+    enTitle: "",
     en:
       "Jade Tongxin Ji, born in 2002. The practice often works across photography, moving image and performance, exploring self-identity, bodily experience, memory and the relationship between image and object.",
   },
