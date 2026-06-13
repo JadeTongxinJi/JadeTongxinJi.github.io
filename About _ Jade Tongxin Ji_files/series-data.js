@@ -308,6 +308,7 @@ window.jadeSeries = (() => {
       mediumZh: "摄影、行为影像、摄影书",
       mediumEn: "Photography, Performance Video, Photo Book",
       cover: `${epitaph}/01-呼吸时.jpg`,
+      atmosphereImage: `${epitaph}/statement-atmosphere.jpg`,
       video: {
         titleZh: "种子",
         titleEn: "Seed",
