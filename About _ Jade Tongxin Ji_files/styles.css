@@ -180,9 +180,23 @@ body {
 }
 
 .home-nav-dropdown {
+  top: 0;
+  left: calc(100% + clamp(12px, 1.1vw, 18px));
+  width: clamp(350px, 29vw, 520px);
+  min-width: 0;
+  max-width: calc(100vw - 32px);
+  justify-items: center;
+  align-content: start;
+  row-gap: 2px;
+  padding: 8px 0;
   border-top: 0;
-  background: rgba(220, 222, 221, 0.42);
+  background: rgba(220, 222, 221, 0.34);
   backdrop-filter: blur(2px);
+  transform: translateX(-4px);
+}
+
+.home-nav-menu.is-open .home-nav-dropdown {
+  transform: translateX(0);
 }
 
 .home-nav-dropdown a {
@@ -210,6 +224,14 @@ body {
   line-height: 1.35;
   text-shadow: 0 1px 5px rgba(13, 13, 12, 0.72);
   white-space: nowrap;
+}
+
+.home-nav-dropdown .series-directory-entry {
+  width: min(100%, 318px);
+  justify-content: flex-start;
+  padding: 6px 0;
+  font-size: 11px;
+  line-height: 1.28;
 }
 
 .home-nav-dropdown .series-directory-entry:hover,
@@ -260,6 +282,12 @@ body {
   .home-nav-menu {
     position: relative;
     width: 100%;
+    padding-bottom: 0;
+    margin-bottom: 0;
+  }
+
+  .home-nav-menu.is-open {
+    margin-bottom: 76px;
   }
 
   .home-nav > a,
@@ -269,15 +297,20 @@ body {
   }
 
   .home-nav-dropdown {
-    top: 0;
-    left: calc(100% + 12px);
-    width: min(480px, calc(100vw - 178px));
-    min-width: min(360px, calc(100vw - 178px));
-    background: rgba(220, 222, 221, 0.46);
+    top: calc(100% + 7px);
+    left: 0;
+    width: min(320px, calc(100vw - 32px));
+    min-width: 0;
+    max-width: calc(100vw - 32px);
+    justify-items: start;
+    row-gap: 1px;
+    padding: 7px 0;
+    background: rgba(220, 222, 221, 0.36);
+    transform: translateY(-4px);
   }
 
   .home-nav-menu.is-open .home-nav-dropdown {
-    transform: translateX(0);
+    transform: translateY(0);
   }
 
   .home-nav-dropdown a {
@@ -324,9 +357,9 @@ body {
   .home-nav-dropdown .series-directory-entry {
     width: 100%;
     min-width: 0;
-    padding: 7px 8px;
+    padding: 6px 10px;
     font-size: 11px;
-    white-space: normal;
+    white-space: nowrap;
   }
 
   .home h1 {
