@@ -280,7 +280,7 @@ window.jadeSeries = (() => {
       id: "upstream-wind",
       year: "2023",
       titleZh: "上游的风",
-      titleEn: "The Wind Upstream",
+      titleEn: "ON THE WAY",
       mediumZh: "纪录片",
       mediumEn: "Documentary",
       cover: `${upstreamWind}/海报.jpg`,
@@ -292,7 +292,7 @@ window.jadeSeries = (() => {
       ],
       video: {
         titleZh: "上游的风",
-        titleEn: "The Wind Upstream",
+        titleEn: "ON THE WAY",
         embedSrc: "https://www.youtube.com/embed/uN6FlCbxMcs",
       },
       sections: [],

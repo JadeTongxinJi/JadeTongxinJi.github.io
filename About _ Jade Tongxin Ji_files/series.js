@@ -1,5 +1,7 @@
 (() => {
   const series = window.jadeSeries || [];
+  const exhibitions = window.jadeExhibitions || [];
+  const presentationHistory = window.jadePresentationHistory || [];
   const make = (tag, className, text) => {
     const element = document.createElement(tag);
     if (className) {
@@ -12,6 +14,24 @@
   };
 
   const galleryHref = (item) => `series-gallery.html#${item.id}`;
+  const exhibitionHref = (item) => `exhibition-gallery.html#${item.id}`;
+  const presentationHref = (item) => {
+    if (item.detailId) return `exhibition-gallery.html#${item.detailId}`;
+    if (item.href) return item.href;
+    return "";
+  };
+  const cleanNavTriggerLabel = (text) => (
+    text.trim()
+      .replace(/\s*[↑↓]$/, "")
+      .replace(/\s*\/\s*$/, "")
+  );
+  const setNavTriggerState = (trigger, isOpen) => {
+    const label = trigger.dataset.baseLabel || cleanNavTriggerLabel(trigger.textContent);
+    trigger.replaceChildren(
+      make("span", "nav-trigger-label", label),
+      make("span", "nav-trigger-arrow", isOpen ? "↑" : "↓")
+    );
+  };
   const seriesByRecent = [...series].sort((a, b) => Number(b.year) - Number(a.year));
   const menuLabelZh = (item) => `${item.year}-${item.titleZh}`;
   const menuLabelEn = (item) => `${item.year}-${item.titleEn}`;
@@ -28,6 +48,65 @@
         return link;
       })
     );
+  });
+
+  const closeSeriesMenus = (exceptMenu) => {
+    document.querySelectorAll(".home-nav-menu.is-open, .page-nav-menu.is-open").forEach((navMenu) => {
+      if (navMenu === exceptMenu) return;
+      navMenu.classList.remove("is-open");
+      const trigger = navMenu.querySelector(".home-nav-trigger, .page-nav-trigger");
+      if (trigger) {
+        trigger.setAttribute("aria-expanded", "false");
+        if (trigger.dataset.baseLabel) setNavTriggerState(trigger, false);
+      }
+    });
+  };
+
+  document.querySelectorAll("[data-render-series-menu]").forEach((menu) => {
+    const navMenu = menu.closest(".home-nav-menu, .page-nav-menu");
+    const trigger = navMenu?.querySelector(".home-nav-trigger, .page-nav-trigger");
+    if (!navMenu || !trigger) return;
+
+    trigger.dataset.baseLabel = cleanNavTriggerLabel(trigger.textContent);
+    setNavTriggerState(trigger, false);
+    trigger.setAttribute("aria-expanded", "false");
+
+    const toggleNavMenu = () => {
+      const isOpen = navMenu.classList.toggle("is-open");
+      closeSeriesMenus(isOpen ? navMenu : null);
+      trigger.setAttribute("aria-expanded", String(isOpen));
+      setNavTriggerState(trigger, isOpen);
+    };
+
+    trigger.addEventListener("click", (event) => {
+      event.preventDefault();
+      toggleNavMenu();
+    });
+
+    navMenu.addEventListener("click", (event) => {
+      if (event.target.closest("[data-render-series-menu]")) return;
+      if (event.target.closest(".home-nav-trigger, .page-nav-trigger")) return;
+      event.preventDefault();
+      toggleNavMenu();
+    });
+
+    menu.addEventListener("click", (event) => {
+      const link = event.target.closest("a");
+      if (!link) return;
+      navMenu.classList.remove("is-open");
+      trigger.setAttribute("aria-expanded", "false");
+      setNavTriggerState(trigger, false);
+    });
+  });
+
+  document.addEventListener("click", (event) => {
+    if (event.target.closest(".home-nav-menu, .page-nav-menu")) return;
+    closeSeriesMenus(null);
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key !== "Escape") return;
+    closeSeriesMenus(null);
   });
 
   const directory = document.querySelector("[data-render-series-directory]");
@@ -72,13 +151,31 @@
   const meta = document.querySelector("[data-series-meta]");
   const medium = document.querySelector("[data-series-medium]");
   const statement = document.querySelector("[data-series-statement]");
+  const statementToggle = document.querySelector("[data-series-statement-toggle]");
   const statementBody = document.querySelector("[data-series-statement-body]");
   const sectionsRoot = document.querySelector("[data-series-sections]");
   let current = null;
 
+  const getRoute = () => {
+    const params = new URLSearchParams(window.location.search);
+    const querySeries = params.get("series");
+    const hash = decodeURIComponent(window.location.hash.replace("#", ""));
+    if (querySeries) {
+      return {
+        seriesId: querySeries,
+        anchor: hash,
+      };
+    }
+    const [seriesId, anchor = ""] = hash.split("/");
+    return {
+      seriesId: seriesId || series[0]?.id,
+      anchor,
+    };
+  };
+
   const getCurrent = () => {
-    const currentId = decodeURIComponent(window.location.hash.replace("#", "")) || series[0]?.id;
-    return series.find((item) => item.id === currentId) || series[0];
+    const route = getRoute();
+    return series.find((item) => item.id === route.seriesId) || series[0];
   };
 
   const lockImageTouch = (target) => {
@@ -87,6 +184,30 @@
       event.preventDefault();
     });
   };
+
+  const setDisclosureOpen = (root, toggle, panel, isOpen, labels = {}) => {
+    if (!root || !toggle || !panel) return;
+    toggle.setAttribute("aria-expanded", String(isOpen));
+    toggle.setAttribute("aria-label", isOpen ? labels.close || "收起作品简介" : labels.open || "展开作品简介");
+    panel.hidden = !isOpen;
+    root.classList.toggle("is-open", isOpen);
+  };
+
+  const bindDisclosure = (root, toggle, panel, getOpen, setOpen, labels) => {
+    if (!root || !toggle || !panel) return;
+    setDisclosureOpen(root, toggle, panel, Boolean(getOpen()), labels);
+    if (toggle.dataset.disclosureBound === "true") return;
+    toggle.dataset.disclosureBound = "true";
+    toggle.addEventListener("click", (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      const nextIsOpen = !Boolean(getOpen());
+      setOpen(nextIsOpen);
+      setDisclosureOpen(root, toggle, panel, nextIsOpen, labels);
+    });
+  };
+
+  const makeDisclosureIcon = () => make("span", "series-disclosure-icon");
 
   const renderSectionPoem = (section) => {
     const poemZh = section.poemZh || [];
@@ -144,6 +265,16 @@
         image.src = src;
         image.alt = `${current.titleZh} ${section.titleZh} ${index + 1}`;
         image.draggable = false;
+        const setImageOrientation = () => {
+          const isPortrait = image.naturalHeight > image.naturalWidth;
+          imageWrap.classList.toggle("is-portrait", isPortrait);
+          imageWrap.classList.toggle("is-landscape", !isPortrait);
+        };
+        if (image.complete && image.naturalWidth) {
+          setImageOrientation();
+        } else {
+          image.addEventListener("load", setImageOrientation, { once: true });
+        }
         lockImageTouch(imageWrap);
         imageWrap.append(image);
 
@@ -176,24 +307,10 @@
     let touchTracking = false;
     let touchIsHorizontal = false;
     const clampIndex = (index) => Math.max(0, Math.min(index, imageTotal - 1));
-    const getSlideWidth = () => Math.max(track.clientWidth || 1, 1);
-    const getSlideLeft = (index) => {
-      const slide = track.querySelectorAll(".gallery-slide")[clampIndex(index)];
-      if (!slide) return index * getSlideWidth();
-      return track.scrollLeft + slide.getBoundingClientRect().left - track.getBoundingClientRect().left;
-    };
+    const getSlideWidth = () => Math.max((track.scrollWidth / imageTotal) || track.clientWidth || 1, 1);
+    const getSlideLeft = (index) => clampIndex(index) * getSlideWidth();
     const getNearestIndex = () => {
-      let nearestIndex = 0;
-      let nearestDistance = Infinity;
-      track.querySelectorAll(".gallery-slide").forEach((slide, index) => {
-        const slideLeft = track.scrollLeft + slide.getBoundingClientRect().left - track.getBoundingClientRect().left;
-        const distance = Math.abs(track.scrollLeft - slideLeft);
-        if (distance < nearestDistance) {
-          nearestDistance = distance;
-          nearestIndex = index;
-        }
-      });
-      return clampIndex(nearestIndex);
+      return clampIndex(Math.round(track.scrollLeft / getSlideWidth()));
     };
 
     const renderImageDetail = (imageItem) => {
@@ -201,17 +318,35 @@
       const hasTitle = imageItem.captionZh || imageItem.captionEn;
       const descriptionZh = imageItem.descriptionZh || [];
       const descriptionEn = imageItem.descriptionEn || [];
-      if (!hasTitle && !descriptionZh.length && !descriptionEn.length) return null;
+      const hasDescription = descriptionZh.length || descriptionEn.length;
+      const isDescriptionOpen = Boolean(imageItem._detailOpen);
+      if (!hasTitle && !hasDescription) return null;
 
       const detail = make("div", "series-image-detail");
+      detail.classList.toggle("is-open", isDescriptionOpen);
+      let toggle = null;
+      let titleBlock = null;
       if (hasTitle) {
-        const titleBlock = make("div", "series-image-detail-title");
-        if (imageItem.captionZh) titleBlock.append(make("strong", "", imageItem.captionZh));
-        if (imageItem.captionEn) titleBlock.append(make("em", "", imageItem.captionEn));
+        titleBlock = make("div", "series-image-detail-title");
+        const titleText = make("div", "series-image-detail-heading");
+        if (imageItem.captionZh) titleText.append(make("strong", "", imageItem.captionZh));
+        if (imageItem.captionEn) titleText.append(make("em", "", imageItem.captionEn));
+        titleBlock.append(titleText);
+        if (hasDescription) {
+          titleBlock.classList.add("is-toggleable");
+          toggle = make("button", "series-image-detail-toggle", "›");
+          toggle.type = "button";
+          toggle.setAttribute("aria-expanded", String(isDescriptionOpen));
+          toggle.setAttribute("aria-label", isDescriptionOpen ? "收起作品简介" : "展开作品简介");
+          titleBlock.append(toggle);
+        }
         detail.append(titleBlock);
       }
-      if (descriptionZh.length || descriptionEn.length) {
+      if (hasDescription) {
         const description = make("div", "series-image-detail-description");
+        const descriptionId = `series-image-detail-${section.id}-${activeIndex}`;
+        description.id = descriptionId;
+        description.hidden = !isDescriptionOpen;
         if (descriptionZh.length) {
           description.append(renderStatementGroup(descriptionZh, "statement-zh"));
         }
@@ -219,6 +354,24 @@
           description.append(renderStatementGroup(descriptionEn, "statement-en"));
         }
         detail.append(description);
+        if (toggle) {
+          const setDescriptionOpen = (nextIsOpen) => {
+            imageItem._detailOpen = nextIsOpen;
+            toggle.setAttribute("aria-expanded", String(nextIsOpen));
+            toggle.setAttribute("aria-label", nextIsOpen ? "收起作品简介" : "展开作品简介");
+            description.hidden = !nextIsOpen;
+            detail.classList.toggle("is-open", nextIsOpen);
+          };
+          toggle.setAttribute("aria-controls", descriptionId);
+          toggle.addEventListener("click", (event) => {
+            event.preventDefault();
+            event.stopPropagation();
+            setDescriptionOpen(!imageItem._detailOpen);
+          });
+          titleBlock?.addEventListener("click", () => {
+            setDescriptionOpen(!imageItem._detailOpen);
+          });
+        }
       }
       return detail;
     };
@@ -499,7 +652,9 @@
     }
 
     const content = make("div", "series-video-collaborator-content");
-    content.append(
+    const heading = make("div", "series-video-collaborator-heading");
+    const titleGroup = make("div", "series-video-collaborator-title");
+    titleGroup.append(
       make(
         "small",
         "series-video-collaborator-kicker",
@@ -507,9 +662,42 @@
       ),
       make("h4", "", collaborator.name || "")
     );
+    heading.append(titleGroup);
 
     const bioZh = collaborator.bioZh || [];
     const bioEn = collaborator.bioEn || [];
+    const hasCollaboratorDetail = bioZh.length || bioEn.length || collaborator.instagram;
+    let panel = null;
+    if (hasCollaboratorDetail) {
+      panel = make("div", "series-video-collaborator-panel");
+      const panelId = `series-collaborator-${current.id}-${collaborator.name || "artist"}`.replace(/[^a-z0-9_-]+/gi, "-");
+      panel.id = panelId;
+      const toggle = make("button", "series-collaborator-toggle series-disclosure-trigger");
+      toggle.type = "button";
+      toggle.setAttribute("aria-controls", panelId);
+      toggle.append(makeDisclosureIcon());
+      heading.classList.add("is-toggleable");
+      heading.append(toggle);
+      heading.addEventListener("click", (event) => {
+        if (event.target.closest("button, a")) return;
+        toggle.click();
+      });
+      bindDisclosure(
+        block,
+        toggle,
+        panel,
+        () => collaborator._detailOpen,
+        (nextIsOpen) => {
+          collaborator._detailOpen = nextIsOpen;
+        },
+        {
+          open: "展开合作艺术家简介",
+          close: "收起合作艺术家简介",
+        }
+      );
+    }
+    content.append(heading);
+
     if (bioZh.length || bioEn.length) {
       const bio = make("div", "series-video-collaborator-bio");
       if (bioZh.length) {
@@ -518,7 +706,7 @@
       if (bioEn.length) {
         bio.append(renderStatementGroup(bioEn, "statement-en"));
       }
-      content.append(bio);
+      (panel || content).append(bio);
     }
 
     if (collaborator.instagram) {
@@ -526,7 +714,11 @@
       link.href = collaborator.instagram;
       link.target = "_blank";
       link.rel = "noreferrer";
-      content.append(link);
+      (panel || content).append(link);
+    }
+
+    if (panel) {
+      content.append(panel);
     }
 
     block.append(content);
@@ -563,16 +755,41 @@
 
     const descriptionZh = videoData.descriptionZh || [];
     const descriptionEn = videoData.descriptionEn || [];
+    const hasDescription = descriptionZh.length || descriptionEn.length;
     const description = make("div", "series-video-description");
+    const descriptionId = `series-video-description-${current.id}-${videoData.titleEn || videoData.titleZh || "video"}`.replace(/[^a-z0-9_-]+/gi, "-");
     if (descriptionZh.length) {
       description.append(renderStatementGroup(descriptionZh, "statement-zh"));
     }
     if (descriptionEn.length) {
       description.append(renderStatementGroup(descriptionEn, "statement-en"));
     }
+    description.id = descriptionId;
+
+    if (hasDescription) {
+      const toggle = make("button", "series-description-toggle series-disclosure-trigger");
+      toggle.type = "button";
+      toggle.setAttribute("aria-controls", descriptionId);
+      toggle.append(makeDisclosureIcon());
+      heading.classList.add("is-toggleable");
+      heading.append(toggle);
+      heading.addEventListener("click", (event) => {
+        if (event.target.closest("button, a")) return;
+        toggle.click();
+      });
+      bindDisclosure(
+        block,
+        toggle,
+        description,
+        () => videoData._descriptionOpen,
+        (nextIsOpen) => {
+          videoData._descriptionOpen = nextIsOpen;
+        }
+      );
+    }
 
     block.append(heading);
-    if (descriptionZh.length || descriptionEn.length) {
+    if (hasDescription) {
       block.append(description);
     }
     if (videoItems.length === 1) {
@@ -618,6 +835,79 @@
     return group;
   };
 
+  const getSeriesExhibitions = (seriesId) => {
+    const records = presentationHistory.length
+      ? presentationHistory
+      : exhibitions.map((item) => ({
+          ...item,
+          detailId: item.id,
+          eventEn: item.titleEn,
+        }));
+    return records
+      .filter((item) => {
+        const ids = [item.seriesId, ...(item.seriesIds || [])].filter(Boolean);
+        return ids.includes(seriesId);
+      })
+      .sort((a, b) => Number(b.year) - Number(a.year));
+  };
+
+  const renderSeriesExhibitions = () => {
+    const relatedExhibitions = getSeriesExhibitions(current.id);
+    if (!relatedExhibitions.length) return null;
+
+    const block = make("section", "series-exhibitions");
+    block.id = "exhibitions";
+    block.setAttribute("aria-label", "Exhibitions and presentations");
+
+    const header = make("div", "series-section-header series-exhibitions-header");
+    const title = make("div", "series-section-title");
+    title.append(make("h3", "", "展览 / 呈现经历"), make("small", "", "Exhibitions / Presentations"));
+    header.append(title);
+
+    const list = make("ol", "series-exhibitions-list");
+    relatedExhibitions.forEach((item) => {
+      const row = make("li", "series-exhibition-item");
+      row.append(make("span", "series-exhibition-year", item.year));
+
+      const body = make("div", "series-exhibition-body");
+      const href = presentationHref(item);
+      const titleLine = make(href ? "a" : "span", `series-exhibition-title${href ? " series-exhibition-link" : ""}`);
+      if (href) {
+        titleLine.href = href;
+        titleLine.setAttribute("aria-label", `${item.eventZh || item.eventEn || item.titleZh || item.titleEn}, view exhibition`);
+        row.classList.add("has-link");
+      }
+      titleLine.append(make("strong", "", item.eventZh || item.titleZh || item.eventEn || item.titleEn));
+      if (item.eventEn || item.titleEn) {
+        titleLine.append(make("em", "", item.eventEn || item.titleEn));
+      }
+      if (href) {
+        titleLine.append(make("span", "series-exhibition-action", "VIEW EXHIBITION ↗"));
+      }
+      body.append(titleLine);
+
+      row.append(body);
+      list.append(row);
+    });
+
+    block.append(header, list);
+    return block;
+  };
+
+  const scrollToRouteAnchor = () => {
+    const { anchor } = getRoute();
+    if (!anchor) return;
+    const target = document.getElementById(anchor);
+    if (!target) return;
+    const scroll = () => {
+      target.scrollIntoView({ block: "start" });
+    };
+    window.requestAnimationFrame(scroll);
+    window.setTimeout(scroll, 260);
+    window.setTimeout(scroll, 900);
+    window.setTimeout(scroll, 1800);
+  };
+
   const renderGallery = () => {
     current = getCurrent();
     if (!current) return;
@@ -647,6 +937,15 @@
         if (statementEn.length) {
           statementBody.append(renderStatementGroup(statementEn, "statement-en"));
         }
+        bindDisclosure(
+          statement,
+          statementToggle,
+          statementBody,
+          () => current._statementOpen,
+          (nextIsOpen) => {
+            current._statementOpen = nextIsOpen;
+          }
+        );
       }
     }
 
@@ -655,7 +954,12 @@
       const renderedSections = current.sections.map(renderSection);
       const videoSections = [current.video, current.videos].map(renderVideoSection).filter(Boolean);
       renderedSections.push(...videoSections);
+      const exhibitionsSection = renderSeriesExhibitions();
+      if (exhibitionsSection) {
+        renderedSections.push(exhibitionsSection);
+      }
       sectionsRoot.replaceChildren(...renderedSections);
+      scrollToRouteAnchor();
     }
   };
 
