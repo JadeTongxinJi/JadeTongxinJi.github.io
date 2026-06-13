@@ -35,29 +35,53 @@
   const seriesByRecent = [...series].sort((a, b) => Number(b.year) - Number(a.year));
   const menuLabelZh = (item) => `${item.year}-${item.titleZh}`;
   const menuLabelEn = (item) => `${item.year}-${item.titleEn}`;
+  const homeSeriesEntrypoints = [
+    {
+      href: "recent-works.html",
+      label: "近期作品 / RECENT WORKS",
+    },
+    {
+      href: "early-works.html",
+      label: "早期尝试 / EARLY WORKS",
+    },
+  ];
 
   document.querySelectorAll("[data-render-series-menu]").forEach((menu) => {
-    menu.replaceChildren(
-      ...seriesByRecent.map((item) => {
-        const link = make("a", "menu-link series-menu-link");
-        link.href = galleryHref(item);
-        link.append(
-          make("span", "menu-title-zh", menuLabelZh(item)),
-          make("small", "menu-title-en", menuLabelEn(item))
-        );
-        return link;
-      })
-    );
+    const isHomeMenu = Boolean(menu.closest(".home-nav-menu"));
+    const links = isHomeMenu
+      ? homeSeriesEntrypoints.map((item) => {
+          const link = make("a", "menu-link series-directory-entry");
+          link.href = item.href;
+          link.append(
+            make("span", "series-directory-entry-label", item.label),
+            make("span", "series-directory-entry-arrow", "→")
+          );
+          return link;
+        })
+      : seriesByRecent.map((item) => {
+          const link = make("a", "menu-link series-menu-link");
+          link.href = galleryHref(item);
+          link.append(
+            make("span", "menu-title-zh", menuLabelZh(item)),
+            make("small", "menu-title-en", menuLabelEn(item))
+          );
+          return link;
+        });
+    menu.replaceChildren(...links);
   });
+
+  const setNavMenuOpen = (navMenu, trigger, isOpen) => {
+    navMenu.classList.toggle("is-open", isOpen);
+    trigger.setAttribute("aria-expanded", String(isOpen));
+    setNavTriggerState(trigger, isOpen);
+  };
 
   const closeSeriesMenus = (exceptMenu) => {
     document.querySelectorAll(".home-nav-menu.is-open, .page-nav-menu.is-open").forEach((navMenu) => {
       if (navMenu === exceptMenu) return;
-      navMenu.classList.remove("is-open");
       const trigger = navMenu.querySelector(".home-nav-trigger, .page-nav-trigger");
       if (trigger) {
-        trigger.setAttribute("aria-expanded", "false");
-        if (trigger.dataset.baseLabel) setNavTriggerState(trigger, false);
+        setNavMenuOpen(navMenu, trigger, false);
       }
     });
   };
@@ -68,18 +92,22 @@
     if (!navMenu || !trigger) return;
 
     trigger.dataset.baseLabel = cleanNavTriggerLabel(trigger.textContent);
-    setNavTriggerState(trigger, false);
-    trigger.setAttribute("aria-expanded", "false");
+    setNavMenuOpen(navMenu, trigger, navMenu.classList.contains("is-open"));
+
+    if (navMenu.dataset.seriesMenuBound === "true") return;
+    navMenu.dataset.seriesMenuBound = "true";
 
     const toggleNavMenu = () => {
-      const isOpen = navMenu.classList.toggle("is-open");
-      closeSeriesMenus(isOpen ? navMenu : null);
-      trigger.setAttribute("aria-expanded", String(isOpen));
-      setNavTriggerState(trigger, isOpen);
+      const nextIsOpen = !navMenu.classList.contains("is-open");
+      if (nextIsOpen) {
+        closeSeriesMenus(navMenu);
+      }
+      setNavMenuOpen(navMenu, trigger, nextIsOpen);
     };
 
     trigger.addEventListener("click", (event) => {
       event.preventDefault();
+      event.stopPropagation();
       toggleNavMenu();
     });
 
@@ -93,9 +121,7 @@
     menu.addEventListener("click", (event) => {
       const link = event.target.closest("a");
       if (!link) return;
-      navMenu.classList.remove("is-open");
-      trigger.setAttribute("aria-expanded", "false");
-      setNavTriggerState(trigger, false);
+      setNavMenuOpen(navMenu, trigger, false);
     });
   });
 
