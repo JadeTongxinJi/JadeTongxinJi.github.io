@@ -35,11 +35,13 @@
   const homeSeriesEntrypoints = [
     {
       href: "recent-works.html",
-      label: "近期作品 / RECENT WORKS",
+      zh: "近期作品",
+      en: "RECENT WORKS",
     },
     {
       href: "early-works.html",
-      label: "早期尝试 / EARLY WORKS",
+      zh: "早期尝试",
+      en: "EARLY WORKS",
     },
   ];
 
@@ -47,8 +49,11 @@
     const links = homeSeriesEntrypoints.map((item) => {
       const link = make("a", "menu-link series-directory-entry");
       link.href = item.href;
+      link.setAttribute("aria-label", `${item.zh} / ${item.en} →`);
       link.append(
-        make("span", "series-directory-entry-label", item.label),
+        make("span", "series-directory-entry-zh", item.zh),
+        make("span", "series-directory-entry-slash", "/"),
+        make("span", "series-directory-entry-en", item.en),
         make("span", "series-directory-entry-arrow", "→")
       );
       return link;
@@ -162,6 +167,7 @@
   const titleEn = document.querySelector("[data-series-title-en]");
   const meta = document.querySelector("[data-series-meta]");
   const medium = document.querySelector("[data-series-medium]");
+  const galleryInfo = detailRoot.querySelector(".gallery-info");
   const statement = document.querySelector("[data-series-statement]");
   const statementToggle = document.querySelector("[data-series-statement-toggle]");
   const statementBody = document.querySelector("[data-series-statement-body]");
@@ -925,6 +931,16 @@
     if (!current) return;
 
     document.title = `${current.titleEn} / Series / Jade Tongxin Ji`;
+    if (galleryInfo) {
+      const atmosphereImage = current.atmosphereImage || "";
+      galleryInfo.classList.toggle("has-series-atmosphere", Boolean(atmosphereImage));
+      if (atmosphereImage) {
+        const atmosphereUrl = new URL(atmosphereImage, window.location.href).href;
+        galleryInfo.style.setProperty("--series-atmosphere-image", `url("${atmosphereUrl}")`);
+      } else {
+        galleryInfo.style.removeProperty("--series-atmosphere-image");
+      }
+    }
     if (titleZh) titleZh.textContent = current.titleZh;
     if (titleEn) titleEn.textContent = current.titleEn;
     if (meta) meta.textContent = `${current.year} / Series`;
