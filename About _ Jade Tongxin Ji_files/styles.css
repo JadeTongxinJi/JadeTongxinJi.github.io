@@ -513,6 +513,110 @@ body {
   row-gap: clamp(24px, 4vw, 54px);
 }
 
+.bio-grid-stacked {
+  grid-template-columns: 1fr;
+}
+
+.bio-block-stacked {
+  display: grid;
+  grid-template-columns: minmax(170px, 0.28fr) minmax(0, 1fr);
+  column-gap: clamp(38px, 6vw, 92px);
+  align-items: start;
+}
+
+.bio-block-stacked h2 {
+  grid-column: 1;
+}
+
+.bio-copy {
+  grid-column: 2;
+  display: grid;
+  gap: 18px;
+}
+
+.about-accordion {
+  display: grid;
+  gap: 0;
+  border-top: 1px solid rgba(245, 242, 236, 0.34);
+  margin-top: clamp(28px, 5vw, 58px);
+}
+
+.about-accordion-item {
+  border-top: 1px solid rgba(245, 242, 236, 0.22);
+}
+
+.about-accordion-item:first-child {
+  border-top: 0;
+}
+
+.about-accordion-toggle {
+  display: grid;
+  width: 100%;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 18px;
+  align-items: center;
+  padding: 18px 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: rgba(245, 242, 236, 0.96);
+  cursor: pointer;
+  font-family: "Courier New", Courier, monospace;
+  font-size: clamp(14px, 1.05vw, 16px);
+  font-weight: 700;
+  line-height: 1.15;
+  text-align: left;
+  text-transform: uppercase;
+}
+
+.about-accordion-title,
+.about-accordion-symbol {
+  display: inline-flex;
+  align-items: center;
+  min-height: 1.15em;
+  line-height: 1.15;
+}
+
+.about-accordion-symbol {
+  justify-content: center;
+  min-width: 1em;
+  color: rgba(245, 242, 236, 0.68);
+}
+
+.about-accordion-toggle:hover,
+.about-accordion-toggle:focus-visible {
+  color: #f5f2ec;
+  outline: none;
+}
+
+.about-accordion-panel {
+  padding: 0 0 clamp(22px, 3vw, 34px);
+}
+
+.about-accordion-panel .bio-copy {
+  grid-column: auto;
+  max-width: min(790px, 100%);
+}
+
+.about-accordion-panel .fact-entry {
+  grid-column: auto;
+  display: grid;
+  gap: 6px;
+  padding: 16px 0;
+  border-top: 1px solid rgba(245, 242, 236, 0.14);
+}
+
+.about-accordion-panel .fact-entry:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+
+.about-accordion-panel p {
+  margin: 0;
+  font-size: clamp(14px, 1.02vw, 18px);
+  line-height: 1.68;
+}
+
 .about-side .bio-grid,
 .about-side .facts-grid {
   margin-top: 0;
@@ -3245,6 +3349,14 @@ body {
   .about-page .fact-block h2,
   .about-page .section-heading h2 {
     font-size: 15px;
+  }
+
+  .about-page .bio-block-stacked {
+    grid-template-columns: 1fr;
+  }
+
+  .about-page .bio-copy {
+    grid-column: 1;
   }
 
   .about-page .bio-block p,

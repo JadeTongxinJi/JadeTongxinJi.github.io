@@ -24,6 +24,23 @@
     return element;
   };
 
+  const bindDisclosure = (root, toggle, panel, symbolSelector) => {
+    if (!root || !toggle || !panel) {
+      return;
+    }
+
+    const symbol = symbolSelector ? toggle.querySelector(symbolSelector) : null;
+    toggle.addEventListener("click", () => {
+      const isOpen = toggle.getAttribute("aria-expanded") === "true";
+      toggle.setAttribute("aria-expanded", String(!isOpen));
+      if (symbol) {
+        symbol.textContent = isOpen ? "+" : "−";
+      }
+      panel.hidden = isOpen;
+      root.classList.toggle("is-open", !isOpen);
+    });
+  };
+
   const appendFactEntry = (block, entry) => {
     const wrapper = make("div", "fact-entry");
     wrapper.append(make("p", "fact-line fact-line-zh", entry.zh));
@@ -111,13 +128,7 @@
     list.replaceChildren(...items.map(makeCvRecord));
     panel.append(list);
 
-    toggle.addEventListener("click", () => {
-      const isOpen = toggle.getAttribute("aria-expanded") === "true";
-      toggle.setAttribute("aria-expanded", String(!isOpen));
-      toggle.querySelector(".cv-year-symbol").textContent = isOpen ? "+" : "−";
-      panel.hidden = isOpen;
-      group.classList.toggle("is-open", !isOpen);
-    });
+    bindDisclosure(group, toggle, panel, ".cv-year-symbol");
 
     group.append(toggle, panel);
     return group;
@@ -139,12 +150,33 @@
     return block;
   };
 
+  const renderFactAccordion = (container, item) => {
+    if (!item) {
+      container.remove();
+      return;
+    }
+
+    const title = container.querySelector(".about-accordion-title");
+    const panel = container.querySelector(".about-accordion-panel");
+    if (title) {
+      title.textContent = item.title;
+    }
+    if (panel) {
+      panel.replaceChildren();
+      if (Array.isArray(item.entries)) {
+        item.entries.forEach((entry) => appendFactEntry(panel, entry));
+      } else if (Array.isArray(item.lines)) {
+        item.lines.forEach((line) => panel.append(make("p", "", line)));
+      }
+    }
+  };
+
   const getFactGroup = (group) => {
     if (!Array.isArray(content.facts)) {
       return [];
     }
     if (group === "profile") {
-      return content.facts.filter((item) => !item.title.includes("驻地") && !item.title.includes("Residency"));
+      return content.facts.filter((item) => item.title.includes("学历") || item.title.includes("Education"));
     }
     if (group === "residency") {
       return content.facts.filter((item) => item.title.includes("驻地") || item.title.includes("Residency"));
@@ -204,7 +236,20 @@
   document.querySelectorAll('[data-render="facts"]').forEach((facts) => {
     const group = facts.dataset.factGroup;
     const blocks = getFactGroup(group);
-    facts.replaceChildren(...blocks.map(makeFactBlock));
+    if (facts.classList.contains("about-accordion-item")) {
+      renderFactAccordion(facts, blocks[0]);
+    } else {
+      facts.replaceChildren(...blocks.map(makeFactBlock));
+    }
+  });
+
+  document.querySelectorAll(".about-accordion-item").forEach((item) => {
+    bindDisclosure(
+      item,
+      item.querySelector(".about-accordion-toggle"),
+      item.querySelector(".about-accordion-panel"),
+      ".about-accordion-symbol"
+    );
   });
 
   const exhibitions = document.querySelector('[data-render="exhibitions"]');

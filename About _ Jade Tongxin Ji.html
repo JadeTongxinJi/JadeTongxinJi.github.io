@@ -4,10 +4,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>About / Jade Tongxin Ji</title>
     <meta name="description" content="About Jade Tongxin Ji / 纪彤心, artist biography, education, residency, exhibitions and awards.">
-    <link rel="stylesheet" href="./About _ Jade Tongxin Ji_files/styles.css?v=20260613-nav-arrow-align-1">
-    <script src="./About _ Jade Tongxin Ji_files/about-content.js?v=20260613-about-footer-remove-1" defer=""></script>
+    <link rel="stylesheet" href="./About _ Jade Tongxin Ji_files/styles.css?v=20260613-about-accordions-1">
+    <script src="./About _ Jade Tongxin Ji_files/about-content.js?v=20260613-about-accordions-1" defer=""></script>
     <script src="./About _ Jade Tongxin Ji_files/exhibitions-data.js?v=20260613-about-cv-years-1" defer=""></script>
-    <script src="./About _ Jade Tongxin Ji_files/about.js?v=20260613-about-bio-heading-1" defer=""></script>
+    <script src="./About _ Jade Tongxin Ji_files/about.js?v=20260613-about-accordions-1" defer=""></script>
     <script src="./About _ Jade Tongxin Ji_files/series-data.js?v=20260613-cv-bilingual-1" defer=""></script>
     <script src="./About _ Jade Tongxin Ji_files/series.js?v=20260613-nav-arrow-align-1" defer=""></script>
   </head>
@@ -43,23 +43,44 @@ Tongxin Ji</span>
         </div>
       </section>
 
-      <section class="bio-grid" aria-label="Artist biography">
-        <article class="bio-block">
-          <h2 data-about="bioZhTitle">个人简介 / BIOGRAPHY</h2>
-          <p data-about="bioZh">纪彤心，2002年生。创作常以摄影、影像、行为等综合媒介展开，围绕自我身份、身体经验、记忆与物像之间的关系进行探索。</p>
-        </article>
+      <section class="about-accordion" aria-label="Biography, education and residency">
+        <section class="about-accordion-item about-accordion-bio">
+          <button class="about-accordion-toggle" type="button" aria-expanded="false" aria-controls="about-bio-panel">
+            <span class="about-accordion-title" data-about="bioZhTitle">个人简介 / BIOGRAPHY</span>
+            <span class="about-accordion-symbol">+</span>
+          </button>
+          <div class="about-accordion-panel" id="about-bio-panel" hidden>
+            <div class="bio-copy">
+              <p data-about="bioZh">纪彤心，2002年生。创作常以摄影、影像、行为等综合媒介展开，围绕自我身份、身体经验、记忆与物像之间的关系进行探索。</p>
+              <p data-about="bioEn">Jade Tongxin Ji, born in 2002. The practice often works across photography, moving image and performance, exploring self-identity, bodily experience, memory and the relationship between image and object.</p>
+            </div>
+          </div>
+        </section>
 
-        <article class="bio-block">
-          <h2 data-about="bioEnTitle" hidden></h2>
-          <p data-about="bioEn">Jade Tongxin Ji, born in 2002. The practice often works across photography, moving image and performance, exploring self-identity, bodily experience, memory and the relationship between image and object.</p>
-        </article>
+        <section class="about-accordion-item" aria-label="Education" data-render="facts" data-fact-group="profile">
+          <button class="about-accordion-toggle" type="button" aria-expanded="false" aria-controls="about-fact-education">
+            <span class="about-accordion-title">学历 / EDUCATION</span>
+            <span class="about-accordion-symbol">+</span>
+          </button>
+          <div class="about-accordion-panel" id="about-fact-education" hidden>
+            <div class="fact-entry"><p class="fact-line fact-line-zh">2024.09-至今 硕士，西安美术学院影视动画系，摄影艺术方向</p><p class="fact-line fact-line-en">2024.09-present MFA Candidate, Photography Art, Department of Film and Animation, Xi'an Academy of Fine Arts</p></div>
+            <div class="fact-entry"><p class="fact-line fact-line-zh">2020.09-2024.06 本科，西安美术学院影视动画系，摄影专业</p><p class="fact-line fact-line-en">2020.09-2024.06 BFA, Photography, Department of Film and Animation, Xi'an Academy of Fine Arts</p></div>
+          </div>
+        </section>
+
+        <section class="about-accordion-item" aria-label="Residency" data-render="facts" data-fact-group="residency">
+          <button class="about-accordion-toggle" type="button" aria-expanded="false" aria-controls="about-fact-residency">
+            <span class="about-accordion-title">驻地 / RESIDENCY</span>
+            <span class="about-accordion-symbol">+</span>
+          </button>
+          <div class="about-accordion-panel" id="about-fact-residency" hidden>
+            <div class="fact-entry"><p class="fact-line fact-line-zh">2026.04-2026.06 巴黎艺术城驻地，法国巴黎</p><p class="fact-line fact-line-en">2026.04-2026.06 Artist Residency, Cité Internationale des Arts, Paris, France</p></div>
+            <div class="fact-entry"><p class="fact-line fact-line-zh">2025.10-2025.11 鄠邑区蔡家坡村驻地，陕西西安</p><p class="fact-line fact-line-en">2025.10-2025.11 Artist Residency, Caijiapo Village, Huyi District, Xi'an, Shaanxi, China</p></div>
+          </div>
+        </section>
       </section>
 
-      <section class="facts-grid facts-grid-profile" aria-label="Education and advisor" data-render="facts" data-fact-group="profile"><div class="fact-block"><h2>学历 / Education</h2><div class="fact-entry"><p class="fact-line fact-line-zh">2024.09-至今 硕士，西安美术学院影视动画系，摄影艺术方向</p><p class="fact-line fact-line-en">2024.09-present MFA Candidate, Photography Art, Department of Film and Animation, Xi'an Academy of Fine Arts</p></div><div class="fact-entry"><p class="fact-line fact-line-zh">2020.09-2024.06 本科，西安美术学院影视动画系，摄影专业</p><p class="fact-line fact-line-en">2020.09-2024.06 BFA, Photography, Department of Film and Animation, Xi'an Academy of Fine Arts</p></div></div><div class="fact-block"><h2>导师 / Advisor</h2><div class="fact-entry"><p class="fact-line fact-line-zh">苏晟</p><p class="fact-line fact-line-en">Sheng Su</p></div></div></section>
-
-      <section class="lower-grid" aria-label="Residency and selected exhibitions">
-        <section class="facts-grid facts-grid-residency" aria-label="Residency" data-render="facts" data-fact-group="residency"><div class="fact-block"><h2>驻地 / Residency</h2><div class="fact-entry"><p class="fact-line fact-line-zh">2026.04-2026.06 巴黎艺术城驻地，法国巴黎</p><p class="fact-line fact-line-en">2026.04-2026.06 Artist Residency, Cité Internationale des Arts, Paris, France</p></div><div class="fact-entry"><p class="fact-line fact-line-zh">2025.10-2025.11 鄠邑区蔡家坡村驻地，陕西西安</p><p class="fact-line fact-line-en">2025.10-2025.11 Artist Residency, Caijiapo Village, Huyi District, Xi'an, Shaanxi, China</p></div></div></section>
-
+      <section class="lower-grid" aria-label="Selected exhibitions">
         <section class="cv-section" aria-label="Selected exhibitions and awards">
           <div class="section-heading">
             <h2 data-about="exhibitionsTitle">参展与获奖<br>Exhibitions / Awards / Screenings</h2>

@@ -1,7 +1,7 @@
 // 这里是 About 页的可编辑内容。
-// 以后如果要改简介、学历、导师、驻地、展览或联系方式，只需要改这个文件里引号中的文字。
+// 以后如果要改简介、学历、驻地、展览或联系方式，只需要改这个文件里引号中的文字。
 // 参展 / 入围 / 获奖履历在 exhibitions-data.js 的 jadePresentationHistory 中维护。
-// 学历、导师、驻地按 { zh: "中文", en: "English" } 的格式添加或修改。
+// 学历、驻地按 { zh: "中文", en: "English" } 的格式添加或修改。
 
 window.jadeAboutContent = {
   meta: {
@@ -32,7 +32,7 @@ window.jadeAboutContent = {
 
   facts: [
     {
-      title: "学历 / Education",
+      title: "学历 / EDUCATION",
       entries: [
         {
           zh: "2024.09-至今 硕士，西安美术学院影视动画系，摄影艺术方向",
@@ -45,16 +45,7 @@ window.jadeAboutContent = {
       ],
     },
     {
-      title: "导师 / Advisor",
-      entries: [
-        {
-          zh: "苏晟",
-          en: "Sheng Su",
-        },
-      ],
-    },
-    {
-      title: "驻地 / Residency",
+      title: "驻地 / RESIDENCY",
       entries: [
         {
           zh: "2026.04-2026.06 巴黎艺术城驻地，法国巴黎",
