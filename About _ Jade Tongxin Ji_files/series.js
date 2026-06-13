@@ -32,32 +32,72 @@
       make("span", "nav-trigger-arrow", isOpen ? "↑" : "↓")
     );
   };
-  const seriesByRecent = [...series].sort((a, b) => Number(b.year) - Number(a.year));
-  const menuLabelZh = (item) => `${item.year}-${item.titleZh}`;
-  const menuLabelEn = (item) => `${item.year}-${item.titleEn}`;
+  const homeSeriesEntrypoints = [
+    {
+      href: "recent-works.html",
+      zh: "近期作品",
+      en: "RECENT WORKS",
+    },
+    {
+      href: "early-works.html",
+      zh: "早期尝试",
+      en: "EARLY WORKS",
+    },
+  ];
+  const workNavigationGroups = [
+    {
+      type: "recent",
+      backHref: "recent-works.html",
+      backLabel: "← 返回近期作品 / BACK TO RECENT WORKS",
+      ids: [
+        "dandelion-has-not-decided",
+        "hesitation",
+        "new-year-elevator",
+        "epitaph",
+      ],
+    },
+    {
+      type: "early",
+      backHref: "early-works.html",
+      backLabel: "← 返回早期尝试 / BACK TO EARLY WORKS",
+      ids: [
+        "tiao-zhi-hua",
+        "upstream-wind",
+        "nature-of-nature",
+        "whale-eggs",
+        "zero-twenty",
+      ],
+    },
+  ];
 
   document.querySelectorAll("[data-render-series-menu]").forEach((menu) => {
-    menu.replaceChildren(
-      ...seriesByRecent.map((item) => {
-        const link = make("a", "menu-link series-menu-link");
-        link.href = galleryHref(item);
-        link.append(
-          make("span", "menu-title-zh", menuLabelZh(item)),
-          make("small", "menu-title-en", menuLabelEn(item))
-        );
-        return link;
-      })
-    );
+    const links = homeSeriesEntrypoints.map((item) => {
+      const link = make("a", "menu-link series-directory-entry");
+      link.href = item.href;
+      link.setAttribute("aria-label", `${item.zh} / ${item.en} →`);
+      link.append(
+        make("span", "series-directory-entry-zh", item.zh),
+        make("span", "series-directory-entry-slash", "/"),
+        make("span", "series-directory-entry-en", item.en),
+        make("span", "series-directory-entry-arrow", "→")
+      );
+      return link;
+    });
+    menu.replaceChildren(...links);
   });
+
+  const setNavMenuOpen = (navMenu, trigger, isOpen) => {
+    navMenu.classList.toggle("is-open", isOpen);
+    trigger.setAttribute("aria-expanded", String(isOpen));
+    setNavTriggerState(trigger, isOpen);
+  };
 
   const closeSeriesMenus = (exceptMenu) => {
     document.querySelectorAll(".home-nav-menu.is-open, .page-nav-menu.is-open").forEach((navMenu) => {
       if (navMenu === exceptMenu) return;
-      navMenu.classList.remove("is-open");
       const trigger = navMenu.querySelector(".home-nav-trigger, .page-nav-trigger");
       if (trigger) {
-        trigger.setAttribute("aria-expanded", "false");
-        if (trigger.dataset.baseLabel) setNavTriggerState(trigger, false);
+        setNavMenuOpen(navMenu, trigger, false);
       }
     });
   };
@@ -68,23 +108,36 @@
     if (!navMenu || !trigger) return;
 
     trigger.dataset.baseLabel = cleanNavTriggerLabel(trigger.textContent);
-    setNavTriggerState(trigger, false);
-    trigger.setAttribute("aria-expanded", "false");
+    setNavMenuOpen(navMenu, trigger, navMenu.classList.contains("is-open"));
+
+    if (navMenu.dataset.seriesMenuBound === "true") return;
+    navMenu.dataset.seriesMenuBound = "true";
+
+    const toggleNavMenu = () => {
+      const nextIsOpen = !navMenu.classList.contains("is-open");
+      if (nextIsOpen) {
+        closeSeriesMenus(navMenu);
+      }
+      setNavMenuOpen(navMenu, trigger, nextIsOpen);
+    };
 
     trigger.addEventListener("click", (event) => {
       event.preventDefault();
-      const isOpen = navMenu.classList.toggle("is-open");
-      closeSeriesMenus(isOpen ? navMenu : null);
-      trigger.setAttribute("aria-expanded", String(isOpen));
-      setNavTriggerState(trigger, isOpen);
+      event.stopPropagation();
+      toggleNavMenu();
+    });
+
+    navMenu.addEventListener("click", (event) => {
+      if (event.target.closest("[data-render-series-menu]")) return;
+      if (event.target.closest(".home-nav-trigger, .page-nav-trigger")) return;
+      event.preventDefault();
+      toggleNavMenu();
     });
 
     menu.addEventListener("click", (event) => {
       const link = event.target.closest("a");
       if (!link) return;
-      navMenu.classList.remove("is-open");
-      trigger.setAttribute("aria-expanded", "false");
-      setNavTriggerState(trigger, false);
+      setNavMenuOpen(navMenu, trigger, false);
     });
   });
 
@@ -139,6 +192,9 @@
   const titleEn = document.querySelector("[data-series-title-en]");
   const meta = document.querySelector("[data-series-meta]");
   const medium = document.querySelector("[data-series-medium]");
+  const directoryBackNav = document.querySelector("[data-series-directory-back-nav]");
+  const workNav = document.querySelector("[data-series-work-nav]");
+  const galleryInfo = detailRoot.querySelector(".gallery-info");
   const statement = document.querySelector("[data-series-statement]");
   const statementToggle = document.querySelector("[data-series-statement-toggle]");
   const statementBody = document.querySelector("[data-series-statement-body]");
@@ -165,6 +221,75 @@
   const getCurrent = () => {
     const route = getRoute();
     return series.find((item) => item.id === route.seriesId) || series[0];
+  };
+
+  const findWorkNavigation = (seriesId) => {
+    for (const group of workNavigationGroups) {
+      const index = group.ids.indexOf(seriesId);
+      if (index === -1) continue;
+      return {
+        group,
+        previous: series.find((item) => item.id === group.ids[index - 1]) || null,
+        next: series.find((item) => item.id === group.ids[index + 1]) || null,
+      };
+    }
+    return null;
+  };
+
+  const appendWorkNavTarget = (link, target) => {
+    if (!target) return;
+    link.append(
+      " ",
+      make("span", "series-work-nav-target", `${target.titleZh} / ${target.titleEn}`)
+    );
+  };
+
+  const renderWorkNavLink = (className, href, label, target) => {
+    const link = make("a", `series-work-nav-link ${className}`);
+    link.href = href;
+    link.append(make("span", "series-work-nav-label", label));
+    appendWorkNavTarget(link, target);
+    return link;
+  };
+
+  const renderWorkNav = () => {
+    if (!workNav || !current) return;
+    const nav = findWorkNavigation(current.id);
+    if (directoryBackNav) {
+      directoryBackNav.replaceChildren();
+      directoryBackNav.hidden = !nav;
+    }
+    workNav.replaceChildren();
+    workNav.hidden = !nav;
+    if (!nav) return;
+
+    if (directoryBackNav) {
+      directoryBackNav.append(renderWorkNavLink("series-work-nav-back", nav.group.backHref, nav.group.backLabel));
+    }
+
+    const pagerRow = make("div", "series-work-nav-row series-work-nav-pager");
+    if (nav.previous) {
+      pagerRow.append(
+        renderWorkNavLink(
+          "series-work-nav-previous",
+          galleryHref(nav.previous),
+          "← 上一件作品 / PREVIOUS WORK",
+          nav.previous
+        )
+      );
+    }
+    if (nav.next) {
+      pagerRow.append(
+        renderWorkNavLink(
+          "series-work-nav-next",
+          galleryHref(nav.next),
+          "下一件作品 / NEXT WORK →",
+          nav.next
+        )
+      );
+    }
+
+    workNav.append(pagerRow);
   };
 
   const lockImageTouch = (target) => {
@@ -902,6 +1027,16 @@
     if (!current) return;
 
     document.title = `${current.titleEn} / Series / Jade Tongxin Ji`;
+    if (galleryInfo) {
+      const atmosphereImage = current.atmosphereImage || "";
+      galleryInfo.classList.toggle("has-series-atmosphere", Boolean(atmosphereImage));
+      if (atmosphereImage) {
+        const atmosphereUrl = new URL(atmosphereImage, window.location.href).href;
+        galleryInfo.style.setProperty("--series-atmosphere-image", `url("${atmosphereUrl}")`);
+      } else {
+        galleryInfo.style.removeProperty("--series-atmosphere-image");
+      }
+    }
     if (titleZh) titleZh.textContent = current.titleZh;
     if (titleEn) titleEn.textContent = current.titleEn;
     if (meta) meta.textContent = `${current.year} / Series`;
@@ -912,6 +1047,7 @@
         make("span", "series-medium-en", current.mediumEn)
       );
     }
+    renderWorkNav();
 
     const statementZh = current.statementZh || [];
     const statementEn = current.statementEn || [];
