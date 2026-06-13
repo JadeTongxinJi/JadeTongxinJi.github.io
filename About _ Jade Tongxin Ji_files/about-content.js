@@ -16,7 +16,7 @@ window.jadeAboutContent = {
   nameEn: "JADE\nTongxin Ji",
 
   heroImage: {
-    src: "个人简历照片.JPG",
+    src: "个人简历照片2.JPG",
     alt: "Portrait of Jade Tongxin Ji",
     caption: "",
   },
