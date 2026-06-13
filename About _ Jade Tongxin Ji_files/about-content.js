@@ -59,7 +59,7 @@ window.jadeAboutContent = {
     },
   ],
 
-  exhibitionsTitle: "参展与获奖\nExhibitions / Awards / Screenings",
+  exhibitionsTitle: "参展与获奖\nExhibitions / Awards",
   exhibitions: [],
 
   footerLinks: [],
