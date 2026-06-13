@@ -212,9 +212,10 @@ body {
 
 .home-nav-dropdown .series-directory-entry,
 .page-nav-dropdown .series-directory-entry {
-  display: flex;
+  display: grid;
+  grid-template-columns: 4.8em auto 10.4em auto;
+  column-gap: 0.45em;
   align-items: baseline;
-  gap: 0.45em;
   padding: 10px 12px;
   border: 0;
   background: transparent;
@@ -232,6 +233,30 @@ body {
   padding: 6px 0;
   font-size: 11px;
   line-height: 1.28;
+}
+
+.page-nav-dropdown .series-directory-entry {
+  width: 238px;
+  max-width: 100%;
+  grid-template-columns: 4.8em auto 9.2em auto;
+}
+
+.series-directory-entry-zh,
+.series-directory-entry-slash,
+.series-directory-entry-en,
+.series-directory-entry-arrow {
+  min-width: 0;
+  white-space: nowrap;
+}
+
+.series-directory-entry-zh,
+.series-directory-entry-en {
+  text-align: left;
+}
+
+.series-directory-entry-slash,
+.series-directory-entry-arrow {
+  justify-self: start;
 }
 
 .home-nav-dropdown .series-directory-entry:hover,
@@ -357,6 +382,7 @@ body {
   .home-nav-dropdown .series-directory-entry {
     width: 100%;
     min-width: 0;
+    grid-template-columns: 4.8em auto 10.4em auto;
     padding: 6px 10px;
     font-size: 11px;
     white-space: nowrap;
@@ -2905,6 +2931,12 @@ body {
     text-align: left;
   }
 
+  .page-nav-dropdown .series-directory-entry {
+    width: min(238px, calc(100vw - 152px));
+    grid-template-columns: 4.8em auto 9.2em auto;
+    column-gap: 0.45em;
+  }
+
   .exhibition-gallery-page .page-nav-dropdown {
     top: calc(100% + 4px);
     right: 0;
@@ -2941,6 +2973,12 @@ body {
     overflow-wrap: anywhere;
     text-overflow: clip;
     white-space: normal;
+  }
+
+  .exhibition-gallery-page .page-nav-dropdown .series-directory-entry {
+    width: min(238px, calc(100vw - 48px));
+    grid-template-columns: 4.8em auto 9.2em auto;
+    white-space: nowrap;
   }
 
   .about-hero {
@@ -3620,6 +3658,11 @@ body {
     grid-template-columns: minmax(104px, 0.82fr) minmax(122px, 1fr);
     font-size: 8.5px;
     gap: 2px 9px;
+  }
+
+  .about-page .page-nav-dropdown .series-directory-entry {
+    grid-template-columns: 4.8em auto 9.2em auto;
+    gap: 0 0.45em;
   }
 
   .about-page .page-nav-dropdown .menu-title-zh,

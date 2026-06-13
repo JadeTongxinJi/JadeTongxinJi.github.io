@@ -35,11 +35,13 @@
   const homeSeriesEntrypoints = [
     {
       href: "recent-works.html",
-      label: "近期作品 / RECENT WORKS",
+      zh: "近期作品",
+      en: "RECENT WORKS",
     },
     {
       href: "early-works.html",
-      label: "早期尝试 / EARLY WORKS",
+      zh: "早期尝试",
+      en: "EARLY WORKS",
     },
   ];
 
@@ -47,8 +49,11 @@
     const links = homeSeriesEntrypoints.map((item) => {
       const link = make("a", "menu-link series-directory-entry");
       link.href = item.href;
+      link.setAttribute("aria-label", `${item.zh} / ${item.en} →`);
       link.append(
-        make("span", "series-directory-entry-label", item.label),
+        make("span", "series-directory-entry-zh", item.zh),
+        make("span", "series-directory-entry-slash", "/"),
+        make("span", "series-directory-entry-en", item.en),
         make("span", "series-directory-entry-arrow", "→")
       );
       return link;
