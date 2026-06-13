@@ -57,43 +57,14 @@
     return event;
   };
 
-  const getCvStatus = (item) => {
-    const zh = item.eventZh || item.zh || "";
-    const en = item.eventEn || item.en || "";
-    const zhStatus = zh.split("，").pop() || "";
-    const enStatus = en.split(",").pop() || "";
-    if (/入围/.test(zhStatus) || /shortlist/i.test(enStatus)) {
-      return { zh: "入围", en: "Shortlisted" };
-    }
-    if (/获奖|金奖|一等奖|优秀奖|优秀作品奖/.test(zhStatus) || /award|prize|awarded/i.test(enStatus)) {
-      return { zh: "获奖", en: "Awarded" };
-    }
-    return { zh: "参展", en: "Selected" };
-  };
-
-  const stripCvStatus = (text = "") => text
-    .replace(/，(参展|入围|获奖|金奖|一等奖|院校优秀奖|优秀作品奖|入选\/参展)$/u, "")
-    .replace(/,\s*(selected and exhibited|exhibited|shortlisted|gold award|first prize|outstanding academy award|outstanding work award)$/i, "");
-
   const getCvDisplay = (item) => {
     const eventZh = item.eventZh || item.zh || "";
     const eventEn = item.eventEn || item.en || "";
     const isSolo = /个展/.test(eventZh) || /solo exhibition/i.test(eventEn);
-    if (isSolo) {
-      return {
-        type: "solo",
-        titleZh: eventZh,
-        titleEn: eventEn.replace(/,\s*solo exhibition$/i, ""),
-        kind: "个展 / Solo Exhibition",
-      };
-    }
-    const status = getCvStatus(item);
     return {
-      type: "group",
-      titleZh: stripCvStatus(eventZh),
-      titleEn: stripCvStatus(eventEn),
-      status: `状态：${status.zh} / ${status.en}`,
-      work: item.workZh && item.workEn ? `作品：${item.workZh} / ${item.workEn}` : "",
+      titleZh: eventZh,
+      titleEn: eventEn,
+      work: !isSolo && item.workZh && item.workEn ? `作品｜${item.workZh} / ${item.workEn}` : "",
     };
   };
 
@@ -109,13 +80,8 @@
     title.append(make("h3", "", display.titleZh), make("p", "", display.titleEn));
     row.append(title);
 
-    if (display.type === "solo") {
-      row.append(make("p", "cv-entry-kind", display.kind));
-    } else {
-      row.append(make("p", "cv-entry-status", display.status));
-      if (display.work) {
-        row.append(make("p", "cv-entry-work", display.work));
-      }
+    if (display.work) {
+      row.append(make("p", "cv-entry-work", display.work));
     }
 
     if (href) {

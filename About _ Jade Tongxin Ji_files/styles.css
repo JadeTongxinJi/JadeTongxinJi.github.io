@@ -722,8 +722,6 @@ body {
 }
 
 .cv-entry-title p,
-.cv-entry-kind,
-.cv-entry-status,
 .cv-entry-work {
   margin: 0;
   color: rgba(245, 242, 236, 0.68);
@@ -733,8 +731,6 @@ body {
   line-height: 1.46;
 }
 
-.cv-entry-kind,
-.cv-entry-status,
 .cv-entry-work {
   color: rgba(245, 242, 236, 0.8);
 }
@@ -742,21 +738,21 @@ body {
 .cv-entry-link {
   justify-self: start;
   margin-top: 5px;
-  color: rgba(245, 242, 236, 0.62);
+  color: rgba(174, 190, 206, 0.88);
   font-family: "Courier New", Courier, monospace;
   font-size: 11px;
   font-weight: 700;
   line-height: 1.25;
   text-decoration: underline;
-  text-decoration-color: rgba(245, 242, 236, 0.42);
+  text-decoration-color: rgba(174, 190, 206, 0.52);
   text-underline-offset: 0.24em;
   text-transform: uppercase;
 }
 
 .cv-entry-link:hover,
 .cv-entry-link:focus-visible {
-  color: #f5f2ec;
-  text-decoration-color: #f5f2ec;
+  color: #cad7e4;
+  text-decoration-color: rgba(202, 215, 228, 0.88);
   outline: none;
 }
 
@@ -3131,8 +3127,6 @@ body {
   .about-page .cv-text-en,
   .about-page .cv-event-title-en,
   .about-page .cv-entry-title p,
-  .about-page .cv-entry-kind,
-  .about-page .cv-entry-status,
   .about-page .cv-entry-work {
     font-size: 13px;
   }
