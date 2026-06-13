@@ -236,19 +236,12 @@
     return null;
   };
 
-  const appendWorkNavTarget = (link, target) => {
-    if (!target) return;
-    link.append(
-      " ",
-      make("span", "series-work-nav-target", `${target.titleZh} / ${target.titleEn}`)
-    );
-  };
+  const getWorkNavTitle = (target) => `${target.titleZh} / ${target.titleEn}`;
 
-  const renderWorkNavLink = (className, href, label, target) => {
+  const renderWorkNavLink = (className, href, label) => {
     const link = make("a", `series-work-nav-link ${className}`);
     link.href = href;
     link.append(make("span", "series-work-nav-label", label));
-    appendWorkNavTarget(link, target);
     return link;
   };
 
@@ -273,8 +266,7 @@
         renderWorkNavLink(
           "series-work-nav-previous",
           galleryHref(nav.previous),
-          "← 上一件作品 / PREVIOUS WORK",
-          nav.previous
+          `← ${getWorkNavTitle(nav.previous)}`
         )
       );
     }
@@ -283,8 +275,7 @@
         renderWorkNavLink(
           "series-work-nav-next",
           galleryHref(nav.next),
-          "下一件作品 / NEXT WORK →",
-          nav.next
+          `${getWorkNavTitle(nav.next)} →`
         )
       );
     }
