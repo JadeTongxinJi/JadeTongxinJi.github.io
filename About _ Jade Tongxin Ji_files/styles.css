@@ -3582,7 +3582,7 @@ body {
   text-transform: uppercase;
 }
 
-.contact-hero h1 {
+.contact-hero h1:not(.contact-kicker) {
   margin: 0;
   font-family: Didot, "Bodoni 72", "Bodoni 72 Display", "Bodoni MT", Georgia, "Times New Roman", serif;
   font-size: clamp(42px, 6vw, 86px);
@@ -3618,7 +3618,7 @@ body {
 
 .contact-value {
   font-family: "Helvetica Neue", Arial, "PingFang SC", sans-serif;
-  font-size: clamp(18px, 2.8vw, 34px);
+  font-size: clamp(15px, 1.315vw, 16px);
   font-weight: 300;
   line-height: 1.08;
   overflow-wrap: anywhere;
@@ -3652,7 +3652,7 @@ body {
     padding-top: 24px;
   }
 
-  .contact-hero h1 {
+  .contact-hero h1:not(.contact-kicker) {
     font-size: clamp(36px, 12vw, 62px);
   }
 
