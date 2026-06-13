@@ -3912,34 +3912,39 @@ body {
 }
 
 .page-nav-menu {
-  flex-direction: column;
+  position: relative;
+  display: inline-flex;
+  flex-direction: row;
   align-items: flex-end;
+  justify-content: flex-end;
   padding-bottom: 0;
   margin-bottom: 0;
+  overflow: visible;
 }
 
 .page-nav-menu > .page-nav-dropdown {
-  position: static;
-  top: auto;
-  right: auto;
+  position: absolute;
+  top: calc(100% + 7px);
+  right: 0;
   left: auto;
-  display: none;
+  display: grid;
   width: max-content;
   min-width: 0;
   max-width: min(300px, calc(100vw - 32px));
   max-height: none;
   overflow: visible;
-  margin-top: 8px;
+  margin-top: 0;
   padding: 4px 0;
   border-top: 0;
-  opacity: 1;
-  pointer-events: auto;
-  transform: none;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-4px);
 }
 
 .page-nav-menu.is-open > .page-nav-dropdown {
-  display: grid;
-  transform: none;
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
 }
 
 .about-page .page-nav-menu > .page-nav-dropdown,
