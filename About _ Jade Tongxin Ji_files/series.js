@@ -14,10 +14,14 @@
   };
 
   const galleryHref = (item) => `series-gallery.html#${item.id}`;
-  const exhibitionHref = (item) => `exhibition-gallery.html#${item.id}`;
+  const exhibitionHref = (item) => `exhibition-gallery.html?from=work#${item.id}`;
+  const withExhibitionSource = (href, source) => {
+    if (!href || !href.startsWith("exhibition-gallery.html#")) return href;
+    return href.replace("exhibition-gallery.html#", `exhibition-gallery.html?from=${source}#`);
+  };
   const presentationHref = (item) => {
-    if (item.detailId) return `exhibition-gallery.html#${item.detailId}`;
-    if (item.href) return item.href;
+    if (item.detailId) return `exhibition-gallery.html?from=work#${item.detailId}`;
+    if (item.href) return withExhibitionSource(item.href, "work");
     return "";
   };
   const cleanNavTriggerLabel = (text) => (

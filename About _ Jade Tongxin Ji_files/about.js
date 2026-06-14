@@ -48,9 +48,14 @@
     block.append(wrapper);
   };
 
+  const withExhibitionSource = (href, source) => {
+    if (!href || !href.startsWith("exhibition-gallery.html#")) return href;
+    return href.replace("exhibition-gallery.html#", `exhibition-gallery.html?from=${source}#`);
+  };
+
   const exhibitionHref = (item) => {
-    if (item.detailId) return `exhibition-gallery.html#${item.detailId}`;
-    return item.href || "";
+    if (item.detailId) return `exhibition-gallery.html?from=about#${item.detailId}`;
+    return withExhibitionSource(item.href || "", "about");
   };
 
   const makeCvEvent = (item) => {
