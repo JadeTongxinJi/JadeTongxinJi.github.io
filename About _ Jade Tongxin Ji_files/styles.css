@@ -1675,7 +1675,7 @@ body {
   scroll-snap-type: x proximity;
   scrollbar-width: none;
   padding-bottom: 12px;
-  touch-action: pan-x pan-y;
+  touch-action: pan-y;
   -webkit-overflow-scrolling: touch;
 }
 
@@ -1696,7 +1696,7 @@ body {
   margin: 0;
   scroll-snap-align: center;
   scroll-snap-stop: normal;
-  touch-action: pan-x pan-y;
+  touch-action: pan-y;
 }
 
 .gallery-image-wrap {
@@ -1709,7 +1709,7 @@ body {
   min-height: calc(100svh - 220px);
   background: transparent;
   overflow: hidden;
-  touch-action: pan-x pan-y;
+  touch-action: pan-y;
   overscroll-behavior-x: contain;
   user-select: none;
   -webkit-user-select: none;
@@ -1724,7 +1724,7 @@ body {
   max-height: calc(100svh - 240px);
   margin: 0 auto;
   object-fit: contain;
-  touch-action: pan-x pan-y;
+  touch-action: pan-y;
   pointer-events: none;
   user-select: none;
   -webkit-user-select: none;
@@ -2829,7 +2829,7 @@ body {
   overflow-y: hidden;
   overscroll-behavior-x: contain;
   padding-bottom: 0;
-  touch-action: pan-x pan-y;
+  touch-action: pan-y;
   -webkit-overflow-scrolling: touch;
 }
 
@@ -2882,7 +2882,7 @@ body {
   height: var(--series-image-height);
   min-height: 0;
   overflow: hidden;
-  touch-action: pan-x pan-y;
+  touch-action: pan-y;
   overscroll-behavior-x: contain;
 }
 
@@ -2900,7 +2900,7 @@ body {
   height: var(--series-image-height);
   overflow: hidden;
   min-height: 0;
-  touch-action: pan-x pan-y;
+  touch-action: pan-y;
   overscroll-behavior-x: contain;
   user-select: none;
   -webkit-user-select: none;
@@ -2916,7 +2916,7 @@ body {
   object-fit: contain;
   object-position: center;
   pointer-events: none;
-  touch-action: pan-x pan-y;
+  touch-action: pan-y;
   user-select: none;
   -webkit-user-select: none;
   -webkit-user-drag: none;
@@ -3733,7 +3733,7 @@ body {
   .series-gallery-section .gallery-image-wrap {
     height: var(--series-image-height);
     overflow: hidden;
-    touch-action: pan-x pan-y;
+    touch-action: pan-y;
     overscroll-behavior-x: contain;
   }
 
@@ -3746,7 +3746,7 @@ body {
     object-fit: contain;
     object-position: center;
     pointer-events: none;
-    touch-action: pan-x pan-y;
+    touch-action: pan-y;
     user-select: none;
     -webkit-user-select: none;
     -webkit-user-drag: none;
