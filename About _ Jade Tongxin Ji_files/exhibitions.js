@@ -11,7 +11,7 @@
     return element;
   };
 
-  const galleryHref = (item) => `exhibition-gallery.html#${item.id}`;
+  const galleryHref = (item, source = "exhibitions") => `exhibition-gallery.html?from=${source}#${item.id}`;
   const exhibitionsByRecent = [...exhibitions].sort((a, b) => Number(b.year) - Number(a.year));
   const menuLabelZh = (item) => ({
     main: `${item.year}-${item.workZh}`,
@@ -76,6 +76,7 @@
   const facts = document.querySelector("[data-gallery-facts]");
   const sourcesTitle = document.querySelector("[data-gallery-sources-title]");
   const sources = document.querySelector("[data-gallery-sources]");
+  const returnSourceLink = document.querySelector("[data-exhibition-return-source]");
   const track = document.querySelector("[data-gallery-track]");
   const toolbar = document.querySelector(".gallery-toolbar");
   const count = document.querySelector("[data-gallery-count]");
@@ -100,6 +101,28 @@
   const getCurrent = () => {
     const currentId = decodeURIComponent(window.location.hash.replace("#", "")) || exhibitions[0]?.id;
     return exhibitions.find((item) => item.id === currentId) || exhibitions[0];
+  };
+
+  const setReturnSourceLink = () => {
+    if (!returnSourceLink) return;
+    const from = new URLSearchParams(window.location.search).get("from");
+    const returnMap = {
+      about: {
+        text: "← 返回 About / BACK TO ABOUT",
+        href: "About _ Jade Tongxin Ji.html",
+      },
+      work: {
+        text: "← 返回作品 / BACK TO WORK",
+        href: "series-gallery.html",
+      },
+      exhibitions: {
+        text: "← 返回展览列表 / BACK TO EXHIBITIONS",
+        href: "exhibitions.html",
+      },
+    };
+    const config = returnMap[from] || returnMap.exhibitions;
+    returnSourceLink.textContent = config.text;
+    returnSourceLink.href = config.href;
   };
 
   const lockImageTouch = (target) => {
@@ -411,5 +434,6 @@
   });
 
   window.addEventListener("hashchange", renderGallery);
+  setReturnSourceLink();
   renderGallery();
 })();
