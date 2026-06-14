@@ -1636,12 +1636,13 @@ body {
   min-width: 0;
   max-width: 100%;
   overflow-x: auto;
-  overscroll-behavior-x: none;
-  scroll-snap-type: x mandatory;
-  scroll-behavior: smooth;
+  overflow-y: hidden;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x proximity;
   scrollbar-width: none;
   padding-bottom: 12px;
-  touch-action: pan-y;
+  touch-action: pan-x pan-y;
+  -webkit-overflow-scrolling: touch;
 }
 
 .gallery-track::-webkit-scrollbar {
@@ -1659,9 +1660,9 @@ body {
   align-items: end;
   min-height: calc(100svh - 220px);
   margin: 0;
-  scroll-snap-align: start;
-  scroll-snap-stop: always;
-  touch-action: pan-y;
+  scroll-snap-align: center;
+  scroll-snap-stop: normal;
+  touch-action: pan-x pan-y;
 }
 
 .gallery-image-wrap {
@@ -1674,8 +1675,8 @@ body {
   min-height: calc(100svh - 220px);
   background: transparent;
   overflow: hidden;
-  touch-action: pan-y;
-  overscroll-behavior-x: none;
+  touch-action: pan-x pan-y;
+  overscroll-behavior-x: contain;
   user-select: none;
   -webkit-user-select: none;
   -webkit-touch-callout: none;
@@ -1689,7 +1690,7 @@ body {
   max-height: calc(100svh - 240px);
   margin: 0 auto;
   object-fit: contain;
-  touch-action: pan-y;
+  touch-action: pan-x pan-y;
   pointer-events: none;
   user-select: none;
   -webkit-user-select: none;
@@ -2791,9 +2792,10 @@ body {
   min-width: 0;
   max-width: calc(100% - clamp(80px, 10vw, 138px));
   overflow-x: auto;
-  overscroll-behavior-x: none;
+  overflow-y: hidden;
+  overscroll-behavior-x: contain;
   padding-bottom: 0;
-  touch-action: pan-y;
+  touch-action: pan-x pan-y;
   -webkit-overflow-scrolling: touch;
 }
 
@@ -2846,8 +2848,8 @@ body {
   height: var(--series-image-height);
   min-height: 0;
   overflow: hidden;
-  touch-action: pan-y;
-  overscroll-behavior-x: none;
+  touch-action: pan-x pan-y;
+  overscroll-behavior-x: contain;
 }
 
 .series-gallery-section .gallery-slide figcaption {
@@ -2864,8 +2866,8 @@ body {
   height: var(--series-image-height);
   overflow: hidden;
   min-height: 0;
-  touch-action: pan-y;
-  overscroll-behavior-x: none;
+  touch-action: pan-x pan-y;
+  overscroll-behavior-x: contain;
   user-select: none;
   -webkit-user-select: none;
   -webkit-touch-callout: none;
@@ -2880,7 +2882,7 @@ body {
   object-fit: contain;
   object-position: center;
   pointer-events: none;
-  touch-action: pan-y;
+  touch-action: pan-x pan-y;
   user-select: none;
   -webkit-user-select: none;
   -webkit-user-drag: none;
@@ -3695,8 +3697,8 @@ body {
   .series-gallery-section .gallery-image-wrap {
     height: var(--series-image-height);
     overflow: hidden;
-    touch-action: pan-y;
-    overscroll-behavior-x: none;
+    touch-action: pan-x pan-y;
+    overscroll-behavior-x: contain;
   }
 
   .series-gallery-section .gallery-image-wrap img {
@@ -3708,7 +3710,7 @@ body {
     object-fit: contain;
     object-position: center;
     pointer-events: none;
-    touch-action: pan-y;
+    touch-action: pan-x pan-y;
     user-select: none;
     -webkit-user-select: none;
     -webkit-user-drag: none;
