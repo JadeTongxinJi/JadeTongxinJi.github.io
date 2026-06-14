@@ -374,7 +374,7 @@
         image.src = src;
         image.alt = `${current.titleZh} ${section.titleZh} ${index + 1}`;
         image.draggable = false;
-        image.loading = index === 0 ? "eager" : "lazy";
+        image.loading = "lazy";
         image.decoding = "async";
         const setImageOrientation = () => {
           const isPortrait = image.naturalHeight > image.naturalWidth;
@@ -402,8 +402,6 @@
     );
 
     let activeIndex = 0;
-    let alignTimer = 0;
-    let scrollSyncFrame = 0;
     const clampIndex = (index) => Math.max(0, Math.min(index, imageTotal - 1));
     const getSlideWidth = () => Math.max((track.scrollWidth / imageTotal) || track.clientWidth || 1, 1);
     const getSlideLeft = (index) => clampIndex(index) * getSlideWidth();
@@ -486,45 +484,29 @@
         slide.classList.toggle("is-active", index === activeIndex);
       });
     };
-    const syncFromScroll = () => {
-      const nextIndex = getNearestIndex();
-      if (nextIndex !== activeIndex) {
-        activeIndex = nextIndex;
-        setActiveSlide();
-        syncImageDetail();
-      }
-      syncCount();
-    };
-    const scrollToIndex = (index, behavior = "smooth") => {
-      window.clearTimeout(alignTimer);
+    const setGalleryIndex = (index) => {
       activeIndex = clampIndex(index);
       setActiveSlide();
       syncImageDetail();
       syncCount();
-      track.scrollTo({
-        left: getSlideLeft(activeIndex),
-        behavior,
-      });
-      if (behavior === "smooth") {
-        alignTimer = window.setTimeout(() => {
-          track.scrollTo({
-            left: getSlideLeft(activeIndex),
-            behavior: "auto",
-          });
-        }, 360);
-      }
     };
-    const scheduleScrollSync = () => {
-      if (scrollSyncFrame) return;
-      scrollSyncFrame = window.requestAnimationFrame(() => {
-        scrollSyncFrame = 0;
-        syncFromScroll();
-      });
+
+    const galleryMotion = window.jadeGalleryMotion?.createGalleryMotion({
+      track,
+      getTotal: () => imageTotal,
+      getIndex: () => activeIndex,
+      setIndex: setGalleryIndex,
+      getSlideLeft,
+      getNearestIndex,
+    });
+
+    const scrollToIndex = (index, behavior = "smooth") => {
+      galleryMotion?.scrollToIndex(index, behavior);
     };
 
     prev.addEventListener("click", () => scrollToIndex(activeIndex - 1));
     next.addEventListener("click", () => scrollToIndex(activeIndex + 1));
-    track.addEventListener("scroll", scheduleScrollSync, { passive: true });
+    galleryMotion?.bind();
     window.addEventListener("resize", () => {
       scrollToIndex(activeIndex, "auto");
     });
