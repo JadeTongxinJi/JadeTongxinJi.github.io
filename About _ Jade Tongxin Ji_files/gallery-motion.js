@@ -11,35 +11,26 @@
     getTotal,
     getIndex,
     setIndex,
-    getSlideLeft,
-    getNearestIndex,
-    getSlideWidth,
     windowObject = typeof window !== "undefined" ? window : globalThis,
-    settleDelay = 140,
-    gestureLockDuration = 560,
-    wheelThreshold = 18,
+    wheelGestureDelay = 120,
   }) => {
-    let settleTimer = 0;
-    let gestureLockTimer = 0;
-    let isGestureLocked = false;
-    let snapTargetIndex = null;
-    let pointerTracking = false;
-    let pointerIsHorizontal = false;
-    let pointerId = null;
-    let pointerStartX = 0;
-    let pointerStartY = 0;
-    let pointerLastX = 0;
-    let pointerLastY = 0;
-    let pointerStartIndex = 0;
+    let wheelTimer = 0;
+    let wheelDelta = 0;
+    let wheelDirection = 0;
+    let wheelConsumed = false;
+    let pointerState = null;
     let isBound = false;
 
     const total = () => Math.max(0, Number(getTotal?.() || 0));
     const clampIndex = (index) => Math.max(0, Math.min(index, Math.max(total() - 1, 0)));
     const currentIndex = () => clampIndex(getIndex());
-    const slideWidth = () => Math.max(Number(getSlideWidth?.() || track?.clientWidth || 1), 1);
-    const swipeThreshold = () => Math.max(40, slideWidth() * 0.15);
-    const clearSettleTimer = () => windowObject.clearTimeout(settleTimer);
-    const clearGestureLockTimer = () => windowObject.clearTimeout(gestureLockTimer);
+    const viewport = () => track?.closest?.(".gallery-viewport") || track;
+    const slideWidth = () => {
+      const rect = viewport()?.getBoundingClientRect?.();
+      return Math.max(Number(rect?.width || track?.clientWidth || 1), 1);
+    };
+    const swipeThreshold = () => Math.min(60, slideWidth() * 0.12);
+    const clearWheelTimer = () => windowObject.clearTimeout(wheelTimer);
     const canPrevent = (event) => event?.cancelable !== false;
     const preventIfPossible = (event) => {
       if (canPrevent(event)) {
@@ -47,122 +38,99 @@
       }
     };
 
-    const unlockGesture = () => {
-      if (track && snapTargetIndex !== null) {
-        const targetIndex = clampIndex(snapTargetIndex);
-        setIndex(targetIndex);
-        track.scrollTo({
-          left: getSlideLeft(targetIndex),
-          behavior: "auto",
-        });
-      }
-      snapTargetIndex = null;
-      isGestureLocked = false;
+    const positionTrack = (offset = 0) => {
+      if (!track) return;
+      const x = (-currentIndex() * slideWidth()) + offset;
+      track.style.transform = `translate3d(${x}px, 0, 0)`;
     };
 
-    const lockGesture = (targetIndex) => {
-      isGestureLocked = true;
-      snapTargetIndex = clampIndex(targetIndex);
-      clearGestureLockTimer();
-      gestureLockTimer = windowObject.setTimeout(unlockGesture, gestureLockDuration);
+    const setInstantPosition = () => {
+      if (!track) return;
+      track.classList.add("is-dragging");
+      positionTrack();
+      windowObject.requestAnimationFrame?.(() => {
+        track.classList.remove("is-dragging");
+      });
     };
 
-    const alignToIndex = (index, behavior = "smooth", shouldLock = behavior === "smooth") => {
+    const goToIndex = (index, { animate = true } = {}) => {
       if (!track || total() <= 0) return false;
       const targetIndex = clampIndex(index);
-      clearSettleTimer();
       setIndex(targetIndex);
-      track.scrollTo({
-        left: getSlideLeft(targetIndex),
-        behavior,
-      });
-      if (shouldLock) {
-        lockGesture(targetIndex);
+      if (animate) {
+        track.classList.remove("is-dragging");
+        positionTrack();
+      } else {
+        setInstantPosition();
       }
       return true;
     };
 
-    const settleToCurrentSlide = (behavior = "smooth") => {
-      if (total() <= 1) return;
-      clearSettleTimer();
-      alignToIndex(currentIndex(), behavior, false);
-    };
-
-    const scheduleSettle = () => {
-      if (total() <= 1) return;
-      clearSettleTimer();
-      settleTimer = windowObject.setTimeout(() => {
-        settleToCurrentSlide("smooth");
-      }, settleDelay);
-    };
-
-    const handleScroll = () => {
-      if (isGestureLocked) return;
-      scheduleSettle();
-    };
-
-    const handleScrollEnd = () => {
-      clearSettleTimer();
-      settleToCurrentSlide("smooth");
-    };
-
     const scrollToIndex = (index, behavior = "smooth") => {
-      if (isGestureLocked && behavior !== "auto") return false;
-      return alignToIndex(index, behavior, behavior === "smooth");
+      return goToIndex(index, { animate: behavior !== "auto" });
     };
 
-    const resetPointerGesture = () => {
-      pointerTracking = false;
-      pointerIsHorizontal = false;
-      pointerId = null;
+    const resetWheelGesture = () => {
+      wheelDirection = 0;
+      wheelDelta = 0;
+      wheelConsumed = false;
+    };
+
+    const getDragOffset = (state, clientX) => {
+      let offset = clientX - state.startX;
+      const width = slideWidth();
+      offset = Math.max(-width, Math.min(width, offset));
+      if (state.startIndex === 0 && offset > 0) return 0;
+      if (state.startIndex === total() - 1 && offset < 0) return 0;
+      return offset;
     };
 
     const handlePointerDown = (event) => {
-      if (!track || total() <= 1 || isGestureLocked || event.pointerType === "mouse") return;
-      pointerTracking = true;
-      pointerIsHorizontal = false;
-      pointerId = event.pointerId;
-      pointerStartX = event.clientX;
-      pointerStartY = event.clientY;
-      pointerLastX = event.clientX;
-      pointerLastY = event.clientY;
-      pointerStartIndex = currentIndex();
-      clearSettleTimer();
+      if (!track || total() <= 1) return;
+      if (event.pointerType === "mouse" && event.button !== 0) return;
+      pointerState = {
+        pointerId: event.pointerId,
+        startX: event.clientX,
+        startY: event.clientY,
+        lastX: event.clientX,
+        lastY: event.clientY,
+        startIndex: currentIndex(),
+        axis: "",
+      };
     };
 
     const handlePointerMove = (event) => {
-      if (!pointerTracking || event.pointerId !== pointerId) return;
-      pointerLastX = event.clientX;
-      pointerLastY = event.clientY;
-      const deltaX = pointerLastX - pointerStartX;
-      const deltaY = pointerLastY - pointerStartY;
-      if (!pointerIsHorizontal && Math.abs(deltaX) > 8 && Math.abs(deltaX) > Math.abs(deltaY) + 6) {
-        pointerIsHorizontal = true;
+      if (!pointerState || event.pointerId !== pointerState.pointerId) return;
+      pointerState.lastX = event.clientX;
+      pointerState.lastY = event.clientY;
+      const deltaX = pointerState.lastX - pointerState.startX;
+      const deltaY = pointerState.lastY - pointerState.startY;
+      const absX = Math.abs(deltaX);
+      const absY = Math.abs(deltaY);
+      if (!pointerState.axis && absX > 8 && absX > absY + 6) {
+        pointerState.axis = "x";
+        track.classList.add("is-dragging");
         try {
           track.setPointerCapture?.(event.pointerId);
         } catch (error) {
           // Pointer capture is best-effort; pointerup still resolves the gesture.
         }
       }
-      if (pointerIsHorizontal) {
+      if (!pointerState.axis && absY > 8 && absY > absX + 6) {
+        pointerState.axis = "y";
+      }
+      if (pointerState.axis === "x") {
         preventIfPossible(event);
+        positionTrack(getDragOffset(pointerState, event.clientX));
       }
     };
 
     const finishPointerGesture = (event) => {
-      if (!pointerTracking || event.pointerId !== pointerId) return;
-      const deltaX = pointerLastX - pointerStartX;
-      const deltaY = pointerLastY - pointerStartY;
-      const shouldMove = (
-        pointerIsHorizontal &&
-        Math.abs(deltaX) >= swipeThreshold() &&
-        Math.abs(deltaX) > Math.abs(deltaY)
-      );
-      const targetIndex = shouldMove
-        ? pointerStartIndex + (deltaX < 0 ? 1 : -1)
-        : pointerStartIndex;
-
-      if (pointerIsHorizontal) {
+      if (!pointerState || event.pointerId !== pointerState.pointerId) return;
+      const state = pointerState;
+      pointerState = null;
+      track.classList.remove("is-dragging");
+      if (state.axis === "x") {
         preventIfPossible(event);
       }
       try {
@@ -170,17 +138,25 @@
       } catch (error) {
         // Pointer capture may not have been set if the gesture stayed below threshold.
       }
-      resetPointerGesture();
-      alignToIndex(targetIndex, "smooth", true);
+      if (state.axis !== "x") {
+        positionTrack();
+        return;
+      }
+      const offset = getDragOffset(state, state.lastX);
+      const targetIndex = Math.abs(offset) >= swipeThreshold()
+        ? state.startIndex + (offset < 0 ? 1 : -1)
+        : state.startIndex;
+      goToIndex(targetIndex);
     };
 
     const cancelPointerGesture = (event) => {
-      const targetIndex = pointerTracking ? pointerStartIndex : currentIndex();
-      if (pointerIsHorizontal) {
+      const wasHorizontal = pointerState?.axis === "x";
+      if (wasHorizontal) {
         preventIfPossible(event);
       }
-      resetPointerGesture();
-      alignToIndex(targetIndex, "smooth", true);
+      pointerState = null;
+      track?.classList.remove("is-dragging");
+      positionTrack();
     };
 
     const handleWheel = (event) => {
@@ -191,37 +167,44 @@
       if (!isHorizontalWheel) return;
 
       preventIfPossible(event);
-      if (isGestureLocked || Math.abs(deltaX) < wheelThreshold) return;
-
       const direction = deltaX > 0 ? 1 : -1;
-      alignToIndex(currentIndex() + direction, "smooth", true);
+      if (wheelDirection && wheelDirection !== direction) {
+        wheelDelta = 0;
+        wheelConsumed = false;
+      }
+      wheelDirection = direction;
+      wheelDelta += Math.abs(deltaX);
+
+      clearWheelTimer();
+      wheelTimer = windowObject.setTimeout(resetWheelGesture, wheelGestureDelay);
+      if (wheelConsumed || wheelDelta < swipeThreshold()) return;
+
+      wheelDelta = 0;
+      wheelConsumed = true;
+      goToIndex(currentIndex() + direction);
     };
 
     const bind = () => {
       if (!track || isBound) return;
-      track.addEventListener("scroll", handleScroll, { passive: true });
-      track.addEventListener("scrollend", handleScrollEnd, { passive: true });
       track.addEventListener("wheel", handleWheel, { passive: false });
       track.addEventListener("pointerdown", handlePointerDown);
       track.addEventListener("pointermove", handlePointerMove, { passive: false });
       track.addEventListener("pointerup", finishPointerGesture);
       track.addEventListener("pointercancel", cancelPointerGesture);
       isBound = true;
+      scrollToIndex(currentIndex(), "auto");
     };
 
     const destroy = () => {
       if (!track || !isBound) return;
-      track.removeEventListener("scroll", handleScroll);
-      track.removeEventListener("scrollend", handleScrollEnd);
       track.removeEventListener("wheel", handleWheel);
       track.removeEventListener("pointerdown", handlePointerDown);
       track.removeEventListener("pointermove", handlePointerMove);
       track.removeEventListener("pointerup", finishPointerGesture);
       track.removeEventListener("pointercancel", cancelPointerGesture);
-      clearSettleTimer();
-      clearGestureLockTimer();
-      resetPointerGesture();
-      unlockGesture();
+      clearWheelTimer();
+      pointerState = null;
+      track.classList.remove("is-dragging");
       isBound = false;
     };
 
@@ -229,7 +212,7 @@
       bind,
       destroy,
       scrollToIndex,
-      settleToNearestSlide: settleToCurrentSlide,
+      settleToNearestSlide: () => scrollToIndex(currentIndex(), "auto"),
     };
   };
 

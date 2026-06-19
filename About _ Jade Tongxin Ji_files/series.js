@@ -359,6 +359,7 @@
       header.append(title);
     }
 
+    const viewport = make("div", "gallery-viewport");
     const track = make("div", "gallery-track");
     track.replaceChildren(
       ...section.images.map((imageItem, index) => {
@@ -400,14 +401,10 @@
         return figure;
       })
     );
+    viewport.append(track);
 
     let activeIndex = 0;
     const clampIndex = (index) => Math.max(0, Math.min(index, imageTotal - 1));
-    const getSlideWidth = () => Math.max((track.scrollWidth / imageTotal) || track.clientWidth || 1, 1);
-    const getSlideLeft = (index) => clampIndex(index) * getSlideWidth();
-    const getNearestIndex = () => {
-      return clampIndex(Math.round(track.scrollLeft / getSlideWidth()));
-    };
 
     const renderImageDetail = (imageItem) => {
       if (typeof imageItem === "string") return null;
@@ -496,8 +493,6 @@
       getTotal: () => imageTotal,
       getIndex: () => activeIndex,
       setIndex: setGalleryIndex,
-      getSlideLeft,
-      getNearestIndex,
     });
 
     const scrollToIndex = (index, behavior = "smooth") => {
@@ -511,7 +506,7 @@
       scrollToIndex(activeIndex, "auto");
     });
 
-    frame.append(prev, track, next, count);
+    frame.append(prev, viewport, next, count);
     if (!isSingleSection) {
       block.append(header);
     }

@@ -1663,20 +1663,30 @@ body {
   padding: 0;
 }
 
+.gallery-viewport {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
+  overscroll-behavior-x: contain;
+  touch-action: pan-y;
+}
+
 .gallery-track {
   display: flex;
   gap: 0;
   width: 100%;
   min-width: 0;
   max-width: 100%;
-  overflow-x: auto;
-  overflow-y: hidden;
-  overscroll-behavior-x: contain;
-  scroll-snap-type: x proximity;
-  scrollbar-width: none;
   padding-bottom: 12px;
   touch-action: pan-y;
-  -webkit-overflow-scrolling: touch;
+  transform: translate3d(0, 0, 0);
+  transition: transform 260ms ease;
+  will-change: transform;
+}
+
+.gallery-track.is-dragging {
+  transition: none;
 }
 
 .gallery-track::-webkit-scrollbar {
@@ -1694,8 +1704,6 @@ body {
   align-items: end;
   min-height: calc(100svh - 220px);
   margin: 0;
-  scroll-snap-align: center;
-  scroll-snap-stop: normal;
   touch-action: pan-y;
 }
 
@@ -2818,19 +2826,19 @@ body {
   max-width: 100%;
 }
 
-.series-gallery-frame .gallery-track {
+.series-gallery-frame .gallery-viewport {
   grid-column: 1;
   grid-row: 1;
   justify-self: center;
   width: min(100%, 1180px);
   min-width: 0;
   max-width: calc(100% - clamp(80px, 10vw, 138px));
-  overflow-x: auto;
-  overflow-y: hidden;
   overscroll-behavior-x: contain;
-  padding-bottom: 0;
   touch-action: pan-y;
-  -webkit-overflow-scrolling: touch;
+}
+
+.series-gallery-frame .gallery-track {
+  padding-bottom: 0;
 }
 
 .series-gallery-arrow {
@@ -2957,10 +2965,12 @@ body {
 }
 
 /* Fallback for series pages that were rendered before the gallery frame update. */
+.series-gallery-page .series-gallery-section > .gallery-viewport > .gallery-track > .series-slide,
 .series-gallery-page .series-gallery-section > .gallery-track > .series-slide {
   grid-template-columns: 1fr;
 }
 
+.series-gallery-page .series-gallery-section > .gallery-viewport > .gallery-track > .series-slide figcaption,
 .series-gallery-page .series-gallery-section > .gallery-track > .series-slide figcaption {
   display: none;
 }
@@ -3716,7 +3726,7 @@ body {
     font-size: 13px;
   }
 
-  .series-gallery-frame .gallery-track {
+  .series-gallery-frame .gallery-viewport {
     width: calc(100vw - 116px);
     max-width: min(100%, calc(100vw - 116px));
   }

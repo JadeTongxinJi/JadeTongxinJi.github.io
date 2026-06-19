@@ -122,30 +122,6 @@
     return Math.max(0, Math.min(index, current.images.length - 1));
   };
 
-  const getSlideWidth = () => Math.max(track?.clientWidth || 1, 1);
-
-  const getSlideLeft = (index) => {
-    if (!track) return index * getSlideWidth();
-    const slide = track.querySelectorAll(".gallery-slide")[clampIndex(index)];
-    if (!slide) return index * getSlideWidth();
-    return track.scrollLeft + slide.getBoundingClientRect().left - track.getBoundingClientRect().left;
-  };
-
-  const getNearestIndex = () => {
-    if (!track || !current) return 0;
-    let nearestIndex = 0;
-    let nearestDistance = Infinity;
-    track.querySelectorAll(".gallery-slide").forEach((slide, index) => {
-      const slideLeft = track.scrollLeft + slide.getBoundingClientRect().left - track.getBoundingClientRect().left;
-      const distance = Math.abs(track.scrollLeft - slideLeft);
-      if (distance < nearestDistance) {
-        nearestDistance = distance;
-        nearestIndex = index;
-      }
-    });
-    return clampIndex(nearestIndex);
-  };
-
   const updateCount = () => {
     if (!count || !current) return;
     count.textContent = `${String(activeIndex + 1).padStart(2, "0")} / ${String(current.images.length).padStart(2, "0")}`;
@@ -169,8 +145,6 @@
     getTotal: () => current?.images.length || 0,
     getIndex: () => activeIndex,
     setIndex: setGalleryIndex,
-    getSlideLeft,
-    getNearestIndex,
   });
 
   const scrollToIndex = (index, behavior = "smooth") => {
@@ -265,7 +239,6 @@
       activeIndex = 0;
       setActiveSlide();
       updateCount();
-      track.scrollLeft = 0;
       window.requestAnimationFrame(() => scrollToIndex(0, "auto"));
     }
   };
